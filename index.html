@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensoriamento Remoto • PWA Educacional</title>
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para ícones (opcional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos extras para o canvas e responsividade */
+        canvas { max-width: 100%; height: auto; border-radius: 0.5rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-100 font-sans antialiased">
+
+    <!-- Cabeçalho com abas -->
+    <header class="bg-slate-800 shadow-lg sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3">
+            <h1 class="text-2xl md:text-3xl font-bold text-center text-cyan-400">🛰️ SensorLab • Sensoriamento Remoto</h1>
+            <nav class="flex flex-wrap justify-center gap-2 mt-4 text-sm md:text-base">
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="camera">📷 Câmera</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="game">🃏 Jogo</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="lab">🔬 Espalhamento</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="spectrum">🌈 Espectro</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="curiosity">❓ Curiosidades</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="glossary">📖 Glossário</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="quantities">📊 Grandezas</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Aba Câmera -->
+        <div id="camera" class="tab-content active">
+            <h2 class="text-2xl font-semibold mb-4">📷 Laboratório de Radiometria</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Painel da câmera -->
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <div class="relative bg-black rounded-lg overflow-hidden">
+                        <video id="video" autoplay playsinline class="w-full h-auto"></video>
+                        <canvas id="canvas" class="w-full h-auto hidden"></canvas>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button id="captureBtn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded flex items-center gap-2"><i class="fas fa-camera"></i> Capturar</button>
+                        <button id="backToVideoBtn" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded hidden">Voltar à câmera</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Clique na imagem capturada para selecionar pontos.</p>
+                </div>
+
+                <!-- Painel de informações radiométricas -->
+                <div class="bg-slate-800 p-4 rounded-lg space-y-4">
+                    <h3 class="text-xl font-semibold">Pontos selecionados</h3>
+                    <div id="pointsList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                    <div id="whiteRefInfo" class="bg-green-900 p-2 rounded hidden"></div>
+                    <button id="setWhiteRefBtn" class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-sm hidden">Definir como referência branca</button>
+                    <button id="clearPointsBtn" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Limpar pontos</button>
+                    <div class="bg-slate-700 p-3 rounded text-sm">
+                        <p><i class="fas fa-info-circle text-blue-300"></i> Os valores de radiância e reflectância são relativos (baseados em 0-255 e na referência branca).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba Jogo (Trunfo) -->
+        <div id="game" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🃏 Trunfo: Satélites e Sensores</h2>
+            <div class="bg-slate-800 p-4 rounded-lg">
+                <div id="gameBoard" class="grid md:grid-cols-2 gap-6">
+                    <!-- Área do jogador -->
+                    <div>
+                        <h3 class="text-lg font-medium mb-2">Sua carta</h3>
+                        <div id="playerCard" class="bg-slate-700 p-4 rounded-lg border-2 border-blue-500"></div>
+                        <div class="mt-4">
+                            <p class="mb-2">Escolha um atributo:</p>
+                            <div id="attributeButtons" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                    <!-- Área do computador -->
+                    <div>
+                        <h3 class="text-lg font-medium mb-2">Carta do computador</h3>
+                        <div id="computerCard" class="bg-slate-700 p-4 rounded-lg border-2 border-red-500"></div>
+                    </div>
+                </div>
+                <div id="gameMessage" class="mt-4 text-center text-lg font-bold"></div>
+                <button id="newGameBtn" class="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Nova rodada</button>
+            </div>
+        </div>
+
+        <!-- Aba Laboratório de Espalhamento -->
+        <div id="lab" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🔬 Simulação de Espalhamento</h2>
+            <div class="bg-slate-800 p-4 rounded-lg">
+                <canvas id="scatteringCanvas" width="600" height="400" class="w-full border border-gray-600 rounded"></canvas>
+                <div class="mt-4">
+                    <label class="block mb-2">Tamanho da partícula (µm): <span id="particleSizeValue">0.5</span></label>
+                    <input type="range" id="particleSizeSlider" min="0.1" max="3" step="0.1" value="0.5" class="w-full">
+                </div>
+                <p id="scatteringType" class="mt-2 text-sm bg-slate-700 p-2 rounded"></p>
+            </div>
+        </div>
+
+        <!-- Aba Explorador do Espectro -->
+        <div id="spectrum" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🌈 Espectro Eletromagnético</h2>
+            <div class="bg-slate-800 p-4 rounded-lg">
+                <div class="flex h-16 rounded overflow-hidden cursor-pointer">
+                    <div class="flex-1 bg-purple-700 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="gama">Gama</div>
+                    <div class="flex-1 bg-indigo-600 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="x">Raio-X</div>
+                    <div class="flex-1 bg-blue-600 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="uv">UV</div>
+                    <div class="flex-1 bg-gradient-to-r from-violet-500 to-red-500 hover:opacity-80 flex items-center justify-center text-xs font-bold text-black" data-band="visivel">Visível</div>
+                    <div class="flex-1 bg-orange-600 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="iv">IV</div>
+                    <div class="flex-1 bg-yellow-600 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="micro">Micro</div>
+                    <div class="flex-1 bg-amber-500 hover:opacity-80 flex items-center justify-center text-xs font-bold" data-band="radio">Rádio</div>
+                </div>
+                <div id="bandInfo" class="mt-4 bg-slate-700 p-4 rounded hidden"></div>
+            </div>
+        </div>
+
+        <!-- Aba Curiosidades -->
+        <div id="curiosity" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">❓ Curiosidades do Cotidiano</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="ceu">
+                    <h3 class="font-bold text-lg">🔵 Por que o céu é azul?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Espalhamento Rayleigh: a luz solar interage com moléculas de ar; as componentes de menor comprimento de onda (azul) são mais espalhadas.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="por-do-sol">
+                    <h3 class="font-bold text-lg">🟠 Por que o pôr do sol é alaranjado?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Ao entardecer, a luz atravessa mais atmosfera; o azul é espalhado, restando os tons alaranjados.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="vegetacao">
+                    <h3 class="font-bold text-lg">🌿 Por que a vegetação saudável aparece vermelha em composições de infravermelho?</h3>
+                    <p class="mt-2 text-gray-300 hidden">A clorofila reflete fortemente no infravermelho próximo; em composições que usam IV no canal vermelho, a vegetação fica vermelha.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="nuvens">
+                    <h3 class="font-bold text-lg">☁️ Por que as nuvens são brancas?</h3>
+                    <p class="mt-2 text-gray-300 hidden">As gotículas de água são grandes (espalhamento não-seletivo), espalham igualmente todos os comprimentos de onda.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba Glossário -->
+        <div id="glossary" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">📖 Glossário Ilustrado</h2>
+            <div class="grid gap-4 md:grid-cols-3" id="glossaryList"></div>
+        </div>
+
+        <!-- Aba Grandezas Radiométricas -->
+        <div id="quantities" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">📊 Grandezas Radiométricas</h2>
+            <div class="grid gap-4 md:grid-cols-2" id="quantitiesList"></div>
+        </div>
+    </main>
+
+    <!-- Rodapé com informações institucionais (versão compacta) -->
+    <footer class="bg-slate-800 mt-8 py-4 text-center text-sm text-gray-400">
+        <p>© Sensoriamento Remoto e SIG • Agronomia UFT Gurupi • Prof. Dr. Jacinto Pereira Santos</p>
+        <p class="text-xs mt-1">Ferramenta didática • Instalável como PWA</p>
+    </footer>
+
+    <script>
+        // ==================== DADOS ESTÁTICOS ====================
+
+        // Cartas para o jogo
+        const cards = [
+            { id: 1, nome: 'Landsat 8', resolucao: 30, bandas: 11, revisit: 16, ano: 2013 },
+            { id: 2, nome: 'Sentinel-2', resolucao: 10, bandas: 13, revisit: 5, ano: 2015 },
+            { id: 3, nome: 'MODIS', resolucao: 250, bandas: 36, revisit: 1, ano: 1999 },
+            { id: 4, nome: 'CBERS-4', resolucao: 20, bandas: 7, revisit: 26, ano: 2014 },
+            { id: 5, nome: 'RapidEye', resolucao: 5, bandas: 5, revisit: 5.5, ano: 2008 },
+            { id: 6, nome: 'WorldView-3', resolucao: 0.31, bandas: 29, revisit: 1, ano: 2014 },
+        ];
+
+        // Grandezas radiométricas
+        const quantities = [
+            { nome: 'Número Digital (DN)', definicao: 'Valor bruto registrado pelo sensor, sem correção.', unidade: 'adimensional (0-255, 0-1023...)', obtencao: 'Leitura direta do pixel.', aplicacao: 'Base para conversões, visualização.' },
+            { nome: 'Radiância espectral', definicao: 'Fluxo radiante por unidade de área, ângulo sólido e comprimento de onda.', unidade: 'W/m²/sr/μm', obtencao: 'Conversão de DN com coeficientes de calibração.', aplicacao: 'Estimativa de reflectância, temperatura.' },
+            { nome: 'Reflectância', definicao: 'Razão entre radiância refletida e irradiância incidente.', unidade: 'adimensional (0-1)', obtencao: 'Radiância / (irradiância solar/π) com correção.', aplicacao: 'Índices de vegetação, classificação.' },
+            { nome: 'Irradiância', definicao: 'Potência radiante incidente por unidade de área.', unidade: 'W/m²', obtencao: 'Medida com sensores ou modelagem.', aplicacao: 'Balanço de radiação.' },
+            { nome: 'Emitância', definicao: 'Potência radiante emitida por unidade de área.', unidade: 'W/m²', obtencao: 'Relacionada à temperatura (Lei de Stefan-Boltzmann).', aplicacao: 'Sensoriamento térmico.' },
+            { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' }
+        ];
+
+        // Termos do glossário
+        const glossaryTerms = [
+            { termo: 'Radiação eletromagnética', definicao: 'Forma de energia que se propaga no espaço na forma de ondas elétricas e magnéticas.' },
+            { termo: 'Modelo ondulatório', definicao: 'Descreve a radiação como onda, com comprimento de onda, frequência e amplitude.' },
+            { termo: 'Modelo corpuscular', definicao: 'Descreve a radiação como partículas (fótons) com energia quantizada.' },
+            { termo: 'Absorção', definicao: 'Processo pelo qual a energia radiante é retida por um material.' },
+            { termo: 'Transmissão', definicao: 'Passagem da radiação através de um meio.' },
+            { termo: 'Reflexão', definicao: 'Mudança de direção da radiação ao atingir uma superfície.' },
+            { termo: 'Reflectância', definicao: 'Razão entre a radiação refletida e a incidente.' }
+        ];
+
+        // Informações do espectro
+        const bandInfo = {
+            gama: { fontes: 'Núcleos atômicos, explosões solares', interacao: 'Absorvido pela atmosfera', aplicacao: 'Astronomia, medicina' },
+            x: { fontes: 'Átomos excitados, raios-X', interacao: 'Absorvido pela atmosfera', aplicacao: 'Radiografia, astronomia' },
+            uv: { fontes: 'Sol, lâmpadas UV', interacao: 'Parcialmente absorvido (ozônio)', aplicacao: 'Detecção de hidrocarbonetos' },
+            visivel: { fontes: 'Sol, luz artificial', interacao: 'Espalhamento Rayleigh, absorção por pigmentos', aplicacao: 'Sensoriamento óptico, cores' },
+            iv: { fontes: 'Corpos aquecidos', interacao: 'Absorção por vapor d\'água, CO2', aplicacao: 'Temperatura da superfície, vegetação' },
+            micro: { fontes: 'Magnetrons, corpos frios', interacao: 'Transmite nuvens', aplicacao: 'Radar, radiometria de micro-ondas' },
+            radio: { fontes: 'Estrelas, rádio-fontes', interacao: 'Pouca interação', aplicacao: 'Rádio astronomia, comunicações' }
+        };
+
+        // ==================== FUNÇÕES AUXILIARES ====================
+
+        // Navegação por abas
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // ==================== MÓDULO CÂMERA ====================
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const backBtn = document.getElementById('backToVideoBtn');
+        const pointsListDiv = document.getElementById('pointsList');
+        const whiteRefInfo = document.getElementById('whiteRefInfo');
+        const setWhiteRefBtn = document.getElementById('setWhiteRefBtn');
+        const clearPointsBtn = document.getElementById('clearPointsBtn');
+
+        let stream = null;
+        let imageCaptured = false;
+        let points = [];
+        let whiteRef = null;
+        let lastSelectedPoint = null;
+
+        // Iniciar câmera
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.classList.remove('hidden');
+                canvas.classList.add('hidden');
+                backBtn.classList.add('hidden');
+                captureBtn.classList.remove('hidden');
+                imageCaptured = false;
+            } catch (err) {
+                alert('Não foi possível acessar a câmera. Verifique as permissões.');
+            }
+        }
+        startCamera();
+
+        captureBtn.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            video.classList.add('hidden');
+            canvas.classList.remove('hidden');
+            backBtn.classList.remove('hidden');
+            captureBtn.classList.add('hidden');
+            imageCaptured = true;
+        });
+
+        backBtn.addEventListener('click', () => {
+            video.classList.remove('hidden');
+            canvas.classList.add('hidden');
+            backBtn.classList.add('hidden');
+            captureBtn.classList.remove('hidden');
+            imageCaptured = false;
+        });
+
+        canvas.addEventListener('click', (e) => {
+            if (!imageCaptured) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            const ctx = canvas.getContext('2d');
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            const point = { x: Math.round(x), y: Math.round(y), r: pixel[0], g: pixel[1], b: pixel[2] };
+            points.push(point);
+            lastSelectedPoint = point;
+            updatePointsList();
+            drawMarkers(ctx);
+            setWhiteRefBtn.classList.remove('hidden');
+        });
+
+        function drawMarkers(ctx) {
+            points.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
+                ctx.strokeStyle = 'yellow';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,0,0.3)';
+                ctx.fill();
+            });
+        }
+
+        function updatePointsList() {
+            if (points.length === 0) {
+                pointsListDiv.innerHTML = '<p class="text-gray-400">Nenhum ponto selecionado.</p>';
+                return;
+            }
+            let html = '';
+            points.forEach((p, idx) => {
+                const radR = (p.r / 255).toFixed(3);
+                const radG = (p.g / 255).toFixed(3);
+                const radB = (p.b / 255).toFixed(3);
+                let refText = '';
+                if (whiteRef) {
+                    const refR = (p.r / whiteRef.r).toFixed(3);
+                    const refG = (p.g / whiteRef.g).toFixed(3);
+                    const refB = (p.b / whiteRef.b).toFixed(3);
+                    refText = `<br>Refl. relativa: R=${refR} G=${refG} B=${refB}`;
+                }
+                html += `<div class="bg-slate-700 p-2 rounded text-sm">
+                    <strong>Ponto ${idx+1}</strong> (${p.x},${p.y})<br>
+                    DN: R=${p.r} G=${p.g} B=${p.b}<br>
+                    Radiância relativa: R=${radR} G=${radG} B=${radB}${refText}
+                </div>`;
+            });
+            pointsListDiv.innerHTML = html;
+        }
+
+        setWhiteRefBtn.addEventListener('click', () => {
+            if (lastSelectedPoint) {
+                whiteRef = lastSelectedPoint;
+                whiteRefInfo.innerHTML = `<p><i class="fas fa-check-circle text-green-300"></i> Referência branca: R=${whiteRef.r} G=${whiteRef.g} B=${whiteRef.b}</p>`;
+                whiteRefInfo.classList.remove('hidden');
+                setWhiteRefBtn.classList.add('hidden');
+                updatePointsList();
+            }
+        });
+
+        clearPointsBtn.addEventListener('click', () => {
+            points = [];
+            whiteRef = null;
+            lastSelectedPoint = null;
+            whiteRefInfo.classList.add('hidden');
+            setWhiteRefBtn.classList.add('hidden');
+            updatePointsList();
+            if (imageCaptured) {
+                const ctx = canvas.getContext('2d');
+                // Para simplificar, avisamos que os marcadores não serão apagados sem recapturar.
+                alert('Para remover os marcadores, recapture a imagem.');
+            }
+        });
+
+        // ==================== JOGO DO TRUNFO ====================
+        let playerCard, computerCard;
+        const playerCardDiv = document.getElementById('playerCard');
+        const computerCardDiv = document.getElementById('computerCard');
+        const attributeButtonsDiv = document.getElementById('attributeButtons');
+        const gameMessageDiv = document.getElementById('gameMessage');
+        const newGameBtn = document.getElementById('newGameBtn');
+
+        function drawCards() {
+            const shuffled = [...cards].sort(() => Math.random() - 0.5);
+            playerCard = shuffled[0];
+            computerCard = shuffled[1];
+            displayCard(playerCard, playerCardDiv, 'blue');
+            displayCard(computerCard, computerCardDiv, 'red');
+            attributeButtonsDiv.innerHTML = '';
+            gameMessageDiv.innerHTML = '';
+            const attributes = [
+                { nome: 'Resolução (m)', chave: 'resolucao' },
+                { nome: 'Bandas', chave: 'bandas' },
+                { nome: 'Revisita (dias)', chave: 'revisit' },
+                { nome: 'Ano de lançamento', chave: 'ano' }
+            ];
+            attributes.forEach(attr => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm';
+                btn.textContent = attr.nome;
+                btn.addEventListener('click', () => compareAttribute(attr.chave));
+                attributeButtonsDiv.appendChild(btn);
+            });
+        }
+
+        function displayCard(card, element, borderColor) {
+            element.innerHTML = `
+                <p class="font-bold text-lg">${card.nome}</p>
+                <p>Resolução: ${card.resolucao} m</p>
+                <p>Bandas: ${card.bandas}</p>
+                <p>Revisita: ${card.revisit} dias</p>
+                <p>Ano: ${card.ano}</p>
+            `;
+            element.style.borderColor = borderColor;
+        }
+
+        function compareAttribute(attr) {
+            let playerVal = playerCard[attr];
+            let compVal = computerCard[attr];
+            let result = '';
+            if (playerVal > compVal) {
+                result = 'Você venceu!';
+            } else if (playerVal < compVal) {
+                result = 'Computador venceu!';
+            } else {
+                result = 'Empate!';
+            }
+            gameMessageDiv.innerHTML = `${result} (${playerVal} vs ${compVal})`;
+        }
+
+        newGameBtn.addEventListener('click', drawCards);
+        drawCards();
+
+        // ==================== LABORATÓRIO DE ESPALHAMENTO ====================
+        const scatteringCanvas = document.getElementById('scatteringCanvas');
+        const particleSlider = document.getElementById('particleSizeSlider');
+        const particleSizeValue = document.getElementById('particleSizeValue');
+        const scatteringType = document.getElementById('scatteringType');
+
+        function drawScattering() {
+            const size = parseFloat(particleSlider.value);
+            particleSizeValue.textContent = size.toFixed(1);
+            const ctx = scatteringCanvas.getContext('2d');
+            const w = scatteringCanvas.width, h = scatteringCanvas.height;
+            ctx.clearRect(0, 0, w, h);
+            
+            const grd = ctx.createLinearGradient(0, 0, 0, h);
+            grd.addColorStop(0, '#87CEEB');
+            grd.addColorStop(1, '#F0F8FF');
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, w, h);
+
+            const numParticles = 80;
+            for (let i = 0; i < numParticles; i++) {
+                const x = Math.random() * w;
+                const y = Math.random() * h;
+                const radius = size * 3;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                
+                if (size < 0.5) {
+                    ctx.fillStyle = 'rgba(0,0,255,0.3)';
+                } else if (size < 1.5) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                } else {
+                    ctx.fillStyle = 'rgba(128,128,128,0.7)';
+                }
+                ctx.fill();
+            }
+
+            if (size < 0.5) {
+                scatteringType.textContent = 'Espalhamento Rayleigh (partículas pequenas) → céu azul';
+            } else if (size < 1.5) {
+                scatteringType.textContent = 'Espalhamento Mie (partículas médias) → nuvens brancas';
+            } else {
+                scatteringType.textContent = 'Espalhamento não-seletivo (partículas grandes) → névoa cinza';
+            }
+        }
+
+        particleSlider.addEventListener('input', drawScattering);
+        drawScattering();
+
+        // ==================== EXPLORADOR DO ESPECTRO ====================
+        const bandDivs = document.querySelectorAll('[data-band]');
+        const bandInfoDiv = document.getElementById('bandInfo');
+
+        bandDivs.forEach(div => {
+            div.addEventListener('click', () => {
+                const band = div.dataset.band;
+                const info = bandInfo[band];
+                if (info) {
+                    bandInfoDiv.innerHTML = `
+                        <h3 class="font-bold text-lg">${band.toUpperCase()}</h3>
+                        <p><strong>Fontes:</strong> ${info.fontes}</p>
+                        <p><strong>Interação com a atmosfera:</strong> ${info.interacao}</p>
+                        <p><strong>Aplicações:</strong> ${info.aplicacao}</p>
+                    `;
+                    bandInfoDiv.classList.remove('hidden');
+                }
+            });
+        });
+
+        // ==================== CURIOSIDADES ====================
+        const curiosityCards = document.querySelectorAll('[data-curiosity]');
+        curiosityCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const p = card.querySelector('p');
+                p.classList.toggle('hidden');
+            });
+        });
+
+        // ==================== GLOSSÁRIO ====================
+        const glossaryList = document.getElementById('glossaryList');
+        glossaryTerms.forEach(term => {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-800 p-3 rounded-lg';
+            div.innerHTML = `<h3 class="font-bold text-cyan-400">${term.termo}</h3><p class="text-sm mt-1">${term.definicao}</p>`;
+            glossaryList.appendChild(div);
+        });
+
+        // ==================== GRANDEZAS ====================
+        const quantitiesList = document.getElementById('quantitiesList');
+        quantities.forEach(q => {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-800 p-4 rounded-lg';
+            div.innerHTML = `
+                <h3 class="font-bold text-xl text-cyan-400">${q.nome}</h3>
+                <p class="text-sm mt-1"><strong>Definição:</strong> ${q.definicao}</p>
+                <p class="text-sm"><strong>Unidade:</strong> ${q.unidade}</p>
+                <p class="text-sm"><strong>Obtenção:</strong> ${q.obtencao}</p>
+                <p class="text-sm"><strong>Aplicação:</strong> ${q.aplicacao}</p>
+            `;
+            quantitiesList.appendChild(div);
+        });
+
+        // ==================== PWA: service worker (opcional) ====================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('Service worker não registrado:', err));
+            });
+        }
+    </script>
+    <!-- Service worker básico para PWA (opcional) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(console.error);
+        }
+    </script>
+</body>
+</html>
