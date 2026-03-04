@@ -104,7 +104,8 @@
                 </div>
                 <div id="quizResult" class="hidden text-center">
                     <p class="text-2xl font-bold text-green-400 mb-4">Quiz concluído!</p>
-                    <p class="text-xl">Você acertou <span id="scoreDisplay">0</span> de 30</p>
+                    <p class="text-xl">Acertos: <span id="correctCount">0</span> / 30</p>
+                    <p class="text-xl text-red-400">Erros: <span id="errorCount">0</span> / 30</p>
                     <button id="quizRestartBtn" class="mt-6 bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded">Recomeçar</button>
                 </div>
             </div>
@@ -212,14 +213,50 @@
             { termo: 'Reflectância', definicao: 'Razão entre a radiação refletida e a incidente.' }
         ];
 
+        // Informações do espectro com curiosidades adicionadas
         const bandInfo = {
-            gama: { fontes: 'Núcleos atômicos, explosões solares', interacao: 'Absorvido pela atmosfera', aplicacao: 'Astronomia, medicina' },
-            x: { fontes: 'Átomos excitados, raios-X', interacao: 'Absorvido pela atmosfera', aplicacao: 'Radiografia, astronomia' },
-            uv: { fontes: 'Sol, lâmpadas UV', interacao: 'Parcialmente absorvido (ozônio)', aplicacao: 'Detecção de hidrocarbonetos' },
-            visivel: { fontes: 'Sol, luz artificial', interacao: 'Espalhamento Rayleigh, absorção por pigmentos', aplicacao: 'Sensoriamento óptico, cores' },
-            iv: { fontes: 'Corpos aquecidos', interacao: 'Absorção por vapor d\'água, CO2', aplicacao: 'Temperatura da superfície, vegetação' },
-            micro: { fontes: 'Magnetrons, corpos frios', interacao: 'Transmite nuvens', aplicacao: 'Radar, radiometria de micro-ondas' },
-            radio: { fontes: 'Estrelas, rádio-fontes', interacao: 'Pouca interação', aplicacao: 'Rádio astronomia, comunicações' }
+            gama: { 
+                fontes: 'Núcleos atômicos, explosões solares', 
+                interacao: 'Absorvido pela atmosfera', 
+                aplicacao: 'Astronomia, medicina',
+                curiosidade: 'Os raios gama possuem tanta energia que são capazes de atravessar materiais densos e são usados para detectar elementos radioativos no espaço e até em estudos geológicos por sensoriamento remoto aerotransportado.'
+            },
+            x: { 
+                fontes: 'Átomos excitados, raios-X', 
+                interacao: 'Absorvido pela atmosfera', 
+                aplicacao: 'Radiografia, astronomia',
+                curiosidade: 'Sensores de raios X são usados para analisar a composição química de rochas em missões espaciais, permitindo estudar a geologia de planetas sem coletar amostras físicas.'
+            },
+            uv: { 
+                fontes: 'Sol, lâmpadas UV', 
+                interacao: 'Parcialmente absorvido (ozônio)', 
+                aplicacao: 'Detecção de hidrocarbonetos',
+                curiosidade: 'Grande parte da radiação ultravioleta do Sol é bloqueada pela camada de ozônio; sem essa proteção natural, a vida na Terra provavelmente não existiria.'
+            },
+            visivel: { 
+                fontes: 'Sol, luz artificial', 
+                interacao: 'Espalhamento Rayleigh, absorção por pigmentos', 
+                aplicacao: 'Sensoriamento óptico, cores',
+                curiosidade: 'A faixa visível corresponde à parte do espectro onde o Sol emite mais energia e onde os olhos humanos são mais sensíveis, resultado de milhões de anos de evolução.'
+            },
+            iv: { 
+                fontes: 'Corpos aquecidos', 
+                interacao: 'Absorção por vapor d\'água, CO2', 
+                aplicacao: 'Temperatura da superfície, vegetação',
+                curiosidade: 'Infravermelho Próximo (NIR): A vegetação saudável reflete muito no infravermelho próximo, permitindo que satélites detectem a saúde das plantas antes que qualquer alteração seja visível a olho nu. Infravermelho de Ondas Curtas (SWIR) é extremamente sensível à umidade, sendo usado para detectar estresse hídrico. Infravermelho Termal (TIR): sensores térmicos medem a temperatura da superfície terrestre, detectando ilhas de calor e correntes oceânicas.'
+            },
+            micro: { 
+                fontes: 'Magnetrons, corpos frios', 
+                interacao: 'Transmite nuvens', 
+                aplicacao: 'Radar, radiometria de micro-ondas',
+                curiosidade: 'As micro-ondas conseguem atravessar nuvens, chuva e até parte da vegetação, permitindo que radares de satélite observem a Terra em qualquer condição climática, dia ou noite.'
+            },
+            radio: { 
+                fontes: 'Estrelas, rádio-fontes', 
+                interacao: 'Pouca interação', 
+                aplicacao: 'Rádio astronomia, comunicações',
+                curiosidade: 'Ondas de rádio são usadas para comunicação com satélites, permitindo que dados de sensoriamento remoto sejam transmitidos da órbita até estações terrestres.'
+            }
         };
 
         // Quiz: 30 perguntas (formato: pergunta, opções A-D, resposta correta 'A','B','C','D')
@@ -472,7 +509,7 @@
         // ---------- QUIZ ----------
         let currentQuizIndex = 0;
         let userAnswers = new Array(quizQuestions.length).fill(null);
-        let quizLocked = false; // quando responder, bloqueia as opções
+        let quizLocked = false;
 
         const quizQuestionEl = document.getElementById('quizQuestion');
         const quizOptionsEl = document.getElementById('quizOptions');
@@ -482,14 +519,17 @@
         const quizNextBtn = document.getElementById('quizNextBtn');
         const quizContainer = document.getElementById('quizContainer');
         const quizResult = document.getElementById('quizResult');
-        const scoreDisplay = document.getElementById('scoreDisplay');
+        const correctCountSpan = document.getElementById('correctCount');
+        const errorCountSpan = document.getElementById('errorCount');
         const quizRestartBtn = document.getElementById('quizRestartBtn');
 
         function renderQuiz() {
             if (currentQuizIndex >= quizQuestions.length) {
                 // fim do quiz
                 const correctCount = userAnswers.filter((ans, idx) => ans === quizQuestions[idx].correct).length;
-                scoreDisplay.textContent = correctCount;
+                const errorCount = 30 - correctCount;
+                correctCountSpan.textContent = correctCount;
+                errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
                 return;
@@ -512,13 +552,6 @@
                 const isSelected = userAnswers[currentQuizIndex] === opt.label;
                 const isCorrect = q.correct === opt.label;
                 let extraClass = 'bg-slate-700 hover:bg-slate-600';
-                if (quizLocked && isSelected) {
-                    extraClass = isCorrect ? 'correct' : 'incorrect';
-                } else if (quizLocked && isCorrect) {
-                    extraClass = 'correct'; // mostra a correta mesmo se não selecionada? Opcional, mas vamos mostrar só a selecionada e a correta? Vou mostrar a correta também para aprendizado.
-                    extraClass = 'correct';
-                }
-                // Se a resposta estiver errada e for a selecionada, fica vermelha; se for a correta, fica verde.
                 if (quizLocked) {
                     if (opt.label === q.correct) extraClass = 'correct';
                     if (isSelected && !isCorrect) extraClass = 'incorrect';
@@ -529,7 +562,6 @@
             });
             quizOptionsEl.innerHTML = html;
 
-            // Adiciona eventos às opções
             document.querySelectorAll('.quiz-option').forEach(optDiv => {
                 optDiv.addEventListener('click', () => {
                     if (quizLocked) return;
@@ -538,11 +570,10 @@
                     const isCorrect = opt === q.correct;
                     quizFeedbackEl.textContent = isCorrect ? '✅ Correto!' : '❌ Incorreto.';
                     quizLocked = true;
-                    renderQuiz(); // re-render para mostrar cores
+                    renderQuiz();
                 });
             });
 
-            // Atualiza botões anterior/próximo
             quizPrevBtn.disabled = currentQuizIndex === 0;
             if (currentQuizIndex === quizQuestions.length - 1) {
                 quizNextBtn.textContent = 'Finalizar';
@@ -567,9 +598,10 @@
                 quizFeedbackEl.textContent = '';
                 renderQuiz();
             } else {
-                // finalizar
                 const correctCount = userAnswers.filter((ans, idx) => ans === quizQuestions[idx].correct).length;
-                scoreDisplay.textContent = correctCount;
+                const errorCount = 30 - correctCount;
+                correctCountSpan.textContent = correctCount;
+                errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
             }
@@ -583,7 +615,6 @@
             renderQuiz();
         });
 
-        // Inicializa quiz
         renderQuiz();
 
         // ---------- LABORATÓRIO DE ESPALHAMENTO ----------
@@ -634,7 +665,7 @@
         particleSlider.addEventListener('input', drawScattering);
         drawScattering();
 
-        // ---------- ESPECTRO ----------
+        // ---------- ESPECTRO (com curiosidades) ----------
         const bandDivs = document.querySelectorAll('[data-band]');
         const bandInfoDiv = document.getElementById('bandInfo');
         bandDivs.forEach(div => {
@@ -647,6 +678,7 @@
                         <p><strong>Fontes:</strong> ${info.fontes}</p>
                         <p><strong>Interação:</strong> ${info.interacao}</p>
                         <p><strong>Aplicações:</strong> ${info.aplicacao}</p>
+                        <p class="mt-2 text-cyan-300"><strong>Curiosidade:</strong> ${info.curiosidade}</p>
                     `;
                     bandInfoDiv.classList.remove('hidden');
                 }
