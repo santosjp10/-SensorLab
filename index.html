@@ -18,11 +18,12 @@
         .glossary-term { margin-bottom: 1rem; }
         .glossary-term h3 { color: #22d3ee; }
         .glossary-term ul { list-style-type: disc; margin-left: 1.5rem; margin-top: 0.25rem; }
+        .view-tab-btn.active { background-color: #334155; color: white; }
     </style>
 </head>
 <body class="bg-slate-900 text-gray-100 font-sans antialiased">
 
-    <!-- Cabeçalho com abas (duas linhas de quatro) -->
+    <!-- Cabeçalho com abas -->
     <header class="bg-slate-800 shadow-lg sticky top-0 z-10">
         <div class="container mx-auto px-4 py-3">
             <h1 class="text-2xl md:text-3xl font-bold text-center text-cyan-400">🛰️ SensorLab – UFT</h1>
@@ -39,6 +40,10 @@
                 <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="curiosity">❓ Curiosidades</button>
                 <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="glossary">📖 Glossário</button>
                 <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="quantities">📊 Grandezas</button>
+            </nav>
+            <!-- Terceira linha de abas -->
+            <nav class="flex flex-wrap justify-center gap-2 mt-2 text-sm md:text-base">
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="indices">🌱 Índices</button>
             </nav>
         </div>
     </header>
@@ -72,7 +77,7 @@
             </div>
         </div>
 
-        <!-- Aba Jogo (Trunfo) -->
+        <!-- Aba Jogo -->
         <div id="game" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🃏 Trunfo: Satélites e Sensores</h2>
             <div class="bg-slate-800 p-4 rounded-lg">
@@ -118,7 +123,7 @@
             </div>
         </div>
 
-        <!-- Aba Laboratório de Espalhamento -->
+        <!-- Aba Espalhamento -->
         <div id="lab" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🔬 Simulação de Espalhamento</h2>
             <div class="bg-slate-800 p-4 rounded-lg">
@@ -131,7 +136,7 @@
             </div>
         </div>
 
-        <!-- Aba Explorador do Espectro (ativa por padrão) -->
+        <!-- Aba Espectro (ativa por padrão) -->
         <div id="spectrum" class="tab-content active">
             <h2 class="text-2xl font-semibold mb-4">🌈 Espectro Eletromagnético</h2>
             <div class="bg-slate-800 p-4 rounded-lg">
@@ -171,16 +176,160 @@
             </div>
         </div>
 
-        <!-- Aba Glossário (com todos os termos solicitados) -->
+        <!-- Aba Glossário -->
         <div id="glossary" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">📖 Glossário Ilustrado</h2>
             <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" id="glossaryList"></div>
         </div>
 
-        <!-- Aba Grandezas Radiométricas -->
+        <!-- Aba Grandezas -->
         <div id="quantities" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">📊 Grandezas Radiométricas</h2>
             <div class="grid gap-4 md:grid-cols-2" id="quantitiesList"></div>
+        </div>
+
+        <!-- Aba Índices de Vegetação -->
+        <div id="indices" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🌱 Composição RGB e Índices de Vegetação</h2>
+            
+            <div class="bg-blue-900/20 p-3 rounded-lg mb-4 text-sm">
+                <p><i class="fas fa-info-circle text-blue-300"></i> Bandas do Landsat 5 TM carregadas automaticamente da pasta <code>/bands</code>. Use os controles abaixo para explorar diferentes composições e índices.</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Painel de Controles -->
+                <div class="bg-slate-800 p-4 rounded-lg space-y-4">
+                    <h3 class="text-xl font-semibold">Controles</h3>
+                    
+                    <!-- Status das bandas -->
+                    <div id="bandStatus" class="bg-slate-700 p-3 rounded text-sm">
+                        <p><i class="fas fa-spinner fa-spin"></i> Aguardando carregamento das bandas...</p>
+                    </div>
+                    
+                    <!-- Seleção de composição RGB -->
+                    <div class="border-t border-slate-700 pt-4">
+                        <h3 class="text-lg font-semibold mb-3">Composição RGB</h3>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-xs">Canal R</label>
+                                <select id="redChannel" class="bg-slate-700 text-sm p-1 rounded w-full">
+                                    <option value="3">Banda 3 (Vermelho)</option>
+                                    <option value="4">Banda 4 (NIR)</option>
+                                    <option value="2">Banda 2 (Verde)</option>
+                                    <option value="1">Banda 1 (Azul)</option>
+                                    <option value="5">Banda 5 (SWIR)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs">Canal G</label>
+                                <select id="greenChannel" class="bg-slate-700 text-sm p-1 rounded w-full">
+                                    <option value="2">Banda 2 (Verde)</option>
+                                    <option value="3">Banda 3 (Vermelho)</option>
+                                    <option value="4">Banda 4 (NIR)</option>
+                                    <option value="1">Banda 1 (Azul)</option>
+                                    <option value="5">Banda 5 (SWIR)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs">Canal B</label>
+                                <select id="blueChannel" class="bg-slate-700 text-sm p-1 rounded w-full">
+                                    <option value="1">Banda 1 (Azul)</option>
+                                    <option value="2">Banda 2 (Verde)</option>
+                                    <option value="3">Banda 3 (Vermelho)</option>
+                                    <option value="4">Banda 4 (NIR)</option>
+                                    <option value="5">Banda 5 (SWIR)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="applyRGBBtn" class="mt-3 bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm w-full" disabled>
+                            Aplicar composição
+                        </button>
+                    </div>
+                    
+                    <!-- Índices de vegetação -->
+                    <div class="border-t border-slate-700 pt-4">
+                        <h3 class="text-lg font-semibold mb-3">Índices de Vegetação</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="index-btn bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded text-sm" data-index="ndvi" disabled>
+                                NDVI
+                            </button>
+                            <button class="index-btn bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded text-sm" data-index="savi" disabled>
+                                SAVI
+                            </button>
+                            <button class="index-btn bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded text-sm" data-index="evi" disabled>
+                                EVI
+                            </button>
+                            <button class="index-btn bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded text-sm" data-index="ndwi" disabled>
+                                NDWI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visualização -->
+                <div class="bg-slate-800 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-3">Visualização</h3>
+                    
+                    <!-- Abas de visualização -->
+                    <div class="flex border-b border-slate-700 mb-4">
+                        <button class="view-tab-btn px-4 py-2 text-sm font-medium active" data-view="rgb">RGB</button>
+                        <button class="view-tab-btn px-4 py-2 text-sm font-medium" data-view="index">Índice</button>
+                        <button class="view-tab-btn px-4 py-2 text-sm font-medium" data-view="histogram">Histograma</button>
+                    </div>
+                    
+                    <!-- Visualização RGB -->
+                    <div id="viewRGB" class="view-content">
+                        <div class="bg-slate-900 rounded-lg overflow-hidden aspect-video flex items-center justify-center">
+                            <canvas id="rgbCanvas" width="400" height="300" class="w-full h-auto"></canvas>
+                        </div>
+                        <p class="text-xs text-center mt-2 text-gray-400">
+                            Composição: <span id="rgbDescription">Vermelho (B3), Verde (B2), Azul (B1)</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Visualização do Índice -->
+                    <div id="viewIndex" class="view-content hidden">
+                        <div class="bg-slate-900 rounded-lg overflow-hidden aspect-video flex items-center justify-center">
+                            <canvas id="indexCanvas" width="400" height="300" class="w-full h-auto"></canvas>
+                        </div>
+                        <div class="mt-2 text-sm">
+                            <p>Índice: <span id="indexName">NDVI</span></p>
+                            <p>Min: <span id="indexMin">0.00</span> | Max: <span id="indexMax">1.00</span> | Média: <span id="indexMean">0.00</span></p>
+                        </div>
+                        <!-- Barra de cores -->
+                        <div class="mt-3 h-6 rounded bg-gradient-to-r from-amber-800 via-green-400 to-green-800 flex">
+                            <div class="w-1/5 h-full" style="background-color: #8B4513;"></div>
+                            <div class="w-1/5 h-full" style="background-color: #CD853F;"></div>
+                            <div class="w-1/5 h-full" style="background-color: #7CCD7C;"></div>
+                            <div class="w-1/5 h-full" style="background-color: #228B22;"></div>
+                            <div class="w-1/5 h-full" style="background-color: #006400;"></div>
+                        </div>
+                        <p class="text-xs text-center mt-1">Solo exposto ← → Vegetação densa</p>
+                    </div>
+                    
+                    <!-- Visualização Histograma -->
+                    <div id="viewHistogram" class="view-content hidden">
+                        <div class="bg-slate-900 rounded-lg p-4 aspect-video flex items-center justify-center">
+                            <canvas id="histogramCanvas" width="400" height="300" class="w-full h-auto"></canvas>
+                        </div>
+                        <p class="text-xs text-center mt-2 text-gray-400">Distribuição dos valores do índice</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informações técnicas -->
+            <div class="mt-6 bg-slate-800 p-4 rounded-lg text-sm">
+                <details>
+                    <summary class="font-semibold cursor-pointer text-cyan-400">📘 Sobre os índices</summary>
+                    <div class="mt-2 space-y-2 text-gray-300">
+                        <p><strong>NDVI</strong> = (NIR - R) / (NIR + R) - Índice de Vegetação por Diferença Normalizada</p>
+                        <p><strong>SAVI</strong> = ((NIR - R) / (NIR + R + L)) * (1 + L) - Índice de Vegetação Ajustado ao Solo (L=0.5)</p>
+                        <p><strong>EVI</strong> = 2.5 * ((NIR - R) / (NIR + 6*R - 7.5*B + 1)) - Índice de Vegetação Melhorado</p>
+                        <p><strong>NDWI</strong> = (G - NIR) / (G + NIR) - Índice de Água por Diferença Normalizada</p>
+                        <p>Os valores dos índices variam de -1 a 1. Vegetação saudável apresenta NDVI > 0.3.</p>
+                    </div>
+                </details>
+            </div>
         </div>
     </main>
 
@@ -191,7 +340,7 @@
     </footer>
 
     <script>
-        // ---------- DADOS ----------
+        // ---------- DADOS (Cards, Quantities, Glossary, BandInfo, QuizQuestions) ----------
         const cards = [
             { id: 1, nome: 'Landsat 8', resolucao: 30, bandas: 11, revisit: 16, ano: 2013 },
             { id: 2, nome: 'Sentinel-2', resolucao: 10, bandas: 13, revisit: 5, ano: 2015 },
@@ -210,59 +359,43 @@
             { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' }
         ];
 
-        // Glossário expandido com todos os termos fornecidos
         const glossaryTerms = [
-            // A
             { termo: 'Absorção', definicao: 'Processo físico no qual a energia da radiação eletromagnética é incorporada pela matéria, sendo convertida em outras formas de energia, como calor ou energia química. Na vegetação, a absorção ocorre principalmente pelos pigmentos fotossintéticos (clorofilas, carotenoides), influenciando diretamente a assinatura espectral das plantas.' },
             { termo: 'Albedo', definicao: 'Razão entre a radiação refletida por uma superfície e a radiação incidente sobre ela. Em áreas agrícolas, o albedo varia conforme tipo de cultura, estágio fenológico, cobertura do solo e umidade.' },
             { termo: 'Assinatura espectral', definicao: 'Padrão característico de reflectância ou emissão de um objeto ao longo do espectro eletromagnético. Culturas agrícolas, solos e água apresentam assinaturas espectrais distintas que permitem sua identificação em imagens de satélite.' },
             { termo: 'Atmosfera', definicao: 'Camada gasosa que envolve a Terra e interfere na propagação da radiação eletromagnética por meio de absorção, espalhamento e transmissão. A atmosfera é composta principalmente por nitrogênio, oxigênio, vapor d’água, dióxido de carbono e aerossóis.' },
-            // B
             { termo: 'Bandas espectrais', definicao: 'Intervalos específicos do espectro eletromagnético detectados por sensores remotos. Exemplos comuns em agricultura incluem: <ul class="list-disc ml-5 mt-1"><li>Azul (≈450 nm)</li><li>Verde (≈550 nm)</li><li>Vermelho (≈650 nm)</li><li>Infravermelho próximo – NIR (≈800–900 nm)</li><li>Infravermelho de ondas curtas – SWIR (≈1600–2200 nm)</li></ul>' },
-            // C
             { termo: 'Calibração radiométrica', definicao: 'Processo de ajuste dos dados do sensor para converter valores digitais em grandezas físicas reais, como radiância ou reflectância.' },
             { termo: 'Comprimento de onda (λ)', definicao: 'Distância entre dois picos consecutivos de uma onda eletromagnética. É geralmente medido em micrômetros (µm) ou nanômetros (nm).' },
             { termo: 'Corpo negro', definicao: 'Objeto ideal que absorve toda a radiação incidente e emite energia de acordo com sua temperatura. O conceito é fundamental para compreender a emissão térmica na faixa do infravermelho termal.' },
-            // D
             { termo: 'Difração', definicao: 'Desvio da propagação da radiação quando ela encontra obstáculos ou aberturas comparáveis ao seu comprimento de onda.' },
             { termo: 'Dispersão', definicao: 'Separação da radiação eletromagnética em diferentes comprimentos de onda, como ocorre quando a luz branca passa por um prisma.' },
             { termo: 'DN (Digital Number)', definicao: 'Valor numérico registrado pelo sensor que representa a intensidade da radiação detectada.' },
-            // E
             { termo: 'Emissão', definicao: 'Processo pelo qual um corpo libera energia na forma de radiação eletromagnética devido à sua temperatura.' },
             { termo: 'Energia eletromagnética', definicao: 'Forma de energia transportada por ondas eletromagnéticas, caracterizadas por frequência e comprimento de onda.' },
             { termo: 'Espalhamento', definicao: 'Desvio da radiação ao interagir com partículas ou moléculas da atmosfera. Tipos principais: <ul class="list-disc ml-5 mt-1"><li><strong>Rayleigh</strong>: partículas menores que o comprimento de onda (responsável pela cor azul do céu)</li><li><strong>Mie</strong>: partículas com tamanho semelhante ao comprimento de onda</li><li><strong>Não seletivo</strong>: partículas muito maiores (ex.: nuvens)</li></ul>' },
             { termo: 'Espectro eletromagnético', definicao: 'Conjunto de todas as frequências ou comprimentos de onda da radiação eletromagnética.' },
-            // F
             { termo: 'Frequência (ν)', definicao: 'Número de ciclos de uma onda por segundo, medido em Hertz (Hz). A relação entre frequência e comprimento de onda é dada por: <em>c = λν</em> onde c = velocidade da luz.' },
-            // I
             { termo: 'Infravermelho próximo (NIR)', definicao: 'Faixa espectral entre aproximadamente 0,7 e 1,3 µm. A vegetação saudável reflete intensamente nesta faixa devido à estrutura celular das folhas.' },
             { termo: 'Infravermelho de ondas curtas (SWIR)', definicao: 'Faixa espectral entre aproximadamente 1,3 e 2,5 µm. É altamente sensível ao conteúdo de água na vegetação e no solo.' },
             { termo: 'Infravermelho termal', definicao: 'Faixa espectral associada à emissão térmica dos objetos, geralmente entre 8 e 14 µm.' },
-            // L
             { termo: 'Lei de Planck', definicao: 'Descreve a distribuição espectral da radiação emitida por um corpo negro em função da temperatura.' },
             { termo: 'Lei de Stefan-Boltzmann', definicao: 'Define que a energia total emitida por um corpo negro é proporcional à quarta potência de sua temperatura absoluta: <em>E = σT⁴</em>' },
             { termo: 'Lei de Wien', definicao: 'Determina o comprimento de onda no qual ocorre a emissão máxima de um corpo negro.' },
-            // R
             { termo: 'Radiação eletromagnética', definicao: 'Forma de energia que se propaga pelo espaço na forma de ondas eletromagnéticas.' },
             { termo: 'Radiância', definicao: 'Quantidade de energia radiante emitida ou refletida por unidade de área, ângulo sólido e comprimento de onda.' },
             { termo: 'Reflectância', definicao: 'Proporção da radiação incidente que é refletida por uma superfície. Na vegetação: baixa no vermelho (absorção pela clorofila) e alta no NIR (estrutura interna da folha).' },
             { termo: 'Reflectância bidirecional (BRDF)', definicao: 'Função que descreve como a reflectância varia com os ângulos de iluminação e observação.' },
-            // S
             { termo: 'Sensor remoto', definicao: 'Instrumento capaz de detectar radiação eletromagnética proveniente da superfície terrestre. Tipos principais: <ul class="list-disc ml-5 mt-1"><li><strong>Passivos</strong>: dependem da radiação solar refletida (ex.: Landsat, Sentinel-2, MODIS)</li><li><strong>Ativos</strong>: emitem sua própria radiação (ex.: Radar, LiDAR)</li></ul>' },
             { termo: 'Sinal espectral', definicao: 'Resposta registrada pelo sensor para determinado objeto em uma banda espectral.' },
-            // T
             { termo: 'Transmitância', definicao: 'Fração da radiação que atravessa um material sem ser absorvida ou refletida.' },
-            // V
             { termo: 'Vegetação (resposta espectral)', definicao: 'A reflectância da vegetação apresenta três regiões principais: <ul class="list-disc ml-5 mt-1"><li><strong>Região do visível (400–700 nm)</strong>: forte absorção pela clorofila.</li><li><strong>Borda do vermelho (red edge)</strong>: transição abrupta entre vermelho e NIR.</li><li><strong>Infravermelho próximo (700–1300 nm)</strong>: alta reflectância devido à estrutura celular das folhas.</li></ul>' },
-            // Índices
             { termo: 'NDVI (Normalized Difference Vegetation Index)', definicao: 'Índice que indica vigor e biomassa da vegetação: <em>NDVI = (NIR - RED) / (NIR + RED)</em>' },
             { termo: 'NDWI (Normalized Difference Water Index)', definicao: 'Índice sensível ao conteúdo de água na vegetação.' },
             { termo: 'EVI (Enhanced Vegetation Index)', definicao: 'Índice aprimorado para áreas com alta biomassa.' },
-            // Referências
             { termo: 'Referências Clássicas', definicao: '<ul class="list-disc ml-5 mt-1"><li>Campbell, J. B.; Wynne, R. H. Introduction to Remote Sensing. 5ª ed. Guilford Press.</li><li>Jensen, J. R. Remote Sensing of the Environment: An Earth Resource Perspective.</li><li>Lillesand, T.; Kiefer, R.; Chipman, J. Remote Sensing and Image Interpretation.</li><li>Ponzoni, F. J.; Shimabukuro, Y. E. Sensoriamento Remoto no Estudo da Vegetação.</li><li>Novo, E. M. L. M. Sensoriamento Remoto: Princípios e Aplicações.</li></ul>' }
         ];
 
-        // Informações do espectro (mantidas como antes)
         const bandInfo = {
             gama: { fontes: 'Núcleos atômicos, explosões solares', interacao: 'Absorvido pela atmosfera', aplicacao: 'Astronomia, medicina', curiosidade: 'Os raios gama possuem tanta energia que são capazes de atravessar materiais densos e são usados para detectar elementos radioativos no espaço e até em estudos geológicos por sensoriamento remoto aerotransportado.' },
             x: { fontes: 'Átomos excitados, raios-X', interacao: 'Absorvido pela atmosfera', aplicacao: 'Radiografia, astronomia', curiosidade: 'Sensores de raios X são usados para analisar a composição química de rochas em missões espaciais, permitindo estudar a geologia de planetas sem coletar amostras físicas.' },
@@ -273,7 +406,6 @@
             radio: { fontes: 'Estrelas, rádio-fontes', interacao: 'Pouca interação', aplicacao: 'Rádio astronomia, comunicações', curiosidade: 'Ondas de rádio são usadas para comunicação com satélites, permitindo que dados de sensoriamento remoto sejam transmitidos da órbita até estações terrestres.' }
         };
 
-        // Quiz (30 perguntas - mantido igual)
         const quizQuestions = [
             { q: "A radiação eletromagnética pode ser definida como:", a: "Fluxo de partículas carregadas", b: "Energia que se propaga em forma de ondas eletromagnéticas", c: "Movimento de matéria no espaço", d: "Emissão exclusiva de calor", correct: "B" },
             { q: "A relação entre comprimento de onda (λ) e frequência (ν) é expressa por:", a: "λ = ν/c", b: "c = λν", c: "ν = c²", d: "λ = c²", correct: "B" },
@@ -307,12 +439,11 @@
             { q: "No sensoriamento remoto, a informação detectada pelos sensores depende principalmente da:", a: "composição química do sensor", b: "interação da radiação com a superfície", c: "pressão atmosférica", d: "cor do satélite", correct: "B" }
         ];
 
-        // ---------- NAVEGAÇÃO POR ABAS ----------
+        // ---------- FUNÇÕES GLOBAIS ----------
+        // Navegação por abas
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
         
-        // Por padrão, a aba "spectrum" já está ativa via classe "active" no HTML.
-        // Mas para garantir que as abas funcionem corretamente:
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabId = btn.dataset.tab;
@@ -321,7 +452,7 @@
             });
         });
 
-        // ---------- CÂMERA (traseira) ----------
+        // ---------- CÂMERA ----------
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const captureBtn = document.getElementById('captureBtn');
@@ -453,7 +584,7 @@
             }
         });
 
-        // ---------- JOGO (com regras de menor/major) ----------
+        // ---------- JOGO ----------
         let playerCard, computerCard;
         const playerCardDiv = document.getElementById('playerCard');
         const computerCardDiv = document.getElementById('computerCard');
@@ -704,12 +835,11 @@
             });
         });
 
-        // ---------- GLOSSÁRIO (inserção dos termos com HTML permitido) ----------
+        // ---------- GLOSSÁRIO ----------
         const glossaryList = document.getElementById('glossaryList');
         glossaryTerms.forEach(term => {
             const div = document.createElement('div');
             div.className = 'bg-slate-800 p-4 rounded-lg glossary-term';
-            // Usar innerHTML para renderizar listas e formatação
             div.innerHTML = `<h3 class="font-bold text-xl text-cyan-400 mb-2">${term.termo}</h3><div class="text-sm text-gray-200">${term.definicao}</div>`;
             glossaryList.appendChild(div);
         });
@@ -728,6 +858,351 @@
             `;
             quantitiesList.appendChild(div);
         });
+
+        // ---------- ÍNDICES DE VEGETAÇÃO (Opção 1: arquivos locais) ----------
+        let bandImages = {};
+        let bandData = {};
+        
+        // Elementos da UI para índices
+        const bandStatus = document.getElementById('bandStatus');
+        const processBtn = document.getElementById('processBandsBtn');
+        const applyRGBBtn = document.getElementById('applyRGBBtn');
+        const rgbCanvas = document.getElementById('rgbCanvas');
+        const indexCanvas = document.getElementById('indexCanvas');
+        const histogramCanvas = document.getElementById('histogramCanvas');
+        const indexBtns = document.querySelectorAll('.index-btn');
+        const viewTabBtns = document.querySelectorAll('.view-tab-btn');
+
+        // Função para carregar as bandas da pasta /bands
+        function loadLandsatBands() {
+            bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Carregando bandas do Landsat 5 TM...</p>';
+            
+            // Caminhos das bandas na pasta /bands
+            const bandPaths = {
+                1: 'bands/band1.png',  // Azul
+                2: 'bands/band2.png',  // Verde
+                3: 'bands/band3.png',  // Vermelho
+                4: 'bands/band4.png',  // NIR
+                5: 'bands/band5.png'   // SWIR
+            };
+            
+            let loadedCount = 0;
+            const totalBands = 5;
+            
+            Object.keys(bandPaths).forEach(bandNum => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                
+                img.onload = () => {
+                    bandImages[bandNum] = img;
+                    loadedCount++;
+                    
+                    bandStatus.innerHTML = `<p><i class="fas fa-spinner fa-spin"></i> Carregando bandas: ${loadedCount}/${totalBands}</p>`;
+                    
+                    if (loadedCount === totalBands) {
+                        bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas carregadas! Processando...</p>';
+                        processBands();
+                    }
+                };
+                
+                img.onerror = () => {
+                    console.error(`Erro ao carregar banda ${bandNum}`);
+                    bandStatus.innerHTML = `<p><i class="fas fa-exclamation-triangle text-yellow-400"></i> Erro na banda ${bandNum}. Verifique se o arquivo existe na pasta /bands.</p>`;
+                };
+                
+                img.src = bandPaths[bandNum];
+            });
+        }
+
+        // Processar bandas (converter para dados numéricos)
+        function processBands() {
+            const tempCanvas = document.createElement('canvas');
+            const ctx = tempCanvas.getContext('2d');
+            
+            // Usar a primeira banda para determinar dimensões
+            const firstBand = bandImages[1];
+            if (!firstBand) return;
+            
+            tempCanvas.width = firstBand.width;
+            tempCanvas.height = firstBand.height;
+            
+            let processedCount = 0;
+            
+            Object.keys(bandImages).forEach(bandNum => {
+                ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+                ctx.drawImage(bandImages[bandNum], 0, 0, tempCanvas.width, tempCanvas.height);
+                const imageData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                
+                const data = new Float32Array(tempCanvas.width * tempCanvas.height);
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    data[i/4] = imageData.data[i] / 255; // Normalizar 0-1
+                }
+                bandData[bandNum] = data;
+                processedCount++;
+                
+                if (processedCount === 5) {
+                    // Todas as bandas processadas
+                    bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas prontas! Explore as composições e índices.</p>';
+                    
+                    // Habilitar botões
+                    processBtn.disabled = false;
+                    applyRGBBtn.disabled = false;
+                    indexBtns.forEach(btn => btn.disabled = false);
+                    
+                    // Renderizar composição RGB inicial
+                    renderRGB();
+                    
+                    // Calcular NDVI inicial
+                    setTimeout(() => {
+                        const ndvi = calculateNDVI();
+                        if (ndvi) {
+                            renderIndex(ndvi, indexCanvas);
+                        }
+                    }, 500);
+                }
+            });
+        }
+
+        // Renderizar composição RGB
+        function renderRGB() {
+            if (!bandData[3] || !bandData[2] || !bandData[1]) return;
+            
+            const width = bandImages[1].width;
+            const height = bandImages[1].height;
+            
+            rgbCanvas.width = width;
+            rgbCanvas.height = height;
+            const ctx = rgbCanvas.getContext('2d');
+            const imageData = ctx.createImageData(width, height);
+            
+            const redSelect = document.getElementById('redChannel');
+            const greenSelect = document.getElementById('greenChannel');
+            const blueSelect = document.getElementById('blueChannel');
+            
+            const rBand = bandData[redSelect.value];
+            const gBand = bandData[greenSelect.value];
+            const bBand = bandData[blueSelect.value];
+            
+            for (let i = 0; i < width * height; i++) {
+                const idx = i * 4;
+                imageData.data[idx] = Math.min(255, rBand[i] * 255);
+                imageData.data[idx + 1] = Math.min(255, gBand[i] * 255);
+                imageData.data[idx + 2] = Math.min(255, bBand[i] * 255);
+                imageData.data[idx + 3] = 255;
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            
+            const redDesc = redSelect.selectedOptions[0].text;
+            const greenDesc = greenSelect.selectedOptions[0].text;
+            const blueDesc = blueSelect.selectedOptions[0].text;
+            document.getElementById('rgbDescription').innerHTML = `Vermelho (${redDesc}), Verde (${greenDesc}), Azul (${blueDesc})`;
+        }
+
+        // Calcular NDVI
+        function calculateNDVI() {
+            if (!bandData[4] || !bandData[3]) return null;
+            
+            const nir = bandData[4];
+            const red = bandData[3];
+            const result = new Float32Array(nir.length);
+            
+            for (let i = 0; i < nir.length; i++) {
+                const n = nir[i];
+                const r = red[i];
+                if (n + r === 0) {
+                    result[i] = 0;
+                } else {
+                    result[i] = (n - r) / (n + r);
+                }
+            }
+            
+            return result;
+        }
+
+        // Calcular SAVI
+        function calculateSAVI(L = 0.5) {
+            if (!bandData[4] || !bandData[3]) return null;
+            
+            const nir = bandData[4];
+            const red = bandData[3];
+            const result = new Float32Array(nir.length);
+            
+            for (let i = 0; i < nir.length; i++) {
+                const n = nir[i];
+                const r = red[i];
+                if (n + r + L === 0) {
+                    result[i] = 0;
+                } else {
+                    result[i] = ((n - r) / (n + r + L)) * (1 + L);
+                }
+            }
+            
+            return result;
+        }
+
+        // Calcular EVI
+        function calculateEVI() {
+            if (!bandData[4] || !bandData[3] || !bandData[1]) return null;
+            
+            const nir = bandData[4];
+            const red = bandData[3];
+            const blue = bandData[1];
+            const result = new Float32Array(nir.length);
+            
+            for (let i = 0; i < nir.length; i++) {
+                const n = nir[i];
+                const r = red[i];
+                const b = blue[i];
+                const denominator = n + 6 * r - 7.5 * b + 1;
+                if (denominator === 0) {
+                    result[i] = 0;
+                } else {
+                    result[i] = 2.5 * ((n - r) / denominator);
+                }
+            }
+            
+            return result;
+        }
+
+        // Calcular NDWI
+        function calculateNDWI() {
+            if (!bandData[2] || !bandData[4]) return null;
+            
+            const green = bandData[2];
+            const nir = bandData[4];
+            const result = new Float32Array(green.length);
+            
+            for (let i = 0; i < green.length; i++) {
+                const g = green[i];
+                const n = nir[i];
+                if (g + n === 0) {
+                    result[i] = 0;
+                } else {
+                    result[i] = (g - n) / (g + n);
+                }
+            }
+            
+            return result;
+        }
+
+        // Renderizar índice no canvas
+        function renderIndex(indexData, canvas) {
+            if (!indexData) return;
+            
+            const width = bandImages[1].width;
+            const height = bandImages[1].height;
+            
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.createImageData(width, height);
+            
+            let min = 1, max = -1, sum = 0;
+            
+            for (let i = 0; i < width * height; i++) {
+                const val = indexData[i];
+                if (val < min) min = val;
+                if (val > max) max = val;
+                sum += val;
+                
+                const idx = i * 4;
+                
+                // Esquema de cores: azul (água) -> marrom (solo) -> verde (vegetação)
+                if (val < -0.2) {
+                    // Água
+                    imageData.data[idx] = 0;
+                    imageData.data[idx + 1] = 100;
+                    imageData.data[idx + 2] = 255;
+                } else if (val < 0) {
+                    // Solo úmido / transição
+                    const t = (val + 0.2) / 0.2;
+                    imageData.data[idx] = 139 + t * 50;
+                    imageData.data[idx + 1] = 69 + t * 50;
+                    imageData.data[idx + 2] = 19 + t * 20;
+                } else {
+                    // Vegetação (quanto maior o valor, mais verde)
+                    const t = Math.min(1, val);
+                    imageData.data[idx] = 34 + t * 100;
+                    imageData.data[idx + 1] = 139 + t * 100;
+                    imageData.data[idx + 2] = 34;
+                }
+                imageData.data[idx + 3] = 255;
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            
+            document.getElementById('indexMin').textContent = min.toFixed(3);
+            document.getElementById('indexMax').textContent = max.toFixed(3);
+            document.getElementById('indexMean').textContent = (sum / (width * height)).toFixed(3);
+        }
+
+        // Event listeners para índices
+        indexBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const indexType = btn.dataset.index;
+                document.getElementById('indexName').textContent = btn.textContent;
+                
+                let indexData = null;
+                switch(indexType) {
+                    case 'ndvi':
+                        indexData = calculateNDVI();
+                        break;
+                    case 'savi':
+                        indexData = calculateSAVI();
+                        break;
+                    case 'evi':
+                        indexData = calculateEVI();
+                        break;
+                    case 'ndwi':
+                        indexData = calculateNDWI();
+                        break;
+                }
+                
+                if (indexData) {
+                    renderIndex(indexData, indexCanvas);
+                    // Mudar para visualização do índice
+                    document.querySelector('[data-view="index"]').click();
+                }
+            });
+        });
+
+        // Aplicar composição RGB
+        applyRGBBtn.addEventListener('click', () => {
+            renderRGB();
+            document.querySelector('[data-view="rgb"]').click();
+        });
+
+        // Alternar entre visualizações
+        viewTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+                
+                viewTabBtns.forEach(b => {
+                    b.classList.remove('bg-slate-700', 'text-white');
+                    b.classList.add('text-gray-400');
+                });
+                btn.classList.add('bg-slate-700', 'text-white');
+                btn.classList.remove('text-gray-400');
+                
+                document.querySelectorAll('.view-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`view${view.charAt(0).toUpperCase() + view.slice(1)}`).classList.remove('hidden');
+            });
+        });
+
+        // Carregar bandas quando a aba for aberta
+        document.querySelector('[data-tab="indices"]').addEventListener('click', () => {
+            if (Object.keys(bandImages).length === 0) {
+                loadLandsatBands();
+            }
+        });
+
+        // Carregar automaticamente se a aba já estiver ativa
+        if (document.getElementById('indices').classList.contains('active')) {
+            loadLandsatBands();
+        }
 
         // ---------- PWA ----------
         if ('serviceWorker' in navigator) {
