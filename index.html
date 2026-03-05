@@ -188,23 +188,28 @@
             <div class="grid gap-4 md:grid-cols-2" id="quantitiesList"></div>
         </div>
 
-        <!-- Aba Índices de Vegetação -->
+        <!-- Aba Índices de Vegetação (com fallback) -->
         <div id="indices" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🌱 Composição RGB e Índices de Vegetação</h2>
             
             <div class="bg-blue-900/20 p-3 rounded-lg mb-4 text-sm">
-                <p><i class="fas fa-info-circle text-blue-300"></i> Bandas do Landsat 5 TM carregadas automaticamente da pasta <code>/bands</code>. Use os controles abaixo para explorar diferentes composições e índices.</p>
+                <p><i class="fas fa-info-circle text-blue-300"></i> 
+                <span id="bandStatus">Aguardando...</span>
+                </p>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <button id="loadBandsBtn" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs">
+                        <i class="fas fa-folder-open"></i> Carregar da pasta /bands
+                    </button>
+                    <button id="syntheticBtn" class="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded text-xs">
+                        <i class="fas fa-flask"></i> Usar dados sintéticos (teste)
+                    </button>
+                </div>
             </div>
             
             <div class="grid lg:grid-cols-2 gap-6">
                 <!-- Painel de Controles -->
                 <div class="bg-slate-800 p-4 rounded-lg space-y-4">
                     <h3 class="text-xl font-semibold">Controles</h3>
-                    
-                    <!-- Status das bandas -->
-                    <div id="bandStatus" class="bg-slate-700 p-3 rounded text-sm">
-                        <p><i class="fas fa-spinner fa-spin"></i> Aguardando carregamento das bandas...</p>
-                    </div>
                     
                     <!-- Seleção de composição RGB -->
                     <div class="border-t border-slate-700 pt-4">
@@ -859,13 +864,14 @@
             quantitiesList.appendChild(div);
         });
 
-        // ---------- ÍNDICES DE VEGETAÇÃO (Opção 1: arquivos locais) ----------
+        // ---------- ÍNDICES DE VEGETAÇÃO ----------
         let bandImages = {};
         let bandData = {};
         
         // Elementos da UI para índices
         const bandStatus = document.getElementById('bandStatus');
-        const processBtn = document.getElementById('processBandsBtn');
+        const loadBandsBtn = document.getElementById('loadBandsBtn');
+        const syntheticBtn = document.getElementById('syntheticBtn');
         const applyRGBBtn = document.getElementById('applyRGBBtn');
         const rgbCanvas = document.getElementById('rgbCanvas');
         const indexCanvas = document.getElementById('indexCanvas');
@@ -873,103 +879,168 @@
         const indexBtns = document.querySelectorAll('.index-btn');
         const viewTabBtns = document.querySelectorAll('.view-tab-btn');
 
-        // Função para carregar as bandas da pasta /bands
-        function loadLandsatBands() {
-            bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Carregando bandas do Landsat 5 TM...</p>';
+        // Função para carregar bandas da pasta /bands
+        function loadBandsFromFolder() {
+            bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Tentando carregar bandas da pasta /bands...</p>';
+            console.log('Carregando bandas de arquivos...');
             
-            // Caminhos das bandas na pasta /bands
             const bandPaths = {
-                1: 'bands/band1.png',  // Azul
-                2: 'bands/band2.png',  // Verde
-                3: 'bands/band3.png',  // Vermelho
-                4: 'bands/band4.png',  // NIR
-                5: 'bands/band5.png'   // SWIR
+                1: 'bands/band1.png',
+                2: 'bands/band2.png',
+                3: 'bands/band3.png',
+                4: 'bands/band4.png',
+                5: 'bands/band5.png'
             };
             
             let loadedCount = 0;
             const totalBands = 5;
+            bandImages = {};
+            bandData = {};
             
             Object.keys(bandPaths).forEach(bandNum => {
                 const img = new Image();
                 img.crossOrigin = 'Anonymous';
                 
                 img.onload = () => {
+                    console.log(`✅ Banda ${bandNum} carregada: ${img.width}x${img.height}`);
                     bandImages[bandNum] = img;
                     loadedCount++;
-                    
                     bandStatus.innerHTML = `<p><i class="fas fa-spinner fa-spin"></i> Carregando bandas: ${loadedCount}/${totalBands}</p>`;
                     
                     if (loadedCount === totalBands) {
                         bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas carregadas! Processando...</p>';
+                        // Verifica dimensões
+                        const dims = Object.values(bandImages).map(img => `${img.width}x${img.height}`);
+                        if (new Set(dims).size > 1) {
+                            console.warn('Bandas com dimensões diferentes!', dims);
+                        }
                         processBands();
                     }
                 };
                 
-                img.onerror = () => {
-                    console.error(`Erro ao carregar banda ${bandNum}`);
-                    bandStatus.innerHTML = `<p><i class="fas fa-exclamation-triangle text-yellow-400"></i> Erro na banda ${bandNum}. Verifique se o arquivo existe na pasta /bands.</p>`;
+                img.onerror = (e) => {
+                    console.error(`❌ Erro ao carregar banda ${bandNum} em ${bandPaths[bandNum]}`, e);
+                    bandStatus.innerHTML = `<p class="text-red-400">Erro na banda ${bandNum}. Verifique se o arquivo existe.</p>`;
                 };
                 
                 img.src = bandPaths[bandNum];
             });
         }
 
-        // Processar bandas (converter para dados numéricos)
+        // Função para gerar dados sintéticos (fallback)
+        function loadSyntheticData() {
+            console.log('Carregando dados sintéticos');
+            bandStatus.innerHTML = '<p><i class="fas fa-flask"></i> Gerando dados sintéticos...</p>';
+            
+            const width = 400;
+            const height = 300;
+            
+            function generatePattern(offset) {
+                const data = new Float32Array(width * height);
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const i = y * width + x;
+                        let val = 0.3;
+                        if (x > 100 && x < 200 && y > 50 && y < 150) val = 0.8; // vegetação densa
+                        if (x > 250 && x < 350 && y > 100 && y < 200) val = 0.7; // vegetação média
+                        if (x > 50 && x < 120 && y > 200 && y < 270) val = 0.1;  // água
+                        if (x > 300 && x < 380 && y > 220 && y < 280) val = 0.4; // solo exposto
+                        // textura
+                        val += Math.sin(x * 0.1 + offset) * 0.05 + Math.cos(y * 0.1 + offset) * 0.05;
+                        data[i] = Math.min(1, Math.max(0, val));
+                    }
+                }
+                return data;
+            }
+            
+            bandData = {
+                1: generatePattern(0), // azul
+                2: generatePattern(1), // verde
+                3: generatePattern(2), // vermelho
+                4: generatePattern(3), // nir
+                5: generatePattern(4)  // swir
+            };
+            
+            // Ajustes espectrais simulados
+            for (let i = 0; i < width * height; i++) {
+                if (bandData[4][i] > 0.6) {
+                    bandData[3][i] *= 0.3; // vegetação: NIR alto, vermelho baixo
+                }
+                if (bandData[4][i] < 0.2) {
+                    bandData[1][i] = 0.1; // água
+                    bandData[2][i] = 0.15;
+                    bandData[3][i] = 0.1;
+                }
+            }
+            
+            // Cria objetos de imagem fictícios (apenas para dimensões)
+            bandImages = {1: {width, height}, 2: {width, height}, 3: {width, height}, 4: {width, height}, 5: {width, height}};
+            
+            bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Dados sintéticos carregados!</p>';
+            enableControls();
+            renderRGB();
+            const ndvi = calculateNDVI();
+            if (ndvi) renderIndex(ndvi, indexCanvas);
+        }
+
         function processBands() {
-            const tempCanvas = document.createElement('canvas');
-            const ctx = tempCanvas.getContext('2d');
-            
-            // Usar a primeira banda para determinar dimensões
+            console.log('▶️ Processando bandas');
             const firstBand = bandImages[1];
-            if (!firstBand) return;
+            if (!firstBand) {
+                console.error('Primeira banda não encontrada');
+                return;
+            }
+            const width = firstBand.width;
+            const height = firstBand.height;
+            console.log(`Dimensões do canvas: ${width}x${height}`);
             
-            tempCanvas.width = firstBand.width;
-            tempCanvas.height = firstBand.height;
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = width;
+            tempCanvas.height = height;
+            const ctx = tempCanvas.getContext('2d');
             
             let processedCount = 0;
             
             Object.keys(bandImages).forEach(bandNum => {
-                ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-                ctx.drawImage(bandImages[bandNum], 0, 0, tempCanvas.width, tempCanvas.height);
-                const imageData = ctx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                ctx.clearRect(0, 0, width, height);
+                ctx.drawImage(bandImages[bandNum], 0, 0, width, height);
+                const imageData = ctx.getImageData(0, 0, width, height);
+                console.log(`Banda ${bandNum} - pixels processados: ${imageData.data.length/4}`);
                 
-                const data = new Float32Array(tempCanvas.width * tempCanvas.height);
+                const data = new Float32Array(width * height);
                 for (let i = 0; i < imageData.data.length; i += 4) {
-                    data[i/4] = imageData.data[i] / 255; // Normalizar 0-1
+                    // Assume imagem em tons de cinza (R=G=B)
+                    data[i/4] = imageData.data[i] / 255;
                 }
                 bandData[bandNum] = data;
                 processedCount++;
                 
                 if (processedCount === 5) {
-                    // Todas as bandas processadas
-                    bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas prontas! Explore as composições e índices.</p>';
-                    
-                    // Habilitar botões
-                    processBtn.disabled = false;
-                    applyRGBBtn.disabled = false;
-                    indexBtns.forEach(btn => btn.disabled = false);
-                    
-                    // Renderizar composição RGB inicial
+                    console.log('✅ Todas as bandas processadas');
+                    enableControls();
                     renderRGB();
-                    
-                    // Calcular NDVI inicial
                     setTimeout(() => {
                         const ndvi = calculateNDVI();
-                        if (ndvi) {
-                            renderIndex(ndvi, indexCanvas);
-                        }
+                        if (ndvi) renderIndex(ndvi, indexCanvas);
                     }, 500);
                 }
             });
         }
 
-        // Renderizar composição RGB
+        function enableControls() {
+            bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas prontas!</p>';
+            applyRGBBtn.disabled = false;
+            indexBtns.forEach(btn => btn.disabled = false);
+        }
+
         function renderRGB() {
-            if (!bandData[3] || !bandData[2] || !bandData[1]) return;
-            
+            console.log('Renderizando RGB');
+            if (!bandData[3] || !bandData[2] || !bandData[1]) {
+                console.warn('Dados insuficientes para RGB');
+                return;
+            }
             const width = bandImages[1].width;
             const height = bandImages[1].height;
-            
             rgbCanvas.width = width;
             rgbCanvas.height = height;
             const ctx = rgbCanvas.getContext('2d');
@@ -979,9 +1050,9 @@
             const greenSelect = document.getElementById('greenChannel');
             const blueSelect = document.getElementById('blueChannel');
             
-            const rBand = bandData[redSelect.value];
-            const gBand = bandData[greenSelect.value];
-            const bBand = bandData[blueSelect.value];
+            const rBand = bandData[redSelect.value] || bandData[3];
+            const gBand = bandData[greenSelect.value] || bandData[2];
+            const bBand = bandData[blueSelect.value] || bandData[1];
             
             for (let i = 0; i < width * height; i++) {
                 const idx = i * 4;
@@ -992,6 +1063,7 @@
             }
             
             ctx.putImageData(imageData, 0, 0);
+            console.log('RGB renderizado');
             
             const redDesc = redSelect.selectedOptions[0].text;
             const greenDesc = greenSelect.selectedOptions[0].text;
@@ -999,100 +1071,69 @@
             document.getElementById('rgbDescription').innerHTML = `Vermelho (${redDesc}), Verde (${greenDesc}), Azul (${blueDesc})`;
         }
 
-        // Calcular NDVI
         function calculateNDVI() {
             if (!bandData[4] || !bandData[3]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
-                if (n + r === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = (n - r) / (n + r);
-                }
+                if (n + r === 0) result[i] = 0;
+                else result[i] = (n - r) / (n + r);
             }
-            
             return result;
         }
 
-        // Calcular SAVI
         function calculateSAVI(L = 0.5) {
             if (!bandData[4] || !bandData[3]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
-                if (n + r + L === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = ((n - r) / (n + r + L)) * (1 + L);
-                }
+                if (n + r + L === 0) result[i] = 0;
+                else result[i] = ((n - r) / (n + r + L)) * (1 + L);
             }
-            
             return result;
         }
 
-        // Calcular EVI
         function calculateEVI() {
             if (!bandData[4] || !bandData[3] || !bandData[1]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const blue = bandData[1];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
                 const b = blue[i];
-                const denominator = n + 6 * r - 7.5 * b + 1;
-                if (denominator === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = 2.5 * ((n - r) / denominator);
-                }
+                const denom = n + 6 * r - 7.5 * b + 1;
+                if (denom === 0) result[i] = 0;
+                else result[i] = 2.5 * ((n - r) / denom);
             }
-            
             return result;
         }
 
-        // Calcular NDWI
         function calculateNDWI() {
             if (!bandData[2] || !bandData[4]) return null;
-            
             const green = bandData[2];
             const nir = bandData[4];
             const result = new Float32Array(green.length);
-            
             for (let i = 0; i < green.length; i++) {
                 const g = green[i];
                 const n = nir[i];
-                if (g + n === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = (g - n) / (g + n);
-                }
+                if (g + n === 0) result[i] = 0;
+                else result[i] = (g - n) / (g + n);
             }
-            
             return result;
         }
 
-        // Renderizar índice no canvas
         function renderIndex(indexData, canvas) {
             if (!indexData) return;
-            
             const width = bandImages[1].width;
             const height = bandImages[1].height;
-            
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
@@ -1107,21 +1148,16 @@
                 sum += val;
                 
                 const idx = i * 4;
-                
-                // Esquema de cores: azul (água) -> marrom (solo) -> verde (vegetação)
                 if (val < -0.2) {
-                    // Água
                     imageData.data[idx] = 0;
                     imageData.data[idx + 1] = 100;
                     imageData.data[idx + 2] = 255;
                 } else if (val < 0) {
-                    // Solo úmido / transição
                     const t = (val + 0.2) / 0.2;
                     imageData.data[idx] = 139 + t * 50;
                     imageData.data[idx + 1] = 69 + t * 50;
                     imageData.data[idx + 2] = 19 + t * 20;
                 } else {
-                    // Vegetação (quanto maior o valor, mais verde)
                     const t = Math.min(1, val);
                     imageData.data[idx] = 34 + t * 100;
                     imageData.data[idx + 1] = 139 + t * 100;
@@ -1137,54 +1173,42 @@
             document.getElementById('indexMean').textContent = (sum / (width * height)).toFixed(3);
         }
 
-        // Event listeners para índices
+        // Event listeners
+        loadBandsBtn.addEventListener('click', loadBandsFromFolder);
+        syntheticBtn.addEventListener('click', loadSyntheticData);
+
         indexBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const indexType = btn.dataset.index;
                 document.getElementById('indexName').textContent = btn.textContent;
-                
                 let indexData = null;
                 switch(indexType) {
-                    case 'ndvi':
-                        indexData = calculateNDVI();
-                        break;
-                    case 'savi':
-                        indexData = calculateSAVI();
-                        break;
-                    case 'evi':
-                        indexData = calculateEVI();
-                        break;
-                    case 'ndwi':
-                        indexData = calculateNDWI();
-                        break;
+                    case 'ndvi': indexData = calculateNDVI(); break;
+                    case 'savi': indexData = calculateSAVI(); break;
+                    case 'evi': indexData = calculateEVI(); break;
+                    case 'ndwi': indexData = calculateNDWI(); break;
                 }
-                
                 if (indexData) {
                     renderIndex(indexData, indexCanvas);
-                    // Mudar para visualização do índice
                     document.querySelector('[data-view="index"]').click();
                 }
             });
         });
 
-        // Aplicar composição RGB
         applyRGBBtn.addEventListener('click', () => {
             renderRGB();
             document.querySelector('[data-view="rgb"]').click();
         });
 
-        // Alternar entre visualizações
         viewTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
-                
                 viewTabBtns.forEach(b => {
                     b.classList.remove('bg-slate-700', 'text-white');
                     b.classList.add('text-gray-400');
                 });
                 btn.classList.add('bg-slate-700', 'text-white');
                 btn.classList.remove('text-gray-400');
-                
                 document.querySelectorAll('.view-content').forEach(content => {
                     content.classList.add('hidden');
                 });
@@ -1192,16 +1216,16 @@
             });
         });
 
-        // Carregar bandas quando a aba for aberta
+        // Carregar automaticamente se a aba já estiver ativa
         document.querySelector('[data-tab="indices"]').addEventListener('click', () => {
             if (Object.keys(bandImages).length === 0) {
-                loadLandsatBands();
+                // Não carrega automaticamente; deixa o usuário escolher
+                bandStatus.innerHTML = '<p>Clique em um dos botões acima para carregar bandas ou usar dados sintéticos.</p>';
             }
         });
 
-        // Carregar automaticamente se a aba já estiver ativa
         if (document.getElementById('indices').classList.contains('active')) {
-            loadLandsatBands();
+            bandStatus.innerHTML = '<p>Clique em um dos botões acima para carregar bandas ou usar dados sintéticos.</p>';
         }
 
         // ---------- PWA ----------
