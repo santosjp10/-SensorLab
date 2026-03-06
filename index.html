@@ -153,27 +153,10 @@
             </div>
         </div>
 
-        <!-- Aba Curiosidades -->
+        <!-- Aba Curiosidades (agora gerada dinamicamente) -->
         <div id="curiosity" class="tab-content">
-            <h2 class="text-2xl font-semibold mb-4">❓ Curiosidades do Cotidiano</h2>
-            <div class="grid gap-4 md:grid-cols-2">
-                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="ceu">
-                    <h3 class="font-bold text-lg">🔵 Por que o céu é azul?</h3>
-                    <p class="mt-2 text-gray-300 hidden">Espalhamento Rayleigh: luz solar interage com moléculas de ar; azul é mais espalhado.</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="por-do-sol">
-                    <h3 class="font-bold text-lg">🟠 Por que o pôr do sol é alaranjado?</h3>
-                    <p class="mt-2 text-gray-300 hidden">Maior caminho na atmosfera; azul espalhado, restam tons alaranjados.</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="vegetacao">
-                    <h3 class="font-bold text-lg">🌿 Por que a vegetação saudável aparece vermelha em composições de infravermelho?</h3>
-                    <p class="mt-2 text-gray-300 hidden">Clorofila reflete fortemente no infravermelho próximo; em composições que usam IV no canal vermelho, a vegetação fica vermelha.</p>
-                </div>
-                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="nuvens">
-                    <h3 class="font-bold text-lg">☁️ Por que as nuvens são brancas?</h3>
-                    <p class="mt-2 text-gray-300 hidden">Gotículas grandes (espalhamento não-seletivo) espalham igualmente todos os comprimentos de onda.</p>
-                </div>
-            </div>
+            <h2 class="text-2xl font-semibold mb-4">🌎 30 Curiosidades sobre Radiação Eletromagnética</h2>
+            <div id="curiosityContainer" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
         </div>
 
         <!-- Aba Glossário -->
@@ -188,7 +171,7 @@
             <div class="grid gap-4 md:grid-cols-2" id="quantitiesList"></div>
         </div>
 
-        <!-- Aba Índices de Vegetação (corrigida) -->
+        <!-- Aba Índices de Vegetação -->
         <div id="indices" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🌱 Composição RGB e Índices de Vegetação</h2>
             
@@ -360,13 +343,27 @@
             { id: 6, nome: 'WorldView-3', resolucao: 0.31, bandas: 29, revisit: 1, ano: 2014 },
         ];
 
+        // Grandezas atualizadas com os novos itens
         const quantities = [
+            // Grandezas originais
             { nome: 'Número Digital (DN)', definicao: 'Valor bruto registrado pelo sensor, sem correção.', unidade: 'adimensional (0-255, 0-1023...)', obtencao: 'Leitura direta do pixel.', aplicacao: 'Base para conversões, visualização.' },
             { nome: 'Radiância espectral', definicao: 'Fluxo radiante por unidade de área, ângulo sólido e comprimento de onda.', unidade: 'W/m²/sr/μm', obtencao: 'Conversão de DN com coeficientes de calibração.', aplicacao: 'Estimativa de reflectância, temperatura.' },
             { nome: 'Reflectância', definicao: 'Razão entre radiância refletida e irradiância incidente.', unidade: 'adimensional (0-1)', obtencao: 'Radiância / (irradiância solar/π) com correção.', aplicacao: 'Índices de vegetação, classificação.' },
             { nome: 'Irradiância', definicao: 'Potência radiante incidente por unidade de área.', unidade: 'W/m²', obtencao: 'Medida com sensores ou modelagem.', aplicacao: 'Balanço de radiação.' },
             { nome: 'Emitância', definicao: 'Potência radiante emitida por unidade de área.', unidade: 'W/m²', obtencao: 'Relacionada à temperatura (Lei de Stefan-Boltzmann).', aplicacao: 'Sensoriamento térmico.' },
-            { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' }
+            { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' },
+            // Novas grandezas
+            { nome: 'Energia Radiante (Q)', definicao: 'Quantidade total de energia transportada pela radiação eletromagnética.', unidade: 'Joule (J)', obtencao: 'Integração do fluxo radiante no tempo.', aplicacao: 'Grandeza fundamental da radiometria.' },
+            { nome: 'Fluxo Radiante (Φ)', definicao: 'Taxa de emissão ou transferência de energia radiante por unidade de tempo.', unidade: 'Watt (W)', obtencao: 'Medida direta com sensores calibrados.', aplicacao: 'Base para outras grandezas radiométricas.' },
+            { nome: 'Intensidade Radiante (I)', definicao: 'Fluxo radiante emitido por unidade de ângulo sólido em uma determinada direção.', unidade: 'W/sr', obtencao: 'Relação entre fluxo e ângulo sólido.', aplicacao: 'Caracteriza a emissão direcional de fontes de radiação.' },
+            { nome: 'Exitância Radiante (M)', definicao: 'Fluxo radiante emitido por uma superfície por unidade de área.', unidade: 'W/m²', obtencao: 'Medida da radiação emergente.', aplicacao: 'Muito usada em estudos térmicos.' },
+            { nome: 'Radiância (L)', definicao: 'Fluxo radiante por unidade de área projetada e por unidade de ângulo sólido.', unidade: 'W/(m²·sr)', obtencao: 'Grandeza diretamente medida pelos sensores remotos.', aplicacao: 'Base para conversão para reflectância.' },
+            { nome: 'Absorvância (α)', definicao: 'Fração da radiação incidente que é absorvida por um material.', unidade: 'Adimensional', obtencao: 'Cálculo a partir de medições de reflectância e transmitância.', aplicacao: 'Importante em estudos de balanço energético.' },
+            { nome: 'Transmitância (τ)', definicao: 'Fração da radiação que atravessa um meio.', unidade: 'Adimensional', obtencao: 'Relação entre radiação transmitida e incidente.', aplicacao: 'Muito usada em estudos atmosféricos.' },
+            { nome: 'Radiância Espectral (Lλ)', definicao: 'Radiância medida em um intervalo específico de comprimento de onda.', unidade: 'W/(m²·sr·µm)', obtencao: 'Sensores hiperespectrais ou multi-espectrais.', aplicacao: 'Base para análise espectral em sensores orbitais.' },
+            { nome: 'Irradiância Espectral (Eλ)', definicao: 'Irradiância medida por unidade de comprimento de onda.', unidade: 'W/(m²·µm)', obtencao: 'Medida com espectrorradiômetros.', aplicacao: 'Usada em modelagem da radiação solar.' },
+            { nome: 'Reflectância Espectral (ρλ)', definicao: 'Reflectância em um comprimento de onda específico.', unidade: 'Adimensional', obtencao: 'Relação entre radiância refletida e irradiância incidente.', aplicacao: 'Base para assinatura espectral de alvos.' },
+            { nome: 'Albedo (A)', definicao: 'Fração da radiação solar total refletida por uma superfície.', unidade: 'Adimensional ou %', obtencao: 'Integração da reflectância em todo o espectro solar.', aplicacao: 'Muito usado em estudos climáticos e agrícolas.' }
         ];
 
         const glossaryTerms = [
@@ -447,6 +444,40 @@
             { q: "Uma das vantagens do radar é:", a: "alta dependência da luz solar", b: "incapacidade de penetrar nuvens", c: "capacidade de operar em qualquer condição atmosférica", d: "baixa sensibilidade", correct: "C" },
             { q: "O espectro eletromagnético organiza a radiação de acordo com:", a: "massa", b: "temperatura", c: "comprimento de onda ou frequência", d: "densidade", correct: "C" },
             { q: "No sensoriamento remoto, a informação detectada pelos sensores depende principalmente da:", a: "composição química do sensor", b: "interação da radiação com a superfície", c: "pressão atmosférica", d: "cor do satélite", correct: "B" }
+        ];
+
+        // ---------- NOVAS CURIOSIDADES ----------
+        const curiosities = [
+            { titulo: "☀️ 1. Energia solar em 1 hora", descricao: "A energia do Sol que chega à Terra em 1 hora poderia abastecer o planeta por um ano. Essa energia é a principal fonte para sensores ópticos, pois é refletida pela superfície terrestre." },
+            { titulo: "🌈 2. Impressão digital espectral", descricao: "Toda superfície da Terra tem uma 'impressão digital espectral'. Cada material reflete radiação de forma diferente. Isso é chamado de assinatura espectral e permite distinguir vegetação, solo, água e rochas." },
+            { titulo: "👁️ 3. O olho humano vê pouco", descricao: "O olho humano vê apenas 0,0035% do espectro eletromagnético (400–700 nm). Sensores orbitais detectam desde ultravioleta até micro-ondas." },
+            { titulo: "🔥 4. A Terra também emite radiação", descricao: "Além de refletir radiação solar, a Terra emite radiação térmica, principalmente no infravermelho térmico (8–14 µm)." },
+            { titulo: "📐 5. Lei de Wien", descricao: "Quanto mais quente um objeto, menor o comprimento de onda que ele emite. Exemplo: Sol → radiação visível; Terra → infravermelho térmico." },
+            { titulo: "🌿 6. Reflexão no infravermelho", descricao: "A vegetação saudável pode refletir até 60% da radiação no infravermelho próximo devido à estrutura celular das folhas." },
+            { titulo: "🍃 7. Absorção de luz vermelha", descricao: "A clorofila absorve fortemente a luz vermelha. Por isso a vegetação parece escura no vermelho em imagens espectrais." },
+            { titulo: "📈 8. O 'Red Edge'", descricao: "Entre 680 e 750 nm ocorre um aumento abrupto da reflectância, chamado de Red Edge. Esse fenômeno é usado para detectar vigor vegetal, estresse hídrico e doenças." },
+            { titulo: "🔬 9. Folhas como espelhos", descricao: "A estrutura do mesófilo esponjoso faz a radiação infravermelha refletir várias vezes, aumentando muito a reflectância no NIR." },
+            { titulo: "⚡ 10. Fotossíntese e energia", descricao: "A fotossíntese usa apenas uma pequena fração da energia solar; a maior parte é refletida ou convertida em calor." },
+            { titulo: "🌾 11. Deficiência de nitrogênio", descricao: "Satélites podem identificar áreas de lavoura com deficiência de nitrogênio por alterações no conteúdo de clorofila, que mudam a reflectância da planta." },
+            { titulo: "📅 12. Previsão de produtividade", descricao: "É possível prever produtividade agrícola meses antes da colheita combinando NDVI, temperatura e histórico climático." },
+            { titulo: "💧 13. Estresse hídrico antes da murcha", descricao: "Sensores detectam estresse hídrico antes da planta murchar, pois mudanças espectrais ocorrem antes de sintomas visuais." },
+            { titulo: "📡 14. Radar e altura da vegetação", descricao: "O radar consegue medir a altura da vegetação, estimando biomassa e estrutura do dossel." },
+            { titulo: "🧪 15. Diferenças dentro da mesma lavoura", descricao: "Mesmo dentro da mesma cultura, produtividade, vigor e fertilidade geram assinaturas espectrais diferentes." },
+            { titulo: "🌎 16. Janelas atmosféricas", descricao: "Apenas algumas faixas do espectro conseguem atravessar a atmosfera. Essas regiões são chamadas de janelas atmosféricas." },
+            { titulo: "💨 17. Absorção pelo vapor d'água", descricao: "O vapor d'água absorve grande parte da radiação infravermelha, por isso sensores evitam essas bandas." },
+            { titulo: "🌫️ 18. Efeito dos aerossóis", descricao: "Aerossóis espalham radiação, alterando cor, brilho e índices espectrais das imagens de satélite." },
+            { titulo: "🛰️ 19. Landsat: 50+ anos de história", descricao: "O satélite Landsat observa a Terra continuamente desde 1972, formando o maior registro histórico da superfície terrestre." },
+            { titulo: "📏 20. Resolução de 30 cm", descricao: "Alguns satélites comerciais conseguem detectar áreas menores que um carro, com resolução espacial de até 30 cm." },
+            { titulo: "💾 21. Bilhões de dados por dia", descricao: "Um satélite moderno coleta bilhões de dados por dia, cada pixel representando medições espectrais da superfície." },
+            { titulo: "🎨 22. Sensores hiperespectrais", descricao: "Sensores hiperespectrais podem ter mais de 200 bandas, permitindo identificar materiais com extrema precisão." },
+            { titulo: "🌳 23. Radar enxerga sob a vegetação", descricao: "O radar pode 'enxergar' o solo sob a vegetação porque micro-ondas penetram parcialmente no dossel vegetal." },
+            { titulo: "📏 24. LiDAR mede árvores individualmente", descricao: "Sensores LiDAR calculam distância usando tempo de retorno do laser, permitindo medir árvores individualmente." },
+            { titulo: "🔥 25. Detecção de queimadas em tempo real", descricao: "Satélites conseguem detectar queimadas em tempo real usando sensores térmicos." },
+            { titulo: "💧 26. Evapotranspiração por satélite", descricao: "É possível estimar evapotranspiração combinando temperatura da superfície, reflectância e energia solar." },
+            { titulo: "🏜️ 27. Desertificação detectada", descricao: "Mudanças na reflectância do solo indicam degradação, permitindo detectar desertificação." },
+            { titulo: "🌲 28. Carbono em florestas", descricao: "Dados de radar e LiDAR permitem estimar biomassa florestal e, consequentemente, carbono armazenado." },
+            { titulo: "🌊 29. Assinatura espectral do oceano", descricao: "A cor da água revela clorofila, sedimentos e poluição, graças à assinatura espectral." },
+            { titulo: "🌍 30. Monitoramento global diário", descricao: "Hoje existem mais de 1000 satélites de observação da Terra monitorando agricultura, clima, florestas, oceanos e cidades." }
         ];
 
         // ---------- FUNÇÕES GLOBAIS ----------
@@ -836,13 +867,20 @@
             });
         });
 
-        // ---------- CURIOSIDADES ----------
-        const curiosityCards = document.querySelectorAll('[data-curiosity]');
-        curiosityCards.forEach(card => {
+        // ---------- CURIOSIDADES (geração dinâmica) ----------
+        const curiosityContainer = document.getElementById('curiosityContainer');
+        curiosities.forEach(cur => {
+            const card = document.createElement('div');
+            card.className = 'bg-slate-800 p-4 rounded-lg cursor-pointer';
+            card.innerHTML = `
+                <h3 class="font-bold text-lg">${cur.titulo}</h3>
+                <p class="mt-2 text-gray-300 hidden">${cur.descricao}</p>
+            `;
             card.addEventListener('click', () => {
                 const p = card.querySelector('p');
                 p.classList.toggle('hidden');
             });
+            curiosityContainer.appendChild(card);
         });
 
         // ---------- GLOSSÁRIO ----------
@@ -869,7 +907,7 @@
             quantitiesList.appendChild(div);
         });
 
-        // ---------- ÍNDICES DE VEGETAÇÃO (CORRIGIDO) ----------
+        // ---------- ÍNDICES DE VEGETAÇÃO ----------
         let bandImages = {};
         let bandData = {};
         
