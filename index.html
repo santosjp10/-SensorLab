@@ -1308,7 +1308,7 @@
             });
         });
 
-        // Alternar entre visualizações
+        // Alternar entre visualizações (CORRIGIDO)
         viewTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
@@ -1320,10 +1320,25 @@
                 btn.classList.add('bg-slate-700', 'text-white');
                 btn.classList.remove('text-gray-400');
                 
+                // Oculta todas as visualizações
                 document.querySelectorAll('.view-content').forEach(content => {
                     content.classList.add('hidden');
                 });
-                document.getElementById(`view${view.charAt(0).toUpperCase() + view.slice(1)}`).classList.remove('hidden');
+                
+                // Mostra a visualização correta, tratando o caso especial "rgb"
+                let targetId;
+                if (view === 'rgb') {
+                    targetId = 'viewRGB';
+                } else {
+                    targetId = `view${view.charAt(0).toUpperCase() + view.slice(1)}`;
+                }
+                
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.classList.remove('hidden');
+                } else {
+                    console.error(`Elemento com id "${targetId}" não encontrado.`);
+                }
             });
         });
 
