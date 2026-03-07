@@ -19,6 +19,17 @@
         .glossary-term h3 { color: #22d3ee; }
         .glossary-term ul { list-style-type: disc; margin-left: 1.5rem; margin-top: 0.25rem; }
         .view-tab-btn.active { background-color: #334155; color: white; }
+
+        /* Scoreboard styles */
+        .score-card { transition: all 0.3s ease; }
+        .score-badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; font-weight: bold; }
+        .quiz-progress-bar { height: 8px; border-radius: 4px; transition: width 0.4s ease; }
+        .history-item { animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .streak-fire { animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .win-glow { box-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+        .lose-glow { box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); }
     </style>
 </head>
 <body class="bg-slate-900 text-gray-100 font-sans antialiased">
@@ -81,6 +92,47 @@
         <div id="game" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🃏 Trunfo: Satélites e Sensores</h2>
             <div class="bg-slate-800 p-4 rounded-lg">
+
+                <!-- Placar do Jogo -->
+                <div class="bg-slate-900/60 border border-slate-700 rounded-xl p-4 mb-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">🏆 Placar da Sessão</h3>
+                        <button id="gameResetScoreBtn" class="text-xs text-gray-500 hover:text-red-400 transition">Zerar</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 mb-3">
+                        <div id="gameScorePlayerBox" class="score-card bg-blue-900/30 border border-blue-700/40 rounded-lg p-3 text-center">
+                            <div id="gameScorePlayer" class="text-3xl font-bold text-blue-400">0</div>
+                            <div class="text-xs text-blue-300 mt-1">🧑 Você</div>
+                        </div>
+                        <div class="score-card bg-slate-700/30 border border-slate-600/40 rounded-lg p-3 text-center">
+                            <div id="gameScoreDraw" class="text-3xl font-bold text-yellow-400">0</div>
+                            <div class="text-xs text-yellow-300 mt-1">🤝 Empates</div>
+                        </div>
+                        <div id="gameScoreComputerBox" class="score-card bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
+                            <div id="gameScoreComputer" class="text-3xl font-bold text-red-400">0</div>
+                            <div class="text-xs text-red-300 mt-1">🤖 CPU</div>
+                        </div>
+                    </div>
+                    <!-- Barra de placar -->
+                    <div class="mb-3">
+                        <div class="bg-slate-700 rounded-full overflow-hidden flex" style="height:8px">
+                            <div id="gameBarPlayer" class="bg-blue-500 transition-all duration-500" style="width:0%"></div>
+                            <div id="gameBarDraw" class="bg-yellow-500 transition-all duration-500" style="width:0%"></div>
+                            <div id="gameBarComputer" class="bg-red-500 transition-all duration-500" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <!-- Streak e histórico -->
+                    <div class="flex items-center gap-4">
+                        <div id="gameStreakBox" class="text-xs text-gray-400">
+                            <span id="gameStreakText">Sem sequência</span>
+                        </div>
+                        <div class="ml-auto">
+                            <p class="text-xs text-gray-500">Último resultado:</p>
+                            <div id="gameLastResults" class="flex gap-1 mt-1"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <h3 class="text-lg font-medium mb-2">Sua carta</h3>
@@ -103,6 +155,50 @@
         <!-- Aba Quiz -->
         <div id="quiz" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">❓ Quiz: Princípios Físicos</h2>
+
+            <!-- Placar do Quiz -->
+            <div class="max-w-3xl mx-auto mb-4">
+                <div class="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">📊 Placar da Sessão</h3>
+                        <button id="quizResetScoreBtn" class="text-xs text-gray-500 hover:text-red-400 transition">Zerar</button>
+                    </div>
+                    <!-- Contador em tempo real -->
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="score-card bg-green-900/30 border border-green-700/40 rounded-lg p-3 text-center">
+                            <div id="quizScoreCorrect" class="text-3xl font-bold text-green-400">0</div>
+                            <div class="text-xs text-green-300 mt-1">✅ Acertos</div>
+                        </div>
+                        <div class="score-card bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
+                            <div id="quizScoreWrong" class="text-3xl font-bold text-red-400">0</div>
+                            <div class="text-xs text-red-300 mt-1">❌ Erros</div>
+                        </div>
+                        <div class="score-card bg-slate-700/50 border border-slate-600/40 rounded-lg p-3 text-center">
+                            <div id="quizScorePending" class="text-3xl font-bold text-gray-300">30</div>
+                            <div class="text-xs text-gray-400 mt-1">⏳ Pendentes</div>
+                        </div>
+                    </div>
+                    <!-- Barra de progresso -->
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Progresso</span>
+                            <span id="quizScorePercent">0%</span>
+                        </div>
+                        <div class="bg-slate-700 rounded-full overflow-hidden" style="height:8px">
+                            <div id="quizProgressBarCorrect" class="quiz-progress-bar bg-green-500 float-left" style="width:0%"></div>
+                            <div id="quizProgressBarWrong" class="quiz-progress-bar bg-red-500 float-left" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <!-- Histórico de partidas -->
+                    <div>
+                        <p class="text-xs text-gray-500 mb-2">Histórico de partidas completas:</p>
+                        <div id="quizHistoryList" class="space-y-1 max-h-24 overflow-y-auto">
+                            <p class="text-xs text-gray-600 italic">Nenhuma partida concluída ainda.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-slate-800 p-6 rounded-lg max-w-3xl mx-auto">
                 <div id="quizContainer">
                     <div id="quizProgress" class="text-sm text-gray-400 mb-2">Pergunta <span id="currentQuestion">1</span> de 30</div>
@@ -633,6 +729,70 @@
         const gameMessageDiv = document.getElementById('gameMessage');
         const newGameBtn = document.getElementById('newGameBtn');
 
+        // Placar do Jogo
+        let gameScore = { player: 0, computer: 0, draw: 0, history: [] };
+
+        function updateGameScoreboard(result) {
+            if (result === 'win') gameScore.player++;
+            else if (result === 'lose') gameScore.computer++;
+            else if (result === 'draw') gameScore.draw++;
+
+            if (result) gameScore.history.push(result);
+            if (gameScore.history.length > 10) gameScore.history.shift();
+
+            document.getElementById('gameScorePlayer').textContent = gameScore.player;
+            document.getElementById('gameScoreComputer').textContent = gameScore.computer;
+            document.getElementById('gameScoreDraw').textContent = gameScore.draw;
+
+            const total = gameScore.player + gameScore.computer + gameScore.draw;
+            if (total > 0) {
+                const pw = (gameScore.player / total * 100).toFixed(1);
+                const dw = (gameScore.draw / total * 100).toFixed(1);
+                const cw = (gameScore.computer / total * 100).toFixed(1);
+                document.getElementById('gameBarPlayer').style.width = pw + '%';
+                document.getElementById('gameBarDraw').style.width = dw + '%';
+                document.getElementById('gameBarComputer').style.width = cw + '%';
+            }
+
+            // Últimos resultados como badges
+            const lastDiv = document.getElementById('gameLastResults');
+            lastDiv.innerHTML = gameScore.history.slice(-8).map(r => {
+                if (r === 'win') return '<span class="text-xs px-1.5 py-0.5 rounded bg-blue-700 text-blue-200 font-bold">V</span>';
+                if (r === 'lose') return '<span class="text-xs px-1.5 py-0.5 rounded bg-red-800 text-red-200 font-bold">D</span>';
+                return '<span class="text-xs px-1.5 py-0.5 rounded bg-yellow-800 text-yellow-200 font-bold">E</span>';
+            }).join('');
+
+            // Sequência
+            const streak = calcStreak(gameScore.history);
+            const streakEl = document.getElementById('gameStreakText');
+            if (streak.count > 1) {
+                if (streak.type === 'win') {
+                    streakEl.innerHTML = `<span class="streak-fire text-green-400 font-bold">🔥 ${streak.count}x seguidas!</span>`;
+                } else if (streak.type === 'lose') {
+                    streakEl.innerHTML = `<span class="text-red-400">💀 ${streak.count} derrotas seguidas</span>`;
+                } else {
+                    streakEl.innerHTML = `<span class="text-yellow-400">🤝 ${streak.count} empates seguidos</span>`;
+                }
+            } else {
+                streakEl.innerHTML = '<span class="text-gray-500">—</span>';
+            }
+        }
+
+        function calcStreak(history) {
+            if (!history.length) return { count: 0 };
+            const last = history[history.length - 1];
+            let count = 0;
+            for (let i = history.length - 1; i >= 0; i--) {
+                if (history[i] === last) count++; else break;
+            }
+            return { type: last, count };
+        }
+
+        document.getElementById('gameResetScoreBtn').addEventListener('click', () => {
+            gameScore = { player: 0, computer: 0, draw: 0, history: [] };
+            updateGameScoreboard(null);
+        });
+
         function drawCards() {
             const shuffled = [...cards].sort(() => Math.random() - 0.5);
             playerCard = shuffled[0];
@@ -677,23 +837,84 @@
                 playerWins = playerVal > compVal;
             }
             let result;
-            if (playerWins) {
-                result = 'Você venceu!';
-            } else if (playerVal === compVal) {
+            let scoreResult;
+            if (playerVal === compVal) {
                 result = 'Empate!';
+                scoreResult = 'draw';
+            } else if (playerWins) {
+                result = 'Você venceu!';
+                scoreResult = 'win';
             } else {
                 result = 'Computador venceu!';
+                scoreResult = 'lose';
             }
             gameMessageDiv.innerHTML = `${result} (${playerVal} vs ${compVal})`;
+            updateGameScoreboard(scoreResult);
+            // desabilitar botões de atributo após jogar
+            attributeButtonsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
         }
 
         newGameBtn.addEventListener('click', drawCards);
         drawCards();
+        updateGameScoreboard(null);
 
         // ---------- QUIZ ----------
         let currentQuizIndex = 0;
         let userAnswers = new Array(quizQuestions.length).fill(null);
         let quizLocked = false;
+
+        // Placar do Quiz
+        let quizSessionHistory = [];
+
+        function updateQuizScoreboard() {
+            const correct = userAnswers.filter((ans, idx) => ans !== null && ans === quizQuestions[idx].correct).length;
+            const wrong = userAnswers.filter((ans, idx) => ans !== null && ans !== quizQuestions[idx].correct).length;
+            const pending = quizQuestions.length - correct - wrong;
+            const answered = correct + wrong;
+            const total = quizQuestions.length;
+
+            document.getElementById('quizScoreCorrect').textContent = correct;
+            document.getElementById('quizScoreWrong').textContent = wrong;
+            document.getElementById('quizScorePending').textContent = pending;
+
+            const correctPct = (correct / total * 100).toFixed(0);
+            const wrongPct = (wrong / total * 100).toFixed(0);
+            document.getElementById('quizProgressBarCorrect').style.width = correctPct + '%';
+            document.getElementById('quizProgressBarWrong').style.width = wrongPct + '%';
+            document.getElementById('quizScorePercent').textContent = answered > 0
+                ? `${Math.round(correct / answered * 100)}% de acerto` : '0%';
+        }
+
+        function recordQuizResult() {
+            const correct = userAnswers.filter((ans, idx) => ans !== null && ans === quizQuestions[idx].correct).length;
+            const ts = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            quizSessionHistory.unshift({ correct, total: quizQuestions.length, ts });
+            if (quizSessionHistory.length > 5) quizSessionHistory.pop();
+            renderQuizHistory();
+        }
+
+        function renderQuizHistory() {
+            const container = document.getElementById('quizHistoryList');
+            if (!quizSessionHistory.length) {
+                container.innerHTML = '<p class="text-xs text-gray-600 italic">Nenhuma partida concluída ainda.</p>';
+                return;
+            }
+            container.innerHTML = quizSessionHistory.map((h, i) => {
+                const pct = Math.round(h.correct / h.total * 100);
+                const color = pct >= 70 ? 'text-green-400' : pct >= 40 ? 'text-yellow-400' : 'text-red-400';
+                const medal = pct === 100 ? '🥇' : pct >= 70 ? '🥈' : pct >= 40 ? '🥉' : '💀';
+                return `<div class="history-item flex items-center justify-between bg-slate-700/50 rounded px-2 py-1 text-xs">
+                    <span class="text-gray-400">${h.ts}</span>
+                    <span class="${color} font-bold">${medal} ${h.correct}/${h.total} (${pct}%)</span>
+                </div>`;
+            }).join('');
+        }
+
+        document.getElementById('quizResetScoreBtn').addEventListener('click', () => {
+            quizSessionHistory = [];
+            renderQuizHistory();
+            updateQuizScoreboard();
+        });
 
         const quizQuestionEl = document.getElementById('quizQuestion');
         const quizOptionsEl = document.getElementById('quizOptions');
@@ -715,6 +936,7 @@
                 errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
+                recordQuizResult();
                 return;
             }
             quizContainer.classList.remove('hidden');
@@ -752,6 +974,7 @@
                     const isCorrect = opt === q.correct;
                     quizFeedbackEl.textContent = isCorrect ? '✅ Correto!' : '❌ Incorreto.';
                     quizLocked = true;
+                    updateQuizScoreboard();
                     renderQuiz();
                 });
             });
@@ -786,6 +1009,7 @@
                 errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
+                recordQuizResult();
             }
         });
 
@@ -794,10 +1018,12 @@
             userAnswers.fill(null);
             quizLocked = false;
             quizFeedbackEl.textContent = '';
+            updateQuizScoreboard();
             renderQuiz();
         });
 
         renderQuiz();
+        updateQuizScoreboard();
 
         // ---------- LABORATÓRIO DE ESPALHAMENTO ----------
         const scatteringCanvas = document.getElementById('scatteringCanvas');
