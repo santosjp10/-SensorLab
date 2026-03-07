@@ -19,17 +19,6 @@
         .glossary-term h3 { color: #22d3ee; }
         .glossary-term ul { list-style-type: disc; margin-left: 1.5rem; margin-top: 0.25rem; }
         .view-tab-btn.active { background-color: #334155; color: white; }
-
-        /* Scoreboard styles */
-        .score-card { transition: all 0.3s ease; }
-        .score-badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; font-weight: bold; }
-        .quiz-progress-bar { height: 8px; border-radius: 4px; transition: width 0.4s ease; }
-        .history-item { animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        .streak-fire { animation: pulse 1s infinite; }
-        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .win-glow { box-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
-        .lose-glow { box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); }
     </style>
 </head>
 <body class="bg-slate-900 text-gray-100 font-sans antialiased">
@@ -55,6 +44,8 @@
             <!-- Terceira linha de abas -->
             <nav class="flex flex-wrap justify-center gap-2 mt-2 text-sm md:text-base">
                 <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="indices">🌱 Índices</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="location">🧭 Localização</button>
+                <button class="tab-btn px-3 py-2 rounded-t-lg bg-slate-700 hover:bg-slate-600 transition" data-tab="converter">🔄 Converter Coord.</button>
             </nav>
         </div>
     </header>
@@ -92,47 +83,6 @@
         <div id="game" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">🃏 Trunfo: Satélites e Sensores</h2>
             <div class="bg-slate-800 p-4 rounded-lg">
-
-                <!-- Placar do Jogo -->
-                <div class="bg-slate-900/60 border border-slate-700 rounded-xl p-4 mb-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">🏆 Placar da Sessão</h3>
-                        <button id="gameResetScoreBtn" class="text-xs text-gray-500 hover:text-red-400 transition">Zerar</button>
-                    </div>
-                    <div class="grid grid-cols-3 gap-3 mb-3">
-                        <div id="gameScorePlayerBox" class="score-card bg-blue-900/30 border border-blue-700/40 rounded-lg p-3 text-center">
-                            <div id="gameScorePlayer" class="text-3xl font-bold text-blue-400">0</div>
-                            <div class="text-xs text-blue-300 mt-1">🧑 Você</div>
-                        </div>
-                        <div class="score-card bg-slate-700/30 border border-slate-600/40 rounded-lg p-3 text-center">
-                            <div id="gameScoreDraw" class="text-3xl font-bold text-yellow-400">0</div>
-                            <div class="text-xs text-yellow-300 mt-1">🤝 Empates</div>
-                        </div>
-                        <div id="gameScoreComputerBox" class="score-card bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
-                            <div id="gameScoreComputer" class="text-3xl font-bold text-red-400">0</div>
-                            <div class="text-xs text-red-300 mt-1">🤖 CPU</div>
-                        </div>
-                    </div>
-                    <!-- Barra de placar -->
-                    <div class="mb-3">
-                        <div class="bg-slate-700 rounded-full overflow-hidden flex" style="height:8px">
-                            <div id="gameBarPlayer" class="bg-blue-500 transition-all duration-500" style="width:0%"></div>
-                            <div id="gameBarDraw" class="bg-yellow-500 transition-all duration-500" style="width:0%"></div>
-                            <div id="gameBarComputer" class="bg-red-500 transition-all duration-500" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <!-- Streak e histórico -->
-                    <div class="flex items-center gap-4">
-                        <div id="gameStreakBox" class="text-xs text-gray-400">
-                            <span id="gameStreakText">Sem sequência</span>
-                        </div>
-                        <div class="ml-auto">
-                            <p class="text-xs text-gray-500">Último resultado:</p>
-                            <div id="gameLastResults" class="flex gap-1 mt-1"></div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="grid md:grid-cols-2 gap-6">
                     <div>
                         <h3 class="text-lg font-medium mb-2">Sua carta</h3>
@@ -155,50 +105,6 @@
         <!-- Aba Quiz -->
         <div id="quiz" class="tab-content">
             <h2 class="text-2xl font-semibold mb-4">❓ Quiz: Princípios Físicos</h2>
-
-            <!-- Placar do Quiz -->
-            <div class="max-w-3xl mx-auto mb-4">
-                <div class="bg-slate-800 rounded-xl p-4 border border-slate-700">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">📊 Placar da Sessão</h3>
-                        <button id="quizResetScoreBtn" class="text-xs text-gray-500 hover:text-red-400 transition">Zerar</button>
-                    </div>
-                    <!-- Contador em tempo real -->
-                    <div class="grid grid-cols-3 gap-3 mb-4">
-                        <div class="score-card bg-green-900/30 border border-green-700/40 rounded-lg p-3 text-center">
-                            <div id="quizScoreCorrect" class="text-3xl font-bold text-green-400">0</div>
-                            <div class="text-xs text-green-300 mt-1">✅ Acertos</div>
-                        </div>
-                        <div class="score-card bg-red-900/30 border border-red-700/40 rounded-lg p-3 text-center">
-                            <div id="quizScoreWrong" class="text-3xl font-bold text-red-400">0</div>
-                            <div class="text-xs text-red-300 mt-1">❌ Erros</div>
-                        </div>
-                        <div class="score-card bg-slate-700/50 border border-slate-600/40 rounded-lg p-3 text-center">
-                            <div id="quizScorePending" class="text-3xl font-bold text-gray-300">30</div>
-                            <div class="text-xs text-gray-400 mt-1">⏳ Pendentes</div>
-                        </div>
-                    </div>
-                    <!-- Barra de progresso -->
-                    <div class="mb-3">
-                        <div class="flex justify-between text-xs text-gray-500 mb-1">
-                            <span>Progresso</span>
-                            <span id="quizScorePercent">0%</span>
-                        </div>
-                        <div class="bg-slate-700 rounded-full overflow-hidden" style="height:8px">
-                            <div id="quizProgressBarCorrect" class="quiz-progress-bar bg-green-500 float-left" style="width:0%"></div>
-                            <div id="quizProgressBarWrong" class="quiz-progress-bar bg-red-500 float-left" style="width:0%"></div>
-                        </div>
-                    </div>
-                    <!-- Histórico de partidas -->
-                    <div>
-                        <p class="text-xs text-gray-500 mb-2">Histórico de partidas completas:</p>
-                        <div id="quizHistoryList" class="space-y-1 max-h-24 overflow-y-auto">
-                            <p class="text-xs text-gray-600 italic">Nenhuma partida concluída ainda.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="bg-slate-800 p-6 rounded-lg max-w-3xl mx-auto">
                 <div id="quizContainer">
                     <div id="quizProgress" class="text-sm text-gray-400 mb-2">Pergunta <span id="currentQuestion">1</span> de 30</div>
@@ -249,10 +155,27 @@
             </div>
         </div>
 
-        <!-- Aba Curiosidades (agora gerada dinamicamente) -->
+        <!-- Aba Curiosidades -->
         <div id="curiosity" class="tab-content">
-            <h2 class="text-2xl font-semibold mb-4">🌎 30 Curiosidades sobre Radiação Eletromagnética</h2>
-            <div id="curiosityContainer" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
+            <h2 class="text-2xl font-semibold mb-4">❓ Curiosidades do Cotidiano</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="ceu">
+                    <h3 class="font-bold text-lg">🔵 Por que o céu é azul?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Espalhamento Rayleigh: luz solar interage com moléculas de ar; azul é mais espalhado.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="por-do-sol">
+                    <h3 class="font-bold text-lg">🟠 Por que o pôr do sol é alaranjado?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Maior caminho na atmosfera; azul espalhado, restam tons alaranjados.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="vegetacao">
+                    <h3 class="font-bold text-lg">🌿 Por que a vegetação saudável aparece vermelha em composições de infravermelho?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Clorofila reflete fortemente no infravermelho próximo; em composições que usam IV no canal vermelho, a vegetação fica vermelha.</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-lg cursor-pointer" data-curiosity="nuvens">
+                    <h3 class="font-bold text-lg">☁️ Por que as nuvens são brancas?</h3>
+                    <p class="mt-2 text-gray-300 hidden">Gotículas grandes (espalhamento não-seletivo) espalham igualmente todos os comprimentos de onda.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Aba Glossário -->
@@ -273,9 +196,9 @@
             
             <div class="bg-blue-900/20 p-3 rounded-lg mb-4 text-sm">
                 <p><i class="fas fa-info-circle text-blue-300"></i> 
-                <span id="bandStatusMessage">Bandas do Landsat 5 TM carregadas automaticamente da pasta /bands. Use os controles abaixo para explorar diferentes composições e índices.</span>
+                <span id="bandStatusMessage">Aguardando carregamento das bandas...</span>
                 </p>
-                <div class="flex gap-2 mt-2">
+                <div class="flex gap-2 mt-2 flex-wrap">
                     <button id="loadLocalBandsBtn" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs">
                         Carregar da pasta /bands
                     </button>
@@ -292,7 +215,7 @@
                     
                     <!-- Status das bandas -->
                     <div id="bandStatus" class="bg-slate-700 p-3 rounded text-sm">
-                        <p><i class="fas fa-spinner fa-spin"></i> Aguardando carregamento das bandas...</p>
+                        <p><i class="fas fa-spinner fa-spin"></i> Aguardando...</p>
                     </div>
                     
                     <!-- Seleção de composição RGB -->
@@ -361,7 +284,7 @@
                     
                     <!-- Abas de visualização -->
                     <div class="flex border-b border-slate-700 mb-4">
-                        <button class="view-tab-btn px-4 py-2 text-sm font-medium" data-view="rgb">RGB</button>
+                        <button class="view-tab-btn px-4 py-2 text-sm font-medium active" data-view="rgb">RGB</button>
                         <button class="view-tab-btn px-4 py-2 text-sm font-medium" data-view="index">Índice</button>
                         <button class="view-tab-btn px-4 py-2 text-sm font-medium" data-view="histogram">Histograma</button>
                     </div>
@@ -420,6 +343,303 @@
                 </details>
             </div>
         </div>
+        <!-- =====================================================
+             ABA LOCALIZAÇÃO GPS
+        ====================================================== -->
+        <div id="location" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🧭 Localização GPS</h2>
+
+            <!-- Barra de status -->
+            <div class="flex flex-wrap items-center gap-3 bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 mb-5 text-sm">
+                <span id="loc-dot" class="w-3 h-3 rounded-full bg-yellow-400 flex-shrink-0" style="box-shadow:0 0 6px #facc15"></span>
+                <span id="loc-status-text" class="text-gray-300 flex-1">Aguardando permissão de localização…</span>
+                <button onclick="locStart()" id="loc-btn"
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-1.5 rounded text-xs font-semibold transition flex-shrink-0">
+                    📡 Obter Localização
+                </button>
+                <button onclick="locStop()" id="loc-stop-btn"
+                    class="bg-slate-600 hover:bg-slate-500 px-4 py-1.5 rounded text-xs font-semibold transition flex-shrink-0 hidden">
+                    ⏹ Parar
+                </button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- ---- Coluna esquerda: Bússola + qualidade ---- -->
+                <div class="space-y-4">
+
+                    <!-- Bússola -->
+                    <div class="bg-slate-800 rounded-lg p-5">
+                        <h3 class="text-base font-semibold text-cyan-400 mb-4">🧭 Bússola Digital</h3>
+                        <div class="flex flex-col items-center">
+
+                            <!-- Rosa dos ventos animada via Canvas -->
+                            <canvas id="compassCanvas" width="240" height="240"
+                                class="rounded-full" style="background:#0f172a;border:2px solid #334155"></canvas>
+
+                            <div class="mt-4 text-center">
+                                <div id="compass-cardinal" class="text-3xl font-bold text-cyan-300 tracking-widest">—</div>
+                                <div id="compass-deg-label" class="text-sm text-gray-400 mt-1">Aguardando sensor…</div>
+                            </div>
+
+                            <!-- Fallback manual -->
+                            <div class="mt-4 w-full max-w-xs">
+                                <p class="text-xs text-gray-500 mb-1">Inserir rumo manualmente (°):</p>
+                                <div class="flex gap-2">
+                                    <input id="loc-manual-deg" type="number" min="0" max="359" placeholder="0 – 359"
+                                        class="bg-slate-700 border border-slate-600 rounded px-3 py-1.5 text-sm w-full text-white font-mono outline-none focus:border-cyan-500">
+                                    <button onclick="locSetManualHeading()"
+                                        class="bg-slate-600 hover:bg-slate-500 px-3 py-1 rounded text-xs font-semibold whitespace-nowrap">Aplicar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Qualidade do sinal -->
+                    <div class="bg-slate-800 rounded-lg p-4">
+                        <h3 class="text-sm font-semibold text-gray-300 mb-3">📶 Qualidade do Sinal GPS</h3>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400">Acurácia Horiz.</p>
+                                <p class="font-mono font-bold text-yellow-300" id="loc-accuracy">— m</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400">Altitude</p>
+                                <p class="font-mono font-bold text-yellow-300" id="loc-altitude">— m</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400">Velocidade</p>
+                                <p class="font-mono font-bold text-yellow-300" id="loc-speed">— km/h</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400">Atualizado em</p>
+                                <p class="font-mono text-xs font-bold text-yellow-300" id="loc-time">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ---- Coluna direita: Coordenadas ---- -->
+                <div class="space-y-4">
+
+                    <!-- Graus Decimais -->
+                    <div class="bg-slate-800 rounded-lg p-4">
+                        <h3 class="text-sm font-semibold text-cyan-400 mb-3">🌐 Graus Decimais (DD)</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Latitude</p>
+                                <p class="font-mono text-lg font-bold text-green-300" id="loc-lat">—</p>
+                                <p class="text-xs text-gray-500" id="loc-lat-hem">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Longitude</p>
+                                <p class="font-mono text-lg font-bold text-green-300" id="loc-lon">—</p>
+                                <p class="text-xs text-gray-500" id="loc-lon-hem">—</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graus, Minutos e Segundos -->
+                    <div class="bg-slate-800 rounded-lg p-4">
+                        <h3 class="text-sm font-semibold text-cyan-400 mb-3">📐 Graus, Minutos e Segundos (GMS)</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Latitude</p>
+                                <p class="font-mono text-sm font-bold text-blue-300 break-all" id="loc-lat-dms">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Longitude</p>
+                                <p class="font-mono text-sm font-bold text-blue-300 break-all" id="loc-lon-dms">—</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UTM -->
+                    <div class="bg-slate-800 rounded-lg p-4 border border-cyan-800">
+                        <h3 class="text-sm font-semibold text-cyan-400 mb-3">🗺️ UTM (Universal Transverse Mercator)</h3>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div class="bg-slate-700 rounded-lg p-3 col-span-2">
+                                <p class="text-xs text-gray-400 mb-1">Fuso UTM / Hemisf.</p>
+                                <p class="font-mono text-xl font-bold text-yellow-300" id="loc-utm-zone">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Easting (E)</p>
+                                <p class="font-mono text-base font-bold text-emerald-300" id="loc-utm-e">—</p>
+                                <p class="text-xs text-gray-500">metros</p>
+                            </div>
+                            <div class="bg-slate-700 rounded-lg p-3">
+                                <p class="text-xs text-gray-400 mb-1">Northing (N)</p>
+                                <p class="font-mono text-base font-bold text-emerald-300" id="loc-utm-n">—</p>
+                                <p class="text-xs text-gray-500">metros</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 bg-slate-700 rounded p-2">
+                            <i class="fas fa-info-circle text-cyan-400"></i>
+                            Projeção cilíndrica conforme — 60 fusos de 6° de longitude. Elipsoide WGS 84.
+                        </p>
+                    </div>
+
+                    <!-- Botão copiar -->
+                    <button onclick="locCopy()"
+                        class="w-full bg-slate-700 hover:bg-slate-600 border border-slate-500 text-sm py-2 rounded-lg transition">
+                        📋 Copiar todas as coordenadas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- =====================================================
+             ABA CONVERSOR DE COORDENADAS
+        ====================================================== -->
+        <div id="converter" class="tab-content">
+            <h2 class="text-2xl font-semibold mb-4">🔄 Conversor de Coordenadas</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+
+                <!-- BLOCO A: Graus Decimais → UTM -->
+                <div class="bg-slate-800 rounded-lg p-5 border border-slate-600">
+                    <h3 class="text-base font-semibold text-cyan-400 mb-1">🌐 → 🗺️ Graus Decimais → UTM</h3>
+                    <p class="text-xs text-gray-400 mb-4">Use sinal negativo para Sul (−) e Oeste (−).</p>
+
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Latitude (°)</label>
+                            <input id="cv-lat" type="number" step="0.000001" placeholder="-10.184570"
+                                oninput="cvLL2UTM()"
+                                class="bg-slate-700 border border-slate-600 focus:border-cyan-500 rounded px-3 py-2 text-sm w-full text-white font-mono outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Longitude (°)</label>
+                            <input id="cv-lon" type="number" step="0.000001" placeholder="-48.332760"
+                                oninput="cvLL2UTM()"
+                                class="bg-slate-700 border border-slate-600 focus:border-cyan-500 rounded px-3 py-2 text-sm w-full text-white font-mono outline-none">
+                        </div>
+                    </div>
+
+                    <button onclick="cvLL2UTM()"
+                        class="w-full bg-cyan-700 hover:bg-cyan-600 py-2 rounded-lg text-sm font-semibold transition mb-4">
+                        ▶ Converter para UTM
+                    </button>
+
+                    <!-- Resultado DD → UTM -->
+                    <div id="cv-res-utm" class="hidden border-t border-slate-600 pt-4 space-y-3">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Resultado UTM</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-slate-700 rounded p-3 text-center">
+                                <p class="text-xs text-gray-400 mb-1">Fuso</p>
+                                <p class="font-mono font-bold text-yellow-300 text-lg" id="cv-utm-zone">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3 text-center">
+                                <p class="text-xs text-gray-400 mb-1">Easting (m)</p>
+                                <p class="font-mono font-bold text-emerald-300 text-sm" id="cv-utm-e">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3 text-center">
+                                <p class="text-xs text-gray-400 mb-1">Northing (m)</p>
+                                <p class="font-mono font-bold text-emerald-300 text-sm" id="cv-utm-n">—</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-slate-700 rounded p-2">
+                                <p class="text-xs text-gray-400 mb-1">Lat GMS</p>
+                                <p class="font-mono text-xs text-blue-300" id="cv-res-lat-dms">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-2">
+                                <p class="text-xs text-gray-400 mb-1">Lon GMS</p>
+                                <p class="font-mono text-xs text-blue-300" id="cv-res-lon-dms">—</p>
+                            </div>
+                        </div>
+                        <button onclick="cvCopyUTM()"
+                            class="w-full bg-slate-700 hover:bg-slate-600 border border-slate-500 text-xs py-2 rounded transition">
+                            📋 Copiar resultado UTM
+                        </button>
+                    </div>
+                    <div id="cv-err-utm" class="hidden mt-2 text-xs text-red-400 bg-red-900/20 rounded p-2"></div>
+                </div>
+
+                <!-- BLOCO B: UTM → Graus Decimais -->
+                <div class="bg-slate-800 rounded-lg p-5 border border-slate-600">
+                    <h3 class="text-base font-semibold text-cyan-400 mb-1">🗺️ → 🌐 UTM → Graus Decimais</h3>
+                    <p class="text-xs text-gray-400 mb-4">Insira o fuso (1–60), Easting e Northing. Marque "Norte" se hemisfério norte.</p>
+
+                    <div class="grid grid-cols-3 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Fuso (1–60)</label>
+                            <input id="cv-zone-in" type="number" min="1" max="60" placeholder="22"
+                                oninput="cvUTM2LL()"
+                                class="bg-slate-700 border border-slate-600 focus:border-cyan-500 rounded px-3 py-2 text-sm w-full text-white font-mono outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Easting (m)</label>
+                            <input id="cv-east-in" type="number" placeholder="763450"
+                                oninput="cvUTM2LL()"
+                                class="bg-slate-700 border border-slate-600 focus:border-cyan-500 rounded px-3 py-2 text-sm w-full text-white font-mono outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Northing (m)</label>
+                            <input id="cv-north-in" type="number" placeholder="8874200"
+                                oninput="cvUTM2LL()"
+                                class="bg-slate-700 border border-slate-600 focus:border-cyan-500 rounded px-3 py-2 text-sm w-full text-white font-mono outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 mb-4">
+                        <label class="flex items-center gap-2 text-sm cursor-pointer select-none">
+                            <input id="cv-northern" type="checkbox" onchange="cvUTM2LL()" class="accent-cyan-500">
+                            Hemisfério Norte
+                        </label>
+                        <span class="text-xs text-gray-500">(desmarque = Sul)</span>
+                    </div>
+
+                    <button onclick="cvUTM2LL()"
+                        class="w-full bg-cyan-700 hover:bg-cyan-600 py-2 rounded-lg text-sm font-semibold transition mb-4">
+                        ▶ Converter para Graus Decimais
+                    </button>
+
+                    <!-- Resultado UTM → DD -->
+                    <div id="cv-res-ll" class="hidden border-t border-slate-600 pt-4 space-y-3">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Resultado Geográfico</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400 mb-1">Latitude (DD)</p>
+                                <p class="font-mono font-bold text-green-300 text-lg" id="cv-out-lat">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-3">
+                                <p class="text-xs text-gray-400 mb-1">Longitude (DD)</p>
+                                <p class="font-mono font-bold text-green-300 text-lg" id="cv-out-lon">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-2">
+                                <p class="text-xs text-gray-400 mb-1">Lat GMS</p>
+                                <p class="font-mono text-xs text-blue-300" id="cv-out-lat-dms">—</p>
+                            </div>
+                            <div class="bg-slate-700 rounded p-2">
+                                <p class="text-xs text-gray-400 mb-1">Lon GMS</p>
+                                <p class="font-mono text-xs text-blue-300" id="cv-out-lon-dms">—</p>
+                            </div>
+                        </div>
+                        <button onclick="cvCopyLL()"
+                            class="w-full bg-slate-700 hover:bg-slate-600 border border-slate-500 text-xs py-2 rounded transition">
+                            📋 Copiar resultado geográfico
+                        </button>
+                    </div>
+                    <div id="cv-err-ll" class="hidden mt-2 text-xs text-red-400 bg-red-900/20 rounded p-2"></div>
+                </div>
+            </div>
+
+            <!-- Nota técnica -->
+            <div class="mt-6 bg-slate-800 rounded-lg p-4 text-sm">
+                <details>
+                    <summary class="font-semibold cursor-pointer text-cyan-400">📘 Sobre o sistema UTM e as conversões</summary>
+                    <div class="mt-3 space-y-2 text-gray-300">
+                        <p><strong>UTM</strong> divide o globo em <strong>60 fusos</strong> de 6° de longitude, numerados de 1 a 60 a partir de 180° O. Cada fuso usa projeção Mercator Transversal com meridiano central próprio.</p>
+                        <p><strong>Easting</strong>: distância (m) ao leste do meridiano central + falso easting de <strong>500 000 m</strong> (para evitar negativos).</p>
+                        <p><strong>Northing</strong>: distância (m) ao norte do Equador. No hemisfério Sul adiciona-se falso northing de <strong>10 000 000 m</strong>.</p>
+                        <p>O Brasil situa-se entre os fusos 18 S e 25 S. Gurupi (TO) está no fuso <strong>22 S</strong>.</p>
+                        <p class="text-xs text-gray-500 mt-2">Elipsoide: WGS 84 — a = 6 378 137 m · f = 1 / 298,257 223 563 · e² = 0,006 694 380</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+
     </main>
 
     <!-- Rodapé institucional -->
@@ -429,7 +649,7 @@
     </footer>
 
     <script>
-        // ---------- DADOS (Cards, Quantities, Glossary, BandInfo, QuizQuestions) ----------
+        // ---------- DADOS ----------
         const cards = [
             { id: 1, nome: 'Landsat 8', resolucao: 30, bandas: 11, revisit: 16, ano: 2013 },
             { id: 2, nome: 'Sentinel-2', resolucao: 10, bandas: 13, revisit: 5, ano: 2015 },
@@ -439,27 +659,13 @@
             { id: 6, nome: 'WorldView-3', resolucao: 0.31, bandas: 29, revisit: 1, ano: 2014 },
         ];
 
-        // Grandezas atualizadas com os novos itens
         const quantities = [
-            // Grandezas originais
             { nome: 'Número Digital (DN)', definicao: 'Valor bruto registrado pelo sensor, sem correção.', unidade: 'adimensional (0-255, 0-1023...)', obtencao: 'Leitura direta do pixel.', aplicacao: 'Base para conversões, visualização.' },
             { nome: 'Radiância espectral', definicao: 'Fluxo radiante por unidade de área, ângulo sólido e comprimento de onda.', unidade: 'W/m²/sr/μm', obtencao: 'Conversão de DN com coeficientes de calibração.', aplicacao: 'Estimativa de reflectância, temperatura.' },
             { nome: 'Reflectância', definicao: 'Razão entre radiância refletida e irradiância incidente.', unidade: 'adimensional (0-1)', obtencao: 'Radiância / (irradiância solar/π) com correção.', aplicacao: 'Índices de vegetação, classificação.' },
             { nome: 'Irradiância', definicao: 'Potência radiante incidente por unidade de área.', unidade: 'W/m²', obtencao: 'Medida com sensores ou modelagem.', aplicacao: 'Balanço de radiação.' },
             { nome: 'Emitância', definicao: 'Potência radiante emitida por unidade de área.', unidade: 'W/m²', obtencao: 'Relacionada à temperatura (Lei de Stefan-Boltzmann).', aplicacao: 'Sensoriamento térmico.' },
-            { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' },
-            // Novas grandezas
-            { nome: 'Energia Radiante (Q)', definicao: 'Quantidade total de energia transportada pela radiação eletromagnética.', unidade: 'Joule (J)', obtencao: 'Integração do fluxo radiante no tempo.', aplicacao: 'Grandeza fundamental da radiometria.' },
-            { nome: 'Fluxo Radiante (Φ)', definicao: 'Taxa de emissão ou transferência de energia radiante por unidade de tempo.', unidade: 'Watt (W)', obtencao: 'Medida direta com sensores calibrados.', aplicacao: 'Base para outras grandezas radiométricas.' },
-            { nome: 'Intensidade Radiante (I)', definicao: 'Fluxo radiante emitido por unidade de ângulo sólido em uma determinada direção.', unidade: 'W/sr', obtencao: 'Relação entre fluxo e ângulo sólido.', aplicacao: 'Caracteriza a emissão direcional de fontes de radiação.' },
-            { nome: 'Exitância Radiante (M)', definicao: 'Fluxo radiante emitido por uma superfície por unidade de área.', unidade: 'W/m²', obtencao: 'Medida da radiação emergente.', aplicacao: 'Muito usada em estudos térmicos.' },
-            { nome: 'Radiância (L)', definicao: 'Fluxo radiante por unidade de área projetada e por unidade de ângulo sólido.', unidade: 'W/(m²·sr)', obtencao: 'Grandeza diretamente medida pelos sensores remotos.', aplicacao: 'Base para conversão para reflectância.' },
-            { nome: 'Absorvância (α)', definicao: 'Fração da radiação incidente que é absorvida por um material.', unidade: 'Adimensional', obtencao: 'Cálculo a partir de medições de reflectância e transmitância.', aplicacao: 'Importante em estudos de balanço energético.' },
-            { nome: 'Transmitância (τ)', definicao: 'Fração da radiação que atravessa um meio.', unidade: 'Adimensional', obtencao: 'Relação entre radiação transmitida e incidente.', aplicacao: 'Muito usada em estudos atmosféricos.' },
-            { nome: 'Radiância Espectral (Lλ)', definicao: 'Radiância medida em um intervalo específico de comprimento de onda.', unidade: 'W/(m²·sr·µm)', obtencao: 'Sensores hiperespectrais ou multi-espectrais.', aplicacao: 'Base para análise espectral em sensores orbitais.' },
-            { nome: 'Irradiância Espectral (Eλ)', definicao: 'Irradiância medida por unidade de comprimento de onda.', unidade: 'W/(m²·µm)', obtencao: 'Medida com espectrorradiômetros.', aplicacao: 'Usada em modelagem da radiação solar.' },
-            { nome: 'Reflectância Espectral (ρλ)', definicao: 'Reflectância em um comprimento de onda específico.', unidade: 'Adimensional', obtencao: 'Relação entre radiância refletida e irradiância incidente.', aplicacao: 'Base para assinatura espectral de alvos.' },
-            { nome: 'Albedo (A)', definicao: 'Fração da radiação solar total refletida por uma superfície.', unidade: 'Adimensional ou %', obtencao: 'Integração da reflectância em todo o espectro solar.', aplicacao: 'Muito usado em estudos climáticos e agrícolas.' }
+            { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' }
         ];
 
         const glossaryTerms = [
@@ -542,42 +748,7 @@
             { q: "No sensoriamento remoto, a informação detectada pelos sensores depende principalmente da:", a: "composição química do sensor", b: "interação da radiação com a superfície", c: "pressão atmosférica", d: "cor do satélite", correct: "B" }
         ];
 
-        // ---------- NOVAS CURIOSIDADES ----------
-        const curiosities = [
-            { titulo: "☀️ 1. Energia solar em 1 hora", descricao: "A energia do Sol que chega à Terra em 1 hora poderia abastecer o planeta por um ano. Essa energia é a principal fonte para sensores ópticos, pois é refletida pela superfície terrestre." },
-            { titulo: "🌈 2. Impressão digital espectral", descricao: "Toda superfície da Terra tem uma 'impressão digital espectral'. Cada material reflete radiação de forma diferente. Isso é chamado de assinatura espectral e permite distinguir vegetação, solo, água e rochas." },
-            { titulo: "👁️ 3. O olho humano vê pouco", descricao: "O olho humano vê apenas 0,0035% do espectro eletromagnético (400–700 nm). Sensores orbitais detectam desde ultravioleta até micro-ondas." },
-            { titulo: "🔥 4. A Terra também emite radiação", descricao: "Além de refletir radiação solar, a Terra emite radiação térmica, principalmente no infravermelho térmico (8–14 µm)." },
-            { titulo: "📐 5. Lei de Wien", descricao: "Quanto mais quente um objeto, menor o comprimento de onda que ele emite. Exemplo: Sol → radiação visível; Terra → infravermelho térmico." },
-            { titulo: "🌿 6. Reflexão no infravermelho", descricao: "A vegetação saudável pode refletir até 60% da radiação no infravermelho próximo devido à estrutura celular das folhas." },
-            { titulo: "🍃 7. Absorção de luz vermelha", descricao: "A clorofila absorve fortemente a luz vermelha. Por isso a vegetação parece escura no vermelho em imagens espectrais." },
-            { titulo: "📈 8. O 'Red Edge'", descricao: "Entre 680 e 750 nm ocorre um aumento abrupto da reflectância, chamado de Red Edge. Esse fenômeno é usado para detectar vigor vegetal, estresse hídrico e doenças." },
-            { titulo: "🔬 9. Folhas como espelhos", descricao: "A estrutura do mesófilo esponjoso faz a radiação infravermelha refletir várias vezes, aumentando muito a reflectância no NIR." },
-            { titulo: "⚡ 10. Fotossíntese e energia", descricao: "A fotossíntese usa apenas uma pequena fração da energia solar; a maior parte é refletida ou convertida em calor." },
-            { titulo: "🌾 11. Deficiência de nitrogênio", descricao: "Satélites podem identificar áreas de lavoura com deficiência de nitrogênio por alterações no conteúdo de clorofila, que mudam a reflectância da planta." },
-            { titulo: "📅 12. Previsão de produtividade", descricao: "É possível prever produtividade agrícola meses antes da colheita combinando NDVI, temperatura e histórico climático." },
-            { titulo: "💧 13. Estresse hídrico antes da murcha", descricao: "Sensores detectam estresse hídrico antes da planta murchar, pois mudanças espectrais ocorrem antes de sintomas visuais." },
-            { titulo: "📡 14. Radar e altura da vegetação", descricao: "O radar consegue medir a altura da vegetação, estimando biomassa e estrutura do dossel." },
-            { titulo: "🧪 15. Diferenças dentro da mesma lavoura", descricao: "Mesmo dentro da mesma cultura, produtividade, vigor e fertilidade geram assinaturas espectrais diferentes." },
-            { titulo: "🌎 16. Janelas atmosféricas", descricao: "Apenas algumas faixas do espectro conseguem atravessar a atmosfera. Essas regiões são chamadas de janelas atmosféricas." },
-            { titulo: "💨 17. Absorção pelo vapor d'água", descricao: "O vapor d'água absorve grande parte da radiação infravermelha, por isso sensores evitam essas bandas." },
-            { titulo: "🌫️ 18. Efeito dos aerossóis", descricao: "Aerossóis espalham radiação, alterando cor, brilho e índices espectrais das imagens de satélite." },
-            { titulo: "🛰️ 19. Landsat: 50+ anos de história", descricao: "O satélite Landsat observa a Terra continuamente desde 1972, formando o maior registro histórico da superfície terrestre." },
-            { titulo: "📏 20. Resolução de 30 cm", descricao: "Alguns satélites comerciais conseguem detectar áreas menores que um carro, com resolução espacial de até 30 cm." },
-            { titulo: "💾 21. Bilhões de dados por dia", descricao: "Um satélite moderno coleta bilhões de dados por dia, cada pixel representando medições espectrais da superfície." },
-            { titulo: "🎨 22. Sensores hiperespectrais", descricao: "Sensores hiperespectrais podem ter mais de 200 bandas, permitindo identificar materiais com extrema precisão." },
-            { titulo: "🌳 23. Radar enxerga sob a vegetação", descricao: "O radar pode 'enxergar' o solo sob a vegetação porque micro-ondas penetram parcialmente no dossel vegetal." },
-            { titulo: "📏 24. LiDAR mede árvores individualmente", descricao: "Sensores LiDAR calculam distância usando tempo de retorno do laser, permitindo medir árvores individualmente." },
-            { titulo: "🔥 25. Detecção de queimadas em tempo real", descricao: "Satélites conseguem detectar queimadas em tempo real usando sensores térmicos." },
-            { titulo: "💧 26. Evapotranspiração por satélite", descricao: "É possível estimar evapotranspiração combinando temperatura da superfície, reflectância e energia solar." },
-            { titulo: "🏜️ 27. Desertificação detectada", descricao: "Mudanças na reflectância do solo indicam degradação, permitindo detectar desertificação." },
-            { titulo: "🌲 28. Carbono em florestas", descricao: "Dados de radar e LiDAR permitem estimar biomassa florestal e, consequentemente, carbono armazenado." },
-            { titulo: "🌊 29. Assinatura espectral do oceano", descricao: "A cor da água revela clorofila, sedimentos e poluição, graças à assinatura espectral." },
-            { titulo: "🌍 30. Monitoramento global diário", descricao: "Hoje existem mais de 1000 satélites de observação da Terra monitorando agricultura, clima, florestas, oceanos e cidades." }
-        ];
-
-        // ---------- FUNÇÕES GLOBAIS ----------
-        // Navegação por abas
+        // ---------- NAVEGAÇÃO POR ABAS ----------
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
         
@@ -729,70 +900,6 @@
         const gameMessageDiv = document.getElementById('gameMessage');
         const newGameBtn = document.getElementById('newGameBtn');
 
-        // Placar do Jogo
-        let gameScore = { player: 0, computer: 0, draw: 0, history: [] };
-
-        function updateGameScoreboard(result) {
-            if (result === 'win') gameScore.player++;
-            else if (result === 'lose') gameScore.computer++;
-            else if (result === 'draw') gameScore.draw++;
-
-            if (result) gameScore.history.push(result);
-            if (gameScore.history.length > 10) gameScore.history.shift();
-
-            document.getElementById('gameScorePlayer').textContent = gameScore.player;
-            document.getElementById('gameScoreComputer').textContent = gameScore.computer;
-            document.getElementById('gameScoreDraw').textContent = gameScore.draw;
-
-            const total = gameScore.player + gameScore.computer + gameScore.draw;
-            if (total > 0) {
-                const pw = (gameScore.player / total * 100).toFixed(1);
-                const dw = (gameScore.draw / total * 100).toFixed(1);
-                const cw = (gameScore.computer / total * 100).toFixed(1);
-                document.getElementById('gameBarPlayer').style.width = pw + '%';
-                document.getElementById('gameBarDraw').style.width = dw + '%';
-                document.getElementById('gameBarComputer').style.width = cw + '%';
-            }
-
-            // Últimos resultados como badges
-            const lastDiv = document.getElementById('gameLastResults');
-            lastDiv.innerHTML = gameScore.history.slice(-8).map(r => {
-                if (r === 'win') return '<span class="text-xs px-1.5 py-0.5 rounded bg-blue-700 text-blue-200 font-bold">V</span>';
-                if (r === 'lose') return '<span class="text-xs px-1.5 py-0.5 rounded bg-red-800 text-red-200 font-bold">D</span>';
-                return '<span class="text-xs px-1.5 py-0.5 rounded bg-yellow-800 text-yellow-200 font-bold">E</span>';
-            }).join('');
-
-            // Sequência
-            const streak = calcStreak(gameScore.history);
-            const streakEl = document.getElementById('gameStreakText');
-            if (streak.count > 1) {
-                if (streak.type === 'win') {
-                    streakEl.innerHTML = `<span class="streak-fire text-green-400 font-bold">🔥 ${streak.count}x seguidas!</span>`;
-                } else if (streak.type === 'lose') {
-                    streakEl.innerHTML = `<span class="text-red-400">💀 ${streak.count} derrotas seguidas</span>`;
-                } else {
-                    streakEl.innerHTML = `<span class="text-yellow-400">🤝 ${streak.count} empates seguidos</span>`;
-                }
-            } else {
-                streakEl.innerHTML = '<span class="text-gray-500">—</span>';
-            }
-        }
-
-        function calcStreak(history) {
-            if (!history.length) return { count: 0 };
-            const last = history[history.length - 1];
-            let count = 0;
-            for (let i = history.length - 1; i >= 0; i--) {
-                if (history[i] === last) count++; else break;
-            }
-            return { type: last, count };
-        }
-
-        document.getElementById('gameResetScoreBtn').addEventListener('click', () => {
-            gameScore = { player: 0, computer: 0, draw: 0, history: [] };
-            updateGameScoreboard(null);
-        });
-
         function drawCards() {
             const shuffled = [...cards].sort(() => Math.random() - 0.5);
             playerCard = shuffled[0];
@@ -837,84 +944,23 @@
                 playerWins = playerVal > compVal;
             }
             let result;
-            let scoreResult;
-            if (playerVal === compVal) {
-                result = 'Empate!';
-                scoreResult = 'draw';
-            } else if (playerWins) {
+            if (playerWins) {
                 result = 'Você venceu!';
-                scoreResult = 'win';
+            } else if (playerVal === compVal) {
+                result = 'Empate!';
             } else {
                 result = 'Computador venceu!';
-                scoreResult = 'lose';
             }
             gameMessageDiv.innerHTML = `${result} (${playerVal} vs ${compVal})`;
-            updateGameScoreboard(scoreResult);
-            // desabilitar botões de atributo após jogar
-            attributeButtonsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
         }
 
         newGameBtn.addEventListener('click', drawCards);
         drawCards();
-        updateGameScoreboard(null);
 
         // ---------- QUIZ ----------
         let currentQuizIndex = 0;
         let userAnswers = new Array(quizQuestions.length).fill(null);
         let quizLocked = false;
-
-        // Placar do Quiz
-        let quizSessionHistory = [];
-
-        function updateQuizScoreboard() {
-            const correct = userAnswers.filter((ans, idx) => ans !== null && ans === quizQuestions[idx].correct).length;
-            const wrong = userAnswers.filter((ans, idx) => ans !== null && ans !== quizQuestions[idx].correct).length;
-            const pending = quizQuestions.length - correct - wrong;
-            const answered = correct + wrong;
-            const total = quizQuestions.length;
-
-            document.getElementById('quizScoreCorrect').textContent = correct;
-            document.getElementById('quizScoreWrong').textContent = wrong;
-            document.getElementById('quizScorePending').textContent = pending;
-
-            const correctPct = (correct / total * 100).toFixed(0);
-            const wrongPct = (wrong / total * 100).toFixed(0);
-            document.getElementById('quizProgressBarCorrect').style.width = correctPct + '%';
-            document.getElementById('quizProgressBarWrong').style.width = wrongPct + '%';
-            document.getElementById('quizScorePercent').textContent = answered > 0
-                ? `${Math.round(correct / answered * 100)}% de acerto` : '0%';
-        }
-
-        function recordQuizResult() {
-            const correct = userAnswers.filter((ans, idx) => ans !== null && ans === quizQuestions[idx].correct).length;
-            const ts = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            quizSessionHistory.unshift({ correct, total: quizQuestions.length, ts });
-            if (quizSessionHistory.length > 5) quizSessionHistory.pop();
-            renderQuizHistory();
-        }
-
-        function renderQuizHistory() {
-            const container = document.getElementById('quizHistoryList');
-            if (!quizSessionHistory.length) {
-                container.innerHTML = '<p class="text-xs text-gray-600 italic">Nenhuma partida concluída ainda.</p>';
-                return;
-            }
-            container.innerHTML = quizSessionHistory.map((h, i) => {
-                const pct = Math.round(h.correct / h.total * 100);
-                const color = pct >= 70 ? 'text-green-400' : pct >= 40 ? 'text-yellow-400' : 'text-red-400';
-                const medal = pct === 100 ? '🥇' : pct >= 70 ? '🥈' : pct >= 40 ? '🥉' : '💀';
-                return `<div class="history-item flex items-center justify-between bg-slate-700/50 rounded px-2 py-1 text-xs">
-                    <span class="text-gray-400">${h.ts}</span>
-                    <span class="${color} font-bold">${medal} ${h.correct}/${h.total} (${pct}%)</span>
-                </div>`;
-            }).join('');
-        }
-
-        document.getElementById('quizResetScoreBtn').addEventListener('click', () => {
-            quizSessionHistory = [];
-            renderQuizHistory();
-            updateQuizScoreboard();
-        });
 
         const quizQuestionEl = document.getElementById('quizQuestion');
         const quizOptionsEl = document.getElementById('quizOptions');
@@ -936,7 +982,6 @@
                 errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
-                recordQuizResult();
                 return;
             }
             quizContainer.classList.remove('hidden');
@@ -974,7 +1019,6 @@
                     const isCorrect = opt === q.correct;
                     quizFeedbackEl.textContent = isCorrect ? '✅ Correto!' : '❌ Incorreto.';
                     quizLocked = true;
-                    updateQuizScoreboard();
                     renderQuiz();
                 });
             });
@@ -1009,7 +1053,6 @@
                 errorCountSpan.textContent = errorCount;
                 quizContainer.classList.add('hidden');
                 quizResult.classList.remove('hidden');
-                recordQuizResult();
             }
         });
 
@@ -1018,12 +1061,10 @@
             userAnswers.fill(null);
             quizLocked = false;
             quizFeedbackEl.textContent = '';
-            updateQuizScoreboard();
             renderQuiz();
         });
 
         renderQuiz();
-        updateQuizScoreboard();
 
         // ---------- LABORATÓRIO DE ESPALHAMENTO ----------
         const scatteringCanvas = document.getElementById('scatteringCanvas');
@@ -1093,20 +1134,13 @@
             });
         });
 
-        // ---------- CURIOSIDADES (geração dinâmica) ----------
-        const curiosityContainer = document.getElementById('curiosityContainer');
-        curiosities.forEach(cur => {
-            const card = document.createElement('div');
-            card.className = 'bg-slate-800 p-4 rounded-lg cursor-pointer';
-            card.innerHTML = `
-                <h3 class="font-bold text-lg">${cur.titulo}</h3>
-                <p class="mt-2 text-gray-300 hidden">${cur.descricao}</p>
-            `;
+        // ---------- CURIOSIDADES ----------
+        const curiosityCards = document.querySelectorAll('[data-curiosity]');
+        curiosityCards.forEach(card => {
             card.addEventListener('click', () => {
                 const p = card.querySelector('p');
                 p.classList.toggle('hidden');
             });
-            curiosityContainer.appendChild(card);
         });
 
         // ---------- GLOSSÁRIO ----------
@@ -1133,30 +1167,26 @@
             quantitiesList.appendChild(div);
         });
 
-        // ---------- ÍNDICES DE VEGETAÇÃO ----------
+        // ---------- ÍNDICES DE VEGETAÇÃO (CORRIGIDO) ----------
         let bandImages = {};
         let bandData = {};
         
-        // Elementos da UI para índices
         const bandStatus = document.getElementById('bandStatus');
+        const bandStatusMessage = document.getElementById('bandStatusMessage');
+        const loadLocalBandsBtn = document.getElementById('loadLocalBandsBtn');
+        const loadSyntheticBtn = document.getElementById('loadSyntheticBtn');
+        const processBtn = document.getElementById('processBandsBtn');
         const applyRGBBtn = document.getElementById('applyRGBBtn');
         const rgbCanvas = document.getElementById('rgbCanvas');
         const indexCanvas = document.getElementById('indexCanvas');
         const histogramCanvas = document.getElementById('histogramCanvas');
         const indexBtns = document.querySelectorAll('.index-btn');
         const viewTabBtns = document.querySelectorAll('.view-tab-btn');
-        const redChannel = document.getElementById('redChannel');
-        const greenChannel = document.getElementById('greenChannel');
-        const blueChannel = document.getElementById('blueChannel');
-        const rgbDescription = document.getElementById('rgbDescription');
-        const indexNameSpan = document.getElementById('indexName');
-        const indexMin = document.getElementById('indexMin');
-        const indexMax = document.getElementById('indexMax');
-        const indexMean = document.getElementById('indexMean');
 
         // Função para carregar bandas da pasta /bands
-        window.loadLocalBands = function() {
+        function loadLandsatBands() {
             bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Tentando carregar bandas da pasta /bands...</p>';
+            bandStatusMessage.textContent = 'Carregando bandas da pasta /bands...';
             
             const bandPaths = {
                 1: 'bands/band1.png',
@@ -1185,10 +1215,9 @@
                         bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas carregadas! Processando...</p>';
                         // Verifica dimensões
                         const dims = Object.values(bandImages).map(img => `${img.width}x${img.height}`);
-                        console.log('Dimensões das bandas:', dims);
+                        console.log('Dimensões:', dims);
                         if (new Set(dims).size > 1) {
-                            console.warn('Bandas com dimensões diferentes!');
-                            bandStatus.innerHTML = '<p class="text-yellow-400">⚠️ Bandas com dimensões diferentes. Podem ocorrer erros.</p>';
+                            console.warn('⚠️ Bandas com dimensões diferentes!');
                         }
                         processBands();
                     }
@@ -1197,79 +1226,14 @@
                 img.onerror = (e) => {
                     console.error(`❌ Erro ao carregar banda ${bandNum} em ${bandPaths[bandNum]}`, e);
                     bandStatus.innerHTML = `<p class="text-red-400">Erro na banda ${bandNum}. Verifique o arquivo.</p>`;
+                    bandStatusMessage.textContent = 'Erro ao carregar bandas. Use dados sintéticos.';
                 };
                 
                 img.src = bandPaths[bandNum];
             });
-        };
+        }
 
-        // Função para gerar dados sintéticos (fallback)
-        window.loadSyntheticBands = function() {
-            console.log('Carregando dados sintéticos');
-            bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Gerando dados sintéticos...</p>';
-            
-            const width = 400;
-            const height = 300;
-            
-            function generatePattern(baseOffset) {
-                const data = new Float32Array(width * height);
-                for (let y = 0; y < height; y++) {
-                    for (let x = 0; x < width; x++) {
-                        const i = y * width + x;
-                        // Simula áreas: vegetação, solo, água
-                        let val = 0.3;
-                        if (x > 100 && x < 200 && y > 50 && y < 150) val = 0.8; // vegetação densa
-                        if (x > 250 && x < 350 && y > 100 && y < 200) val = 0.7; // vegetação média
-                        if (x > 50 && x < 120 && y > 200 && y < 270) val = 0.1;  // água
-                        if (x > 300 && x < 380 && y > 220 && y < 280) val = 0.4; // solo exposto
-                        // textura
-                        val += Math.sin(x * 0.1) * 0.05 + Math.cos(y * 0.1) * 0.05;
-                        data[i] = Math.min(1, Math.max(0, val));
-                    }
-                }
-                return data;
-            }
-            
-            bandData = {
-                1: generatePattern(0),
-                2: generatePattern(1),
-                3: generatePattern(2),
-                4: generatePattern(3),
-                5: generatePattern(4)
-            };
-            
-            // Ajustes para simular comportamento espectral
-            for (let i = 0; i < width * height; i++) {
-                if (bandData[4][i] > 0.6) bandData[3][i] *= 0.3; // vegetação: NIR alto, vermelho baixo
-                if (bandData[4][i] < 0.2) {
-                    bandData[1][i] = 0.1; // água: todos baixos
-                    bandData[2][i] = 0.15;
-                    bandData[3][i] = 0.1;
-                }
-            }
-            
-            // Cria objetos de imagem fictícios (apenas para dimensões)
-            bandImages = {
-                1: { width, height },
-                2: { width, height },
-                3: { width, height },
-                4: { width, height },
-                5: { width, height }
-            };
-            
-            bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Dados sintéticos carregados!</p>';
-            applyRGBBtn.disabled = false;
-            indexBtns.forEach(btn => btn.disabled = false);
-            
-            renderRGB();
-            const ndvi = calculateNDVI();
-            if (ndvi) {
-                renderIndex(ndvi, indexCanvas);
-                renderHistogram(ndvi);
-            }
-        };
-
-        // Processar bandas (converter para dados numéricos)
+        // Função para processar bandas (converter para dados numéricos)
         function processBands() {
             console.log('▶️ Iniciando processamento das bandas');
             const firstBand = bandImages[1];
@@ -1279,7 +1243,7 @@
             }
             const width = firstBand.width;
             const height = firstBand.height;
-            console.log(`Dimensões do canvas: ${width}x${height}`);
+            console.log(`📏 Dimensões do canvas: ${width}x${height}`);
             
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = width;
@@ -1294,167 +1258,238 @@
                 const imageData = ctx.getImageData(0, 0, width, height);
                 console.log(`Banda ${bandNum} - pixels: ${imageData.data.length/4}`);
                 
+                // Extrai o canal R (assumindo tons de cinza)
                 const data = new Float32Array(width * height);
                 for (let i = 0; i < imageData.data.length; i += 4) {
-                    data[i/4] = imageData.data[i] / 255; // assume tons de cinza
+                    data[i/4] = imageData.data[i] / 255;
                 }
                 bandData[bandNum] = data;
                 processedCount++;
                 
                 if (processedCount === 5) {
                     console.log('✅ Todas as bandas processadas');
-                    bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas prontas!</p>';
+                    bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Bandas prontas! Explore as composições.</p>';
+                    bandStatusMessage.textContent = 'Bandas carregadas com sucesso.';
+                    
+                    // Habilita botões
+                    processBtn.disabled = false;
                     applyRGBBtn.disabled = false;
                     indexBtns.forEach(btn => btn.disabled = false);
                     
+                    // Renderiza composição RGB inicial
                     renderRGB();
+                    
+                    // Calcula NDVI inicial
                     setTimeout(() => {
                         const ndvi = calculateNDVI();
                         if (ndvi) {
                             renderIndex(ndvi, indexCanvas);
-                            renderHistogram(ndvi);
                         }
                     }, 500);
                 }
             });
         }
 
-        // Renderizar composição RGB
+        // Função para gerar dados sintéticos (fallback)
+        function loadSyntheticData() {
+            console.log('▶️ Carregando dados sintéticos');
+            bandStatus.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Gerando dados sintéticos...</p>';
+            bandStatusMessage.textContent = 'Usando dados sintéticos (modo de teste).';
+            
+            const width = 400;
+            const height = 300;
+            
+            function generatePattern(baseOffset) {
+                const data = new Float32Array(width * height);
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const i = y * width + x;
+                        let val = 0.3;
+                        // Simula áreas: vegetação densa, solo, água
+                        if (x > 100 && x < 200 && y > 50 && y < 150) val = 0.8; // vegetação densa
+                        if (x > 250 && x < 350 && y > 100 && y < 200) val = 0.7; // vegetação média
+                        if (x > 50 && x < 120 && y > 200 && y < 270) val = 0.1;  // água
+                        if (x > 300 && x < 380 && y > 220 && y < 280) val = 0.4; // solo exposto
+                        // textura
+                        val += Math.sin(x * 0.1) * 0.05 + Math.cos(y * 0.1) * 0.05;
+                        data[i] = Math.min(1, Math.max(0, val));
+                    }
+                }
+                return data;
+            }
+            
+            bandData = {
+                1: generatePattern(0), // Azul
+                2: generatePattern(1), // Verde
+                3: generatePattern(2), // Vermelho
+                4: generatePattern(3), // NIR
+                5: generatePattern(4)  // SWIR
+            };
+            
+            // Ajustes para simular comportamento espectral realista
+            for (let i = 0; i < width * height; i++) {
+                if (bandData[4][i] > 0.6) bandData[3][i] *= 0.3; // vegetação: NIR alto, vermelho baixo
+                if (bandData[4][i] < 0.2) {
+                    bandData[1][i] = 0.1; // água: todos baixos
+                    bandData[2][i] = 0.15;
+                    bandData[3][i] = 0.1;
+                }
+            }
+            
+            // Cria objetos de imagem fictícios (para obter dimensões)
+            bandImages = {
+                1: { width, height },
+                2: { width, height },
+                3: { width, height },
+                4: { width, height },
+                5: { width, height }
+            };
+            
+            bandStatus.innerHTML = '<p><i class="fas fa-check-circle text-green-400"></i> Dados sintéticos carregados!</p>';
+            
+            processBtn.disabled = false;
+            applyRGBBtn.disabled = false;
+            indexBtns.forEach(btn => btn.disabled = false);
+            
+            renderRGB();
+            const ndvi = calculateNDVI();
+            if (ndvi) renderIndex(ndvi, indexCanvas);
+        }
+
+        // Renderizar composição RGB (corrigida com logs e tratamento de erro)
         function renderRGB() {
-            console.log('Renderizando RGB');
-            if (!bandData[3] || !bandData[2] || !bandData[1]) {
-                console.warn('Dados insuficientes para RGB');
+            console.log('▶️ renderRGB chamado');
+            
+            // Verifica se os dados necessários existem
+            if (!bandData[1] || !bandData[2] || !bandData[3]) {
+                console.warn('⚠️ Dados de bandas ausentes para RGB', {
+                    b1: bandData[1] ? 'ok' : 'falta',
+                    b2: bandData[2] ? 'ok' : 'falta',
+                    b3: bandData[3] ? 'ok' : 'falta'
+                });
                 return;
             }
-            const width = bandImages[1].width;
-            const height = bandImages[1].height;
+            
+            const firstBand = bandImages[1];
+            if (!firstBand) {
+                console.warn('⚠️ bandImages[1] não existe');
+                return;
+            }
+            
+            const width = firstBand.width;
+            const height = firstBand.height;
+            console.log(`📏 Dimensões: ${width}x${height}`);
+            
+            if (width === 0 || height === 0) {
+                console.warn('⚠️ Dimensões inválidas');
+                return;
+            }
+            
+            // Configura canvas
             rgbCanvas.width = width;
             rgbCanvas.height = height;
             const ctx = rgbCanvas.getContext('2d');
+            ctx.clearRect(0, 0, width, height);
+            
+            // Obtém as bandas selecionadas
+            const redSelect = document.getElementById('redChannel');
+            const greenSelect = document.getElementById('greenChannel');
+            const blueSelect = document.getElementById('blueChannel');
+            
+            const rBand = bandData[redSelect.value] || bandData[3];
+            const gBand = bandData[greenSelect.value] || bandData[2];
+            const bBand = bandData[blueSelect.value] || bandData[1];
+            
+            console.log(`🎨 Canais: R=${redSelect.value} (tamanho: ${rBand.length}), G=${greenSelect.value} (${gBand.length}), B=${blueSelect.value} (${bBand.length})`);
+            
             const imageData = ctx.createImageData(width, height);
             
-            const rBand = bandData[redChannel.value] || bandData[3];
-            const gBand = bandData[greenChannel.value] || bandData[2];
-            const bBand = bandData[blueChannel.value] || bandData[1];
-            
-            for (let i = 0; i < width * height; i++) {
-                const idx = i * 4;
-                imageData.data[idx] = Math.min(255, rBand[i] * 255);
-                imageData.data[idx + 1] = Math.min(255, gBand[i] * 255);
-                imageData.data[idx + 2] = Math.min(255, bBand[i] * 255);
-                imageData.data[idx + 3] = 255;
+            try {
+                for (let i = 0; i < width * height; i++) {
+                    const idx = i * 4;
+                    imageData.data[idx] = Math.min(255, Math.round(rBand[i] * 255));
+                    imageData.data[idx + 1] = Math.min(255, Math.round(gBand[i] * 255));
+                    imageData.data[idx + 2] = Math.min(255, Math.round(bBand[i] * 255));
+                    imageData.data[idx + 3] = 255;
+                }
+                ctx.putImageData(imageData, 0, 0);
+                console.log('✅ RGB renderizado com sucesso');
+                
+                const redDesc = redSelect.selectedOptions[0].text;
+                const greenDesc = greenSelect.selectedOptions[0].text;
+                const blueDesc = blueSelect.selectedOptions[0].text;
+                document.getElementById('rgbDescription').innerHTML = `Vermelho (${redDesc}), Verde (${greenDesc}), Azul (${blueDesc})`;
+            } catch (e) {
+                console.error('❌ Erro ao renderizar RGB:', e);
             }
-            
-            ctx.putImageData(imageData, 0, 0);
-            console.log('RGB renderizado no canvas');
-            
-            const redDesc = redChannel.selectedOptions[0].text;
-            const greenDesc = greenChannel.selectedOptions[0].text;
-            const blueDesc = blueChannel.selectedOptions[0].text;
-            rgbDescription.innerHTML = `Vermelho (${redDesc}), Verde (${greenDesc}), Azul (${blueDesc})`;
         }
 
-        // Calcular NDVI
+        // Funções para índices (já existentes, mantidas)
         function calculateNDVI() {
             if (!bandData[4] || !bandData[3]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
-                if (n + r === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = (n - r) / (n + r);
-                }
+                result[i] = (n + r === 0) ? 0 : (n - r) / (n + r);
             }
-            
             return result;
         }
 
-        // Calcular SAVI
         function calculateSAVI(L = 0.5) {
             if (!bandData[4] || !bandData[3]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
-                if (n + r + L === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = ((n - r) / (n + r + L)) * (1 + L);
-                }
+                result[i] = (n + r + L === 0) ? 0 : ((n - r) / (n + r + L)) * (1 + L);
             }
-            
             return result;
         }
 
-        // Calcular EVI
         function calculateEVI() {
             if (!bandData[4] || !bandData[3] || !bandData[1]) return null;
-            
             const nir = bandData[4];
             const red = bandData[3];
             const blue = bandData[1];
             const result = new Float32Array(nir.length);
-            
             for (let i = 0; i < nir.length; i++) {
                 const n = nir[i];
                 const r = red[i];
                 const b = blue[i];
-                const denominator = n + 6 * r - 7.5 * b + 1;
-                if (denominator === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = 2.5 * ((n - r) / denominator);
-                }
+                const denom = n + 6 * r - 7.5 * b + 1;
+                result[i] = (denom === 0) ? 0 : 2.5 * ((n - r) / denom);
             }
-            
             return result;
         }
 
-        // Calcular NDWI
         function calculateNDWI() {
             if (!bandData[2] || !bandData[4]) return null;
-            
             const green = bandData[2];
             const nir = bandData[4];
             const result = new Float32Array(green.length);
-            
             for (let i = 0; i < green.length; i++) {
                 const g = green[i];
                 const n = nir[i];
-                if (g + n === 0) {
-                    result[i] = 0;
-                } else {
-                    result[i] = (g - n) / (g + n);
-                }
+                result[i] = (g + n === 0) ? 0 : (g - n) / (g + n);
             }
-            
             return result;
         }
 
-        // Renderizar índice no canvas
         function renderIndex(indexData, canvas) {
             if (!indexData) return;
-            
             const width = bandImages[1].width;
             const height = bandImages[1].height;
-            
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             const imageData = ctx.createImageData(width, height);
             
             let min = 1, max = -1, sum = 0;
-            
             for (let i = 0; i < width * height; i++) {
                 const val = indexData[i];
                 if (val < min) min = val;
@@ -1462,21 +1497,16 @@
                 sum += val;
                 
                 const idx = i * 4;
-                
-                // Esquema de cores: azul (água) -> marrom (solo) -> verde (vegetação)
                 if (val < -0.2) {
-                    // Água
                     imageData.data[idx] = 0;
                     imageData.data[idx + 1] = 100;
                     imageData.data[idx + 2] = 255;
                 } else if (val < 0) {
-                    // Solo úmido / transição
                     const t = (val + 0.2) / 0.2;
                     imageData.data[idx] = 139 + t * 50;
                     imageData.data[idx + 1] = 69 + t * 50;
                     imageData.data[idx + 2] = 19 + t * 20;
                 } else {
-                    // Vegetação (quanto maior o valor, mais verde)
                     const t = Math.min(1, val);
                     imageData.data[idx] = 34 + t * 100;
                     imageData.data[idx + 1] = 139 + t * 100;
@@ -1484,99 +1514,45 @@
                 }
                 imageData.data[idx + 3] = 255;
             }
-            
             ctx.putImageData(imageData, 0, 0);
-            
-            indexMin.textContent = min.toFixed(3);
-            indexMax.textContent = max.toFixed(3);
-            indexMean.textContent = (sum / (width * height)).toFixed(3);
-        }
-
-        // Renderizar histograma
-        function renderHistogram(indexData) {
-            if (!indexData) return;
-            
-            const width = 256; // largura do histograma
-            const height = 200;
-            histogramCanvas.width = width;
-            histogramCanvas.height = height;
-            const ctx = histogramCanvas.getContext('2d');
-            ctx.clearRect(0, 0, width, height);
-            
-            // Calcular histograma (256 bins)
-            const bins = new Array(256).fill(0);
-            const totalPixels = indexData.length;
-            
-            for (let i = 0; i < totalPixels; i++) {
-                // Mapeia o valor do índice (normalmente -1 a 1) para 0-255
-                const val = indexData[i];
-                const bin = Math.floor((val + 1) / 2 * 255);
-                const clampedBin = Math.min(255, Math.max(0, bin));
-                bins[clampedBin]++;
-            }
-            
-            // Encontrar o máximo para normalizar
-            const maxBin = Math.max(...bins);
-            
-            // Desenhar barras
-            ctx.fillStyle = '#22d3ee';
-            for (let i = 0; i < 256; i++) {
-                const barHeight = (bins[i] / maxBin) * height;
-                ctx.fillRect(i, height - barHeight, 1, barHeight);
-            }
-            
-            // Desenhar linhas de referência
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(128, 0); // linha do zero (aproximadamente)
-            ctx.lineTo(128, height);
-            ctx.stroke();
+            document.getElementById('indexMin').textContent = min.toFixed(3);
+            document.getElementById('indexMax').textContent = max.toFixed(3);
+            document.getElementById('indexMean').textContent = (sum / (width * height)).toFixed(3);
         }
 
         // Event listeners
-        document.getElementById('loadLocalBandsBtn').addEventListener('click', loadLocalBands);
-        document.getElementById('loadSyntheticBtn').addEventListener('click', loadSyntheticBands);
-        
+        loadLocalBandsBtn.addEventListener('click', loadLandsatBands);
+        loadSyntheticBtn.addEventListener('click', loadSyntheticData);
+
         applyRGBBtn.addEventListener('click', () => {
+            console.log('Botão Aplicar composição clicado');
             renderRGB();
+            // Ativa a aba RGB
             document.querySelector('[data-view="rgb"]').click();
         });
 
         indexBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const indexType = btn.dataset.index;
-                indexNameSpan.textContent = btn.textContent;
+                document.getElementById('indexName').textContent = btn.textContent;
                 
                 let indexData = null;
                 switch(indexType) {
-                    case 'ndvi':
-                        indexData = calculateNDVI();
-                        break;
-                    case 'savi':
-                        indexData = calculateSAVI();
-                        break;
-                    case 'evi':
-                        indexData = calculateEVI();
-                        break;
-                    case 'ndwi':
-                        indexData = calculateNDWI();
-                        break;
+                    case 'ndvi': indexData = calculateNDVI(); break;
+                    case 'savi': indexData = calculateSAVI(); break;
+                    case 'evi': indexData = calculateEVI(); break;
+                    case 'ndwi': indexData = calculateNDWI(); break;
                 }
-                
                 if (indexData) {
                     renderIndex(indexData, indexCanvas);
-                    renderHistogram(indexData);
                     document.querySelector('[data-view="index"]').click();
                 }
             });
         });
 
-        // Alternar entre visualizações (CORRIGIDO)
         viewTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const view = btn.dataset.view;
-                
                 viewTabBtns.forEach(b => {
                     b.classList.remove('bg-slate-700', 'text-white');
                     b.classList.add('text-gray-400');
@@ -1584,38 +1560,431 @@
                 btn.classList.add('bg-slate-700', 'text-white');
                 btn.classList.remove('text-gray-400');
                 
-                // Oculta todas as visualizações
                 document.querySelectorAll('.view-content').forEach(content => {
                     content.classList.add('hidden');
                 });
-                
-                // Mostra a visualização correta, tratando o caso especial "rgb"
-                let targetId;
-                if (view === 'rgb') {
-                    targetId = 'viewRGB';
-                } else {
-                    targetId = `view${view.charAt(0).toUpperCase() + view.slice(1)}`;
-                }
-                
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.classList.remove('hidden');
-                } else {
-                    console.error(`Elemento com id "${targetId}" não encontrado.`);
-                }
+                document.getElementById(`view${view.charAt(0).toUpperCase() + view.slice(1)}`).classList.remove('hidden');
             });
         });
 
         // Carregar bandas quando a aba for aberta
         document.querySelector('[data-tab="indices"]').addEventListener('click', () => {
             if (Object.keys(bandImages).length === 0) {
-                loadLocalBands();
+                loadLandsatBands(); // tenta carregar da pasta primeiro
             }
         });
 
-        // Carregar automaticamente se a aba já estiver ativa
+        // Se a aba já estiver ativa ao carregar a página, carrega as bandas
         if (document.getElementById('indices').classList.contains('active')) {
-            loadLocalBands();
+            loadLandsatBands();
+        }
+
+
+        // ============================================================
+        //  MÓDULO UTM — WGS 84
+        //  Algoritmo de Bowring / Karney (série de potências)
+        // ============================================================
+        const UTM_A  = 6378137.0;          // semi-eixo maior WGS84
+        const UTM_F  = 1 / 298.257223563;  // achatamento
+        const UTM_E2 = 2 * UTM_F - UTM_F * UTM_F;   // e²
+        const UTM_K0 = 0.9996;             // fator de escala
+
+        function utmZone(lon) {
+            return Math.floor((lon + 180) / 6) + 1;
+        }
+
+        /** Latitude decimal, longitude decimal → objeto UTM */
+        function latLon2UTM(lat, lon) {
+            const z  = utmZone(lon);
+            const lon0 = ((z - 1) * 6 - 180 + 3) * Math.PI / 180; // meridiano central (rad)
+            const latR = lat * Math.PI / 180;
+            const lonR = lon * Math.PI / 180;
+
+            const e2 = UTM_E2;
+            const e4 = e2 * e2, e6 = e4 * e2;
+            const N  = UTM_A / Math.sqrt(1 - e2 * Math.sin(latR) ** 2);
+            const T  = Math.tan(latR) ** 2;
+            const C  = (e2 / (1 - e2)) * Math.cos(latR) ** 2;
+            const A  = Math.cos(latR) * (lonR - lon0);
+
+            // Meridional arc
+            const M = UTM_A * (
+                (1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256) * latR
+              - (3 * e2 / 8 + 3 * e4 / 32 + 45 * e6 / 1024) * Math.sin(2 * latR)
+              + (15 * e4 / 256 + 45 * e6 / 1024) * Math.sin(4 * latR)
+              - (35 * e6 / 3072) * Math.sin(6 * latR)
+            );
+
+            const A2 = A * A, A3 = A2 * A, A4 = A3 * A, A5 = A4 * A, A6 = A5 * A;
+            const easting = UTM_K0 * N * (
+                A
+              + (1 - T + C) * A3 / 6
+              + (5 - 18 * T + T * T + 72 * C - 58 * (e2 / (1 - e2))) * A5 / 120
+            ) + 500000;
+
+            let northing = UTM_K0 * (
+                M + N * Math.tan(latR) * (
+                    A2 / 2
+                  + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+                  + (61 - 58 * T + T * T + 600 * C - 330 * (e2 / (1 - e2))) * A6 / 720
+                )
+            );
+            const northern = lat >= 0;
+            if (!northern) northing += 10000000;
+
+            const hem = northern ? 'N' : 'S';
+            return { zone: z, band: hem, easting, northing, northern };
+        }
+
+        /** UTM → latitude decimal, longitude decimal */
+        function utm2LatLon(zone, easting, northing, northern) {
+            const e2 = UTM_E2;
+            const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2));
+            const e4 = e2 * e2, e6 = e4 * e2;
+
+            const x = easting - 500000;
+            const y = northern ? northing : northing - 10000000;
+            const lon0 = ((zone - 1) * 6 - 180 + 3) * Math.PI / 180;
+
+            const M = y / UTM_K0;
+            const mu = M / (UTM_A * (1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256));
+
+            const phi1 = mu
+                + (3 * e1 / 2 - 27 * e1 ** 3 / 32) * Math.sin(2 * mu)
+                + (21 * e1 ** 2 / 16 - 55 * e1 ** 4 / 32) * Math.sin(4 * mu)
+                + (151 * e1 ** 3 / 96) * Math.sin(6 * mu)
+                + (1097 * e1 ** 4 / 512) * Math.sin(8 * mu);
+
+            const N1 = UTM_A / Math.sqrt(1 - e2 * Math.sin(phi1) ** 2);
+            const T1 = Math.tan(phi1) ** 2;
+            const C1 = (e2 / (1 - e2)) * Math.cos(phi1) ** 2;
+            const R1 = UTM_A * (1 - e2) / (1 - e2 * Math.sin(phi1) ** 2) ** 1.5;
+            const D  = x / (N1 * UTM_K0);
+            const D2 = D * D, D3 = D2 * D, D4 = D3 * D, D5 = D4 * D, D6 = D5 * D;
+
+            const lat = phi1 - (N1 * Math.tan(phi1) / R1) * (
+                D2 / 2
+              - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * (e2 / (1 - e2))) * D4 / 24
+              + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * (e2 / (1 - e2)) - 3 * C1 * C1) * D6 / 720
+            );
+            const lon = lon0 + (
+                D
+              - (1 + 2 * T1 + C1) * D3 / 6
+              + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * (e2 / (1 - e2)) + 24 * T1 * T1) * D5 / 120
+            ) / Math.cos(phi1);
+
+            return { lat: lat * 180 / Math.PI, lon: lon * 180 / Math.PI };
+        }
+
+        /** Decimal → grau°min'seg" (hemisf) */
+        function dd2dms(dd, isLat) {
+            const abs = Math.abs(dd);
+            const deg = Math.floor(abs);
+            const minFull = (abs - deg) * 60;
+            const min = Math.floor(minFull);
+            const sec = ((minFull - min) * 60).toFixed(4);
+            const hem = isLat ? (dd >= 0 ? 'N' : 'S') : (dd >= 0 ? 'L' : 'O');
+            return `${deg}° ${min}' ${sec}" ${hem}`;
+        }
+
+        // ============================================================
+        //  ABA LOCALIZAÇÃO
+        // ============================================================
+        let locWatchId = null;
+        let compassHeading = 0;
+        let compassRaf = null;
+        let compassTargetAngle = 0;
+        let compassCurrentAngle = 0;
+        let lastLocCoords = null;
+
+        /* ---- Bússola canvas ---- */
+        function drawCompass(angleDeg) {
+            const canvas = document.getElementById('compassCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const cx = 120, cy = 120, R = 116;
+            ctx.clearRect(0, 0, 240, 240);
+
+            // Fundo
+            ctx.beginPath();
+            ctx.arc(cx, cy, R, 0, 2 * Math.PI);
+            ctx.fillStyle = '#0f172a';
+            ctx.fill();
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Ticks de grau
+            for (let i = 0; i < 360; i += 5) {
+                const rad = (i - angleDeg) * Math.PI / 180;
+                const inner = (i % 10 === 0) ? R - 16 : R - 9;
+                const outer = R - 3;
+                ctx.beginPath();
+                ctx.moveTo(cx + inner * Math.sin(rad), cy - inner * Math.cos(rad));
+                ctx.lineTo(cx + outer * Math.sin(rad), cy - outer * Math.cos(rad));
+                ctx.strokeStyle = (i % 90 === 0) ? '#94a3b8' : '#334155';
+                ctx.lineWidth = (i % 10 === 0) ? 1.5 : 0.8;
+                ctx.stroke();
+            }
+
+            // Letras cardeais (giram com a rosa)
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const labels = [
+                { t: 'N', a: 0,   color: '#f87171' },
+                { t: 'L', a: 90,  color: '#94a3b8' },
+                { t: 'S', a: 180, color: '#94a3b8' },
+                { t: 'O', a: 270, color: '#94a3b8' },
+            ];
+            labels.forEach(({ t, a, color }) => {
+                const rad = (a - angleDeg) * Math.PI / 180;
+                const r = R - 26;
+                ctx.fillStyle = color;
+                ctx.fillText(t, cx + r * Math.sin(rad), cy - r * Math.cos(rad));
+            });
+
+            // Círculo interno
+            ctx.beginPath();
+            ctx.arc(cx, cy, 68, 0, 2 * Math.PI);
+            ctx.fillStyle = '#1e293b';
+            ctx.fill();
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Agulha fixa (aponta sempre para cima = Norte)
+            // Norte (vermelho)
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - 54);
+            ctx.lineTo(cx - 7, cy + 5);
+            ctx.lineTo(cx + 7, cy + 5);
+            ctx.closePath();
+            ctx.fillStyle = '#f87171';
+            ctx.fill();
+            // Sul (cinza)
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 54);
+            ctx.lineTo(cx - 7, cy - 5);
+            ctx.lineTo(cx + 7, cy - 5);
+            ctx.closePath();
+            ctx.fillStyle = '#475569';
+            ctx.fill();
+            // Tampa central
+            ctx.beginPath();
+            ctx.arc(cx, cy, 7, 0, 2 * Math.PI);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fill();
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function compassLoop() {
+            // Suaviza rotação
+            const diff = compassTargetAngle - compassCurrentAngle;
+            let d = ((diff % 360) + 540) % 360 - 180; // menor caminho
+            compassCurrentAngle += d * 0.12;
+            drawCompass(compassCurrentAngle);
+            compassRaf = requestAnimationFrame(compassLoop);
+        }
+
+        function compassStart() {
+            if (!compassRaf) compassLoop();
+        }
+
+        function locSetHeading(deg) {
+            compassTargetAngle = deg;
+            const dirs = ['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
+            const idx = Math.round(deg / 22.5) % 16;
+            document.getElementById('compass-cardinal').textContent = dirs[idx];
+            document.getElementById('compass-deg-label').textContent = `${Math.round(deg)}° — sensor do dispositivo`;
+        }
+
+        function locSetManualHeading() {
+            const v = parseFloat(document.getElementById('loc-manual-deg').value);
+            if (isNaN(v)) return;
+            const deg = ((v % 360) + 360) % 360;
+            document.getElementById('compass-deg-label').textContent = `${Math.round(deg)}° — entrada manual`;
+            compassTargetAngle = deg;
+            const dirs = ['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
+            document.getElementById('compass-cardinal').textContent = dirs[Math.round(deg / 22.5) % 16];
+        }
+
+        function locUpdateUI(coords) {
+            lastLocCoords = coords;
+            const { latitude: lat, longitude: lon, accuracy, altitude, speed } = coords;
+            const utm = latLon2UTM(lat, lon);
+
+            document.getElementById('loc-lat').textContent     = lat.toFixed(6);
+            document.getElementById('loc-lon').textContent     = lon.toFixed(6);
+            document.getElementById('loc-lat-hem').textContent = lat >= 0 ? '↑ Norte' : '↓ Sul';
+            document.getElementById('loc-lon-hem').textContent = lon >= 0 ? '→ Leste' : '← Oeste';
+            document.getElementById('loc-lat-dms').textContent = dd2dms(lat, true);
+            document.getElementById('loc-lon-dms').textContent = dd2dms(lon, false);
+
+            document.getElementById('loc-utm-zone').textContent = `${utm.zone} ${utm.band}`;
+            document.getElementById('loc-utm-e').textContent    = utm.easting.toFixed(2);
+            document.getElementById('loc-utm-n').textContent    = utm.northing.toFixed(2);
+
+            document.getElementById('loc-accuracy').textContent = accuracy != null ? `± ${accuracy.toFixed(1)} m` : '—';
+            document.getElementById('loc-altitude').textContent = altitude != null ? `${altitude.toFixed(1)} m` : '—';
+            document.getElementById('loc-speed').textContent    = speed != null ? `${(speed * 3.6).toFixed(1)} km/h` : '—';
+            document.getElementById('loc-time').textContent     = new Date().toLocaleTimeString('pt-BR');
+
+            // Status verde
+            const dot = document.getElementById('loc-dot');
+            dot.style.background = '#22c55e';
+            dot.style.boxShadow  = '0 0 6px #22c55e';
+            document.getElementById('loc-status-text').textContent = `📍 Localização obtida — precisão ± ${accuracy ? accuracy.toFixed(0) : '?'} m`;
+        }
+
+        function locStart() {
+            if (!navigator.geolocation) {
+                document.getElementById('loc-status-text').textContent = '❌ Geolocalização não suportada neste dispositivo.';
+                return;
+            }
+            document.getElementById('loc-status-text').textContent = '⏳ Obtendo localização…';
+            compassStart();
+
+            locWatchId = navigator.geolocation.watchPosition(
+                pos => locUpdateUI(pos.coords),
+                err => {
+                    const msgs = { 1: 'Permissão negada.', 2: 'Posição indisponível.', 3: 'Tempo esgotado.' };
+                    document.getElementById('loc-status-text').textContent = '❌ ' + (msgs[err.code] || err.message);
+                },
+                { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+            );
+
+            document.getElementById('loc-btn').classList.add('hidden');
+            document.getElementById('loc-stop-btn').classList.remove('hidden');
+
+            // Sensor de orientação (bússola)
+            if (typeof DeviceOrientationEvent !== 'undefined' &&
+                typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(state => { if (state === 'granted') window.addEventListener('deviceorientation', onOrient); })
+                    .catch(() => {});
+            } else {
+                window.addEventListener('deviceorientation', onOrient);
+            }
+        }
+
+        function locStop() {
+            if (locWatchId != null) { navigator.geolocation.clearWatch(locWatchId); locWatchId = null; }
+            window.removeEventListener('deviceorientation', onOrient);
+            document.getElementById('loc-btn').classList.remove('hidden');
+            document.getElementById('loc-stop-btn').classList.add('hidden');
+            document.getElementById('loc-status-text').textContent = 'Rastreamento pausado.';
+            const dot = document.getElementById('loc-dot');
+            dot.style.background = '#facc15';
+            dot.style.boxShadow  = '0 0 6px #facc15';
+        }
+
+        function onOrient(e) {
+            // webkitCompassHeading (iOS) ou alpha invertido (Android)
+            let heading = e.webkitCompassHeading != null
+                ? e.webkitCompassHeading
+                : (e.alpha != null ? (360 - e.alpha) % 360 : null);
+            if (heading == null) return;
+            locSetHeading(heading);
+        }
+
+        function locCopy() {
+            if (!lastLocCoords) { alert('Obtenha a localização primeiro.'); return; }
+            const { latitude: lat, longitude: lon } = lastLocCoords;
+            const utm = latLon2UTM(lat, lon);
+            const txt =
+                `Graus Decimais: ${lat.toFixed(6)}, ${lon.toFixed(6)}\n` +
+                `GMS Lat: ${dd2dms(lat, true)}\n` +
+                `GMS Lon: ${dd2dms(lon, false)}\n` +
+                `UTM Fuso: ${utm.zone} ${utm.band}\n` +
+                `UTM Easting: ${utm.easting.toFixed(2)} m\n` +
+                `UTM Northing: ${utm.northing.toFixed(2)} m`;
+            navigator.clipboard.writeText(txt)
+                .then(() => alert('Coordenadas copiadas!'))
+                .catch(() => prompt('Copie manualmente:', txt));
+        }
+
+        // Inicia o canvas ao abrir a aba
+        document.querySelector('[data-tab="location"]').addEventListener('click', () => {
+            compassStart();
+            drawCompass(compassCurrentAngle);
+        });
+        // Desenha estado inicial
+        window.addEventListener('load', () => { drawCompass(0); });
+
+        // ============================================================
+        //  ABA CONVERSOR DE COORDENADAS
+        // ============================================================
+
+        function cvShowErr(elId, msg) {
+            const el = document.getElementById(elId);
+            el.textContent = '⚠ ' + msg;
+            el.classList.remove('hidden');
+        }
+        function cvHideErr(elId) { document.getElementById(elId).classList.add('hidden'); }
+
+        /** Graus Decimais → UTM */
+        function cvLL2UTM() {
+            const lat = parseFloat(document.getElementById('cv-lat').value);
+            const lon = parseFloat(document.getElementById('cv-lon').value);
+            cvHideErr('cv-err-utm');
+            document.getElementById('cv-res-utm').classList.add('hidden');
+
+            if (isNaN(lat) || isNaN(lon)) return; // aguarda digitação completa
+            if (lat < -90 || lat > 90)  { cvShowErr('cv-err-utm', 'Latitude deve estar entre -90 e +90.'); return; }
+            if (lon < -180 || lon > 180){ cvShowErr('cv-err-utm', 'Longitude deve estar entre -180 e +180.'); return; }
+
+            const utm = latLon2UTM(lat, lon);
+            document.getElementById('cv-utm-zone').textContent = `${utm.zone} ${utm.band}`;
+            document.getElementById('cv-utm-e').textContent    = utm.easting.toFixed(3);
+            document.getElementById('cv-utm-n').textContent    = utm.northing.toFixed(3);
+            document.getElementById('cv-res-lat-dms').textContent = dd2dms(lat, true);
+            document.getElementById('cv-res-lon-dms').textContent = dd2dms(lon, false);
+            document.getElementById('cv-res-utm').classList.remove('hidden');
+        }
+
+        /** UTM → Graus Decimais */
+        function cvUTM2LL() {
+            const zone  = parseInt(document.getElementById('cv-zone-in').value);
+            const east  = parseFloat(document.getElementById('cv-east-in').value);
+            const north = parseFloat(document.getElementById('cv-north-in').value);
+            const isNorth = document.getElementById('cv-northern').checked;
+            cvHideErr('cv-err-ll');
+            document.getElementById('cv-res-ll').classList.add('hidden');
+
+            if (isNaN(zone) || isNaN(east) || isNaN(north)) return;
+            if (zone < 1 || zone > 60) { cvShowErr('cv-err-ll', 'Fuso deve estar entre 1 e 60.'); return; }
+            if (east < 100000 || east > 900000) { cvShowErr('cv-err-ll', 'Easting típico: 100 000 – 900 000 m.'); return; }
+
+            const { lat, lon } = utm2LatLon(zone, east, north, isNorth);
+            if (isNaN(lat) || isNaN(lon)) { cvShowErr('cv-err-ll', 'Valores fora do intervalo válido.'); return; }
+
+            document.getElementById('cv-out-lat').textContent     = lat.toFixed(6);
+            document.getElementById('cv-out-lon').textContent     = lon.toFixed(6);
+            document.getElementById('cv-out-lat-dms').textContent = dd2dms(lat, true);
+            document.getElementById('cv-out-lon-dms').textContent = dd2dms(lon, false);
+            document.getElementById('cv-res-ll').classList.remove('hidden');
+        }
+
+        function cvCopyUTM() {
+            const zone = document.getElementById('cv-utm-zone').textContent;
+            const e    = document.getElementById('cv-utm-e').textContent;
+            const n    = document.getElementById('cv-utm-n').textContent;
+            const txt  = `UTM Fuso ${zone}\nEasting:  ${e} m\nNorthing: ${n} m`;
+            navigator.clipboard.writeText(txt)
+                .then(() => alert('Resultado UTM copiado!'))
+                .catch(() => prompt('Copie manualmente:', txt));
+        }
+
+        function cvCopyLL() {
+            const lat = document.getElementById('cv-out-lat').textContent;
+            const lon = document.getElementById('cv-out-lon').textContent;
+            const txt = `Latitude:  ${lat}°\nLongitude: ${lon}°\nGMS Lat: ${document.getElementById('cv-out-lat-dms').textContent}\nGMS Lon: ${document.getElementById('cv-out-lon-dms').textContent}`;
+            navigator.clipboard.writeText(txt)
+                .then(() => alert('Resultado geográfico copiado!'))
+                .catch(() => prompt('Copie manualmente:', txt));
         }
 
         // ---------- PWA ----------
