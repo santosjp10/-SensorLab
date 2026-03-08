@@ -193,16 +193,16 @@ body {
 
 .chip-tab {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 3px;
   white-space: nowrap;
-  padding: 7px 14px;
-  border-radius: var(--md-shape-full);
+  padding: 8px 16px 7px;
+  border-radius: var(--md-shape-xl);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
-  font-size: var(--md-type-label-medium);
-  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   transition:
@@ -213,6 +213,18 @@ body {
   user-select: none;
   position: relative;
   overflow: hidden;
+}
+.chip-tab .chip-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform var(--md-duration-medium1) var(--md-motion-spring);
+}
+.chip-tab.active .chip-icon { transform: scale(1.1); }
+.chip-tab .chip-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 .chip-tab:active { transform: scale(0.94); }
 .chip-tab.active {
@@ -936,11 +948,11 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
     </div>
     <!-- Scrollable chip tabs -->
     <div class="chip-tabs" id="chip-tabs">
-      <button class="chip-tab" data-tab="game">🃏 Jogo</button>
-      <button class="chip-tab" data-tab="lab">🔬 Espalhamento</button>
-      <button class="chip-tab" data-tab="curiosity">💡 Curiosidades</button>
-      <button class="chip-tab" data-tab="glossary">📖 Glossário</button>
-      <button class="chip-tab" data-tab="quantities">📊 Grandezas</button>
+      <button class="chip-tab" data-tab="game"><span class="chip-icon">🃏</span><span class="chip-label">Jogo</span></button>
+      <button class="chip-tab" data-tab="lab"><span class="chip-icon">🔬</span><span class="chip-label">Espalhamento</span></button>
+      <button class="chip-tab" data-tab="curiosity"><span class="chip-icon">💡</span><span class="chip-label">Curiosidades</span></button>
+      <button class="chip-tab" data-tab="glossary"><span class="chip-icon">📖</span><span class="chip-label">Glossário</span></button>
+      <button class="chip-tab" data-tab="quantities"><span class="chip-icon">📊</span><span class="chip-label">Grandezas</span></button>
     </div>
   </header>
 
