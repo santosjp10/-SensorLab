@@ -934,17 +934,13 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div class="tab-bar-sub">Sensoriamento Remoto • Agronomia</div>
       </div>
     </div>
-    <!-- Scrollable chip tabs -->
+    <!-- Scrollable chip tabs - Apenas conteúdos educacionais -->
     <div class="chip-tabs" id="chip-tabs">
-      <button class="chip-tab" data-tab="spectrum">🌈 Espectro</button>
-      <button class="chip-tab" data-tab="camera">📷 Câmera</button>
-      <button class="chip-tab" data-tab="quiz">❓ Quiz</button>
       <button class="chip-tab" data-tab="game">🃏 Jogo</button>
       <button class="chip-tab" data-tab="lab">🔬 Espalhamento</button>
       <button class="chip-tab" data-tab="curiosity">💡 Curiosidades</button>
       <button class="chip-tab" data-tab="glossary">📖 Glossário</button>
       <button class="chip-tab" data-tab="quantities">📊 Grandezas</button>
-      <button class="chip-tab" data-tab="indices">🌱 Índices</button>
     </div>
   </header>
 
@@ -954,7 +950,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   <main id="content-area">
 
     <!-- ===== ABA ESPECTRO ===== -->
-    <div id="spectrum" class="tab-content active">
+    <div id="spectrum" class="tab-content">
       <h2 class="section-title">🌈 Espectro Eletromagnético</h2>
       <div class="m3-card">
         <p class="m3-card-subtitle">Toque em uma faixa para ver informações detalhadas</p>
@@ -1037,7 +1033,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
     </div>
 
     <!-- ===== ABA JOGO ===== -->
-    <div id="game" class="tab-content">
+    <div id="game" class="tab-content active">
       <h2 class="section-title">🃏 Trunfo: Satélites</h2>
       <div class="m3-card" style="background:var(--md-sys-color-primary-container);border-color:transparent;">
         <div class="m3-card-title" style="color:var(--md-sys-color-on-primary-container);">Sua Carta</div>
@@ -1389,7 +1385,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
        BOTTOM NAVIGATION BAR
   ============================================================= -->
   <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-item active" data-nav="spectrum" onclick="navTo('spectrum',this)">
+    <button class="nav-item" data-nav="spectrum" onclick="navTo('spectrum',this)">
       <div class="nav-indicator"></div>
       <div class="nav-icon">🌈</div>
       <div class="nav-label">Espectro</div>
@@ -2232,7 +2228,8 @@ function cvCopyLL(){
 // ================================================================
 //  ACTIVE CHIP SYNC on load
 // ================================================================
-document.querySelector('.chip-tab[data-tab="spectrum"]')?.classList.add('active');
+// Default to first available chip tab (Jogo) since Espectro moved to bottom nav
+document.querySelector('.chip-tab[data-tab="game"]')?.classList.add('active');
 
 // ================================================================
 //  PWA
