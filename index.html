@@ -1196,7 +1196,16 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           </div>
         </div>
         <div id="viewHistogram" class="view-content hidden">
-          <canvas id="histogramCanvas" width="400" height="200" style="width:100%;"></canvas>
+          <canvas id="histogramCanvas" width="400" height="220" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
+          <div style="display:flex;justify-content:space-between;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:6px;padding:0 2px;">
+            <span>-1.0</span><span>-0.5</span><span>0.0</span><span>+0.5</span><span>+1.0</span>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:var(--md-type-label-small);">
+            <span id="hist-index-label" style="color:var(--md-sys-color-primary);font-weight:700;">NDVI</span>
+            <span>Pixels: <strong id="hist-pixels">--</strong></span>
+            <span>Moda: <strong id="hist-mode">--</strong></span>
+            <span>Media: <strong id="hist-mean">--</strong></span>
+          </div>
         </div>
       </div>
       <div class="m3-card">
@@ -1236,6 +1245,25 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <input id="loc-manual-deg" type="number" min="0" max="359" placeholder="Rumo manual (0–359°)"
             class="m3-input m3-input-mono" style="flex:1;padding:10px 12px;">
           <button onclick="locSetManualHeading()" class="btn-filled" style="padding:10px 16px;font-size:var(--md-type-label-medium);">OK</button>
+        </div>
+      </div>
+
+      <!-- Calibrar Bússola -->
+      <div class="m3-card" id="calib-card">
+        <div class="m3-card-title">🎯 Calibrar Bússola</div>
+        <p style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:12px;">A calibração corrige desvios magnéticos causados por interferências do ambiente. Recomendada quando a leitura parecer imprecisa.</p>
+        <div id="calib-progress-wrap" class="hidden" style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:6px;"><span>Progresso da calibração</span><span id="calib-pct">0%</span></div>
+          <div style="height:8px;border-radius:var(--md-shape-full);background:var(--md-sys-color-outline-variant);overflow:hidden;"><div id="calib-bar" style="height:100%;width:0%;border-radius:var(--md-shape-full);background:var(--md-sys-color-primary);transition:width 0.3s;"></div></div>
+        </div>
+        <div id="calib-anim-wrap" style="display:none;justify-content:center;align-items:center;margin:12px 0;">
+          <svg width="160" height="90" viewBox="0 0 160 90"><path d="M80,45 C80,20 20,20 20,45 C20,70 80,70 80,45 C80,20 140,20 140,45 C140,70 80,70 80,45" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="3" stroke-dasharray="4 4"/><circle id="calib-dot" cx="80" cy="45" r="10" fill="var(--md-sys-color-primary)"/><text x="80" y="86" text-anchor="middle" font-size="10" fill="var(--md-sys-color-on-surface-variant)" font-family="inherit">Mova o dispositivo em ∞</text></svg>
+        </div>
+        <div id="calib-status" style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);text-align:center;min-height:20px;margin-bottom:12px;"></div>
+        <div id="calib-result" class="hidden" style="border-radius:var(--md-shape-md);padding:10px 14px;margin-bottom:12px;font-size:var(--md-type-body-small);font-weight:700;text-align:center;"></div>
+        <div style="display:flex;gap:8px;">
+          <button id="calib-btn" onclick="calibStart()" class="btn-filled" style="flex:1;">🔄 Iniciar Calibração</button>
+          <button id="calib-cancel-btn" onclick="calibCancel()" class="btn-outlined hidden" style="flex:1;">✕ Cancelar</button>
         </div>
       </div>
 
@@ -1922,7 +1950,7 @@ function processBands() {
             processBtn.disabled=false; applyRGBBtn.disabled=false;
             indexBtns.forEach(b=>b.disabled=false);
             renderRGB();
-            setTimeout(()=>{ const nd=calculateNDVI(); if(nd) renderIndex(nd,indexCanvas); },500);
+            setTimeout(()=>{ const nd=calculateNDVI(); if(nd){ lastIndexData=nd; lastIndexName='NDVI'; renderIndex(nd,indexCanvas); drawHistogram(nd,'NDVI'); }},500);
         }
     });
 }
@@ -1948,7 +1976,7 @@ function loadSyntheticData() {
     bandStatus.innerHTML='✅ Dados sintéticos carregados!'; bandStatusMessage.textContent='Dados sintéticos OK.';
     processBtn.disabled=false; applyRGBBtn.disabled=false;
     indexBtns.forEach(b=>b.disabled=false);
-    renderRGB(); const nd=calculateNDVI(); if(nd) renderIndex(nd,indexCanvas);
+    renderRGB(); const nd=calculateNDVI(); if(nd){ lastIndexData=nd; lastIndexName='NDVI'; renderIndex(nd,indexCanvas); drawHistogram(nd,'NDVI'); }
 }
 function renderRGB() {
     if(!bandData[1]||!bandData[2]||!bandData[3]) return;
@@ -2010,6 +2038,124 @@ function renderIndex(indexData,canvas){
     document.getElementById('indexMean').textContent=(sum/(w*h)).toFixed(3);
 }
 
+
+// ================================================================
+//  HISTOGRAMA
+// ================================================================
+let lastIndexData = null, lastIndexName = 'NDVI';
+
+function drawHistogram(indexData, label) {
+    if (!indexData) { return; }
+    lastIndexData = indexData;
+    lastIndexName = label || lastIndexName;
+
+    const canvas = document.getElementById('histogramCanvas');
+    if (!canvas) return;
+    const W = canvas.width, H = canvas.height;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+
+    // Build bins [-1, +1] in 100 steps
+    const BINS = 100;
+    const bins = new Array(BINS).fill(0);
+    let sum = 0, count = 0;
+    for (let i = 0; i < indexData.length; i++) {
+        const v = indexData[i];
+        if (isNaN(v)) continue;
+        const b = Math.min(BINS - 1, Math.max(0, Math.floor((v + 1) / 2 * BINS)));
+        bins[b]++;
+        sum += v;
+        count++;
+    }
+    const maxBin = Math.max(...bins);
+    const mean = count > 0 ? sum / count : 0;
+
+    // Find mode bin
+    const modeBin = bins.indexOf(maxBin);
+    const modeVal = ((modeBin / BINS) * 2 - 1).toFixed(3);
+
+    // Padding
+    const padL = 42, padR = 12, padT = 16, padB = 32;
+    const gW = W - padL - padR, gH = H - padT - padB;
+
+    // Background
+    ctx.fillStyle = '#0a0d14';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = '#1e2a3a';
+    ctx.lineWidth = 1;
+    for (let g = 0; g <= 4; g++) {
+        const y = padT + gH - (g / 4) * gH;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + gW, y); ctx.stroke();
+        ctx.fillStyle = '#4a5568';
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round((g / 4) * maxBin), padL - 4, y + 3);
+    }
+
+    // Zero line
+    const zeroX = padL + gW * 0.5;
+    ctx.strokeStyle = '#334155';
+    ctx.setLineDash([3, 3]);
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(zeroX, padT); ctx.lineTo(zeroX, padT + gH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Bars with gradient color (red→yellow→green like NDVI palette)
+    const barW = gW / BINS;
+    for (let b = 0; b < BINS; b++) {
+        if (bins[b] === 0) continue;
+        const x = padL + b * barW;
+        const bH = (bins[b] / maxBin) * gH;
+        const y = padT + gH - bH;
+        // Color by value
+        const val = (b / BINS) * 2 - 1;
+        let r, g, bl;
+        if (val < -0.2) { r = 0; g = 100; bl = 220; }
+        else if (val < 0) { const t = (val + 0.2) / 0.2; r = Math.round(139 + t * 80); g = Math.round(69 + t * 60); bl = 19; }
+        else { const t = Math.min(1, val); r = Math.round(34 + (1-t) * 180); g = Math.round(139 + t * 80); bl = 34; }
+        ctx.fillStyle = `rgba(${r},${g},${bl},0.85)`;
+        ctx.fillRect(x, y, Math.max(1, barW - 0.5), bH);
+    }
+
+    // Mean line
+    const meanX = padL + ((mean + 1) / 2) * gW;
+    ctx.strokeStyle = '#78D7F5';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(meanX, padT); ctx.lineTo(meanX, padT + gH); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Mean label
+    ctx.fillStyle = '#78D7F5';
+    ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('med', meanX, padT - 4);
+
+    // X axis labels
+    ctx.fillStyle = '#4a5568';
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'center';
+    [-1, -0.5, 0, 0.5, 1].forEach(v => {
+        const x = padL + ((v + 1) / 2) * gW;
+        ctx.fillText(v.toFixed(1), x, padT + gH + 14);
+    });
+
+    // Axis lines
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + gH); ctx.lineTo(padL + gW, padT + gH);
+    ctx.stroke();
+
+    // Update stats
+    document.getElementById('hist-index-label').textContent = lastIndexName;
+    document.getElementById('hist-pixels').textContent = count.toLocaleString('pt-BR');
+    document.getElementById('hist-mode').textContent = modeVal;
+    document.getElementById('hist-mean').textContent = mean.toFixed(3);
+}
+
 loadLocalBandsBtn.addEventListener('click', loadLandsatBands);
 loadSyntheticBtn.addEventListener('click', loadSyntheticData);
 applyRGBBtn.addEventListener('click', () => { renderRGB(); switchView('rgb'); });
@@ -2023,7 +2169,7 @@ indexBtns.forEach(btn => {
             case 'evi':  d=calculateEVI();  break;
             case 'ndwi': d=calculateNDWI(); break;
         }
-        if(d){ renderIndex(d,indexCanvas); switchView('index'); }
+        if(d){ lastIndexData=d; lastIndexName=btn.textContent.trim(); renderIndex(d,indexCanvas); switchView('index'); drawHistogram(d,lastIndexName); }
     });
 });
 viewSegBtns.forEach(btn => {
@@ -2037,6 +2183,7 @@ function switchView(view) {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== map[view]);
     });
+    if (view === 'histogram') drawHistogram(lastIndexData, lastIndexName);
 }
 document.querySelector('[data-tab="indices"]')?.addEventListener('click', () => {
     if(Object.keys(bandImages).length===0) loadLandsatBands();
@@ -2181,6 +2328,115 @@ function onOrient(e){
     const h=e.webkitCompassHeading!=null?e.webkitCompassHeading:(e.alpha!=null?(360-e.alpha)%360:null);
     if(h!=null)locSetHeading(h);
 }
+// ================================================================
+//  CALIBRAÇÃO DA BÚSSOLA
+// ================================================================
+let calibInterval=null,calibTimeout=null,calibReadings=[],calibAnimRaf=null,calibAnimT=0;
+
+function calibStart(){
+    calibReadings=[];
+    calibAnimT=0;
+    document.getElementById("calib-btn").classList.add("hidden");
+    document.getElementById("calib-cancel-btn").classList.remove("hidden");
+    document.getElementById("calib-progress-wrap").classList.remove("hidden");
+    document.getElementById("calib-anim-wrap").style.display="flex";
+    document.getElementById("calib-result").classList.add("hidden");
+    document.getElementById("calib-bar").style.width="0%";
+    document.getElementById("calib-pct").textContent="0%";
+    document.getElementById("calib-status").textContent="🔄 Gire o dispositivo lentamente em forma de ∞ no ar…";
+    calibAnimRaf=requestAnimationFrame(calibAnimate);
+    if(typeof DeviceOrientationEvent!=="undefined"&&typeof DeviceOrientationEvent.requestPermission==="function"){
+        DeviceOrientationEvent.requestPermission().then(s=>{
+            if(s==="granted"){ window.addEventListener("deviceorientation",calibOnOrient); calibBeginTimeout(); }
+            else { calibFail("Permissão de orientação negada."); }
+        }).catch(()=>calibFail("Erro ao solicitar permissão."));
+    } else {
+        window.addEventListener("deviceorientation",calibOnOrient);
+        calibBeginTimeout();
+    }
+}
+
+function calibBeginTimeout(){
+    calibTimeout=setTimeout(()=>{
+        if(calibReadings.length<20) calibFail("Sem dados do sensor. Verifique se o dispositivo possui magnetômetro.");
+    },6000);
+}
+
+function calibOnOrient(e){
+    if(e.alpha==null&&e.beta==null&&e.gamma==null) return;
+    calibReadings.push({alpha:e.alpha||0,beta:e.beta||0,gamma:e.gamma||0});
+    const pct=Math.min(100,Math.round((calibReadings.length/60)*100));
+    document.getElementById("calib-bar").style.width=pct+"%";
+    document.getElementById("calib-pct").textContent=pct+"%";
+    if(calibReadings.length>=5&&calibReadings.length<60){
+        const msgs=["Continue girando em ∞…","Quase lá, continue…","Ótimo! Mantenha o movimento…"];
+        document.getElementById("calib-status").textContent="🔄 "+msgs[Math.floor(calibReadings.length/20)%3];
+    }
+    if(calibReadings.length>=60) calibFinish();
+}
+
+function calibAnimate(){
+    calibAnimT+=0.03;
+    const t=calibAnimT;
+    const x=80+60*Math.sin(t);
+    const y=45+22*Math.sin(2*t)/2;
+    const dot=document.getElementById("calib-dot");
+    if(dot){dot.setAttribute("cx",x.toFixed(1));dot.setAttribute("cy",y.toFixed(1));}
+    calibAnimRaf=requestAnimationFrame(calibAnimate);
+}
+
+function calibFinish(){
+    calibCleanup();
+    const alphas=calibReadings.map(r=>r.alpha);
+    const spread=Math.max(...alphas)-Math.min(...alphas);
+    const quality=spread>270?"Excelente":spread>180?"Boa":spread>90?"Regular":"Baixa";
+    const qColor=spread>270?"#4ade80":spread>180?"#78D7F5":spread>90?"#fbbf24":"#f87171";
+    const result=document.getElementById("calib-result");
+    result.innerHTML=`<span style="font-size:1.6rem;">${spread>180?"✅":"⚠️"}</span><br>Calibração concluída!<br><span style="color:${qColor};font-size:1rem;">Qualidade: ${quality}</span><br><span style="font-size:0.7rem;font-weight:400;color:var(--md-sys-color-on-surface-variant);">Variação angular detectada: ${Math.round(spread)}°</span>`;
+    result.style.background=spread>180?"rgba(74,222,128,0.1)":"rgba(251,191,36,0.1)";
+    result.style.border=`1px solid ${qColor}40`;
+    result.classList.remove("hidden");
+    document.getElementById("calib-status").textContent="";
+    snack(spread>180?"✅ Bússola calibrada com sucesso!":"⚠️ Calibração parcial — repita o movimento");
+    if(spread<=180){
+        document.getElementById("calib-btn").textContent="🔄 Recalibrar";
+        document.getElementById("calib-btn").classList.remove("hidden");
+    } else {
+        document.getElementById("calib-btn").textContent="🔄 Iniciar Calibração";
+        document.getElementById("calib-btn").classList.remove("hidden");
+    }
+}
+
+function calibFail(msg){
+    calibCleanup();
+    const result=document.getElementById("calib-result");
+    result.innerHTML=`<span style="font-size:1.4rem;">❌</span><br>${msg}`;
+    result.style.background="rgba(255,180,171,0.1)";
+    result.style.border="1px solid rgba(255,180,171,0.3)";
+    result.classList.remove("hidden");
+    document.getElementById("calib-btn").textContent="🔄 Tentar Novamente";
+    document.getElementById("calib-btn").classList.remove("hidden");
+    document.getElementById("calib-status").textContent="";
+    snack("❌ "+msg);
+}
+
+function calibCancel(){
+    calibCleanup();
+    document.getElementById("calib-status").textContent="Calibração cancelada.";
+    document.getElementById("calib-btn").textContent="🔄 Iniciar Calibração";
+    document.getElementById("calib-btn").classList.remove("hidden");
+}
+
+function calibCleanup(){
+    window.removeEventListener("deviceorientation",calibOnOrient);
+    if(calibTimeout){ clearTimeout(calibTimeout); calibTimeout=null; }
+    if(calibAnimRaf){ cancelAnimationFrame(calibAnimRaf); calibAnimRaf=null; }
+    document.getElementById("calib-cancel-btn").classList.add("hidden");
+    document.getElementById("calib-progress-wrap").classList.add("hidden");
+    document.getElementById("calib-anim-wrap").style.display="none";
+}
+
+
 function locCopy(){
     if(!lastLocCoords){snack('Obtenha a localização primeiro.');return;}
     const{latitude:lat,longitude:lon}=lastLocCoords,utm=latLon2UTM(lat,lon);
