@@ -929,6 +929,38 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   color: var(--md-sys-color-on-primary-container);
   margin-bottom: 12px;
 }
+
+/* ================================================================
+   TRILHA DE APRENDIZAGEM / ATIVIDADES GUIADAS
+   ================================================================ */
+.chip-tab { flex-shrink: 0; }
+.act-card { border-left: 4px solid var(--md-sys-color-primary); }
+.act-card.done { border-left-color: #4ade80; }
+.act-card summary { cursor:pointer; font-weight:700; color:var(--md-sys-color-primary); font-size:var(--md-type-body-medium); list-style:none; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+.act-card summary::-webkit-details-marker { display:none; }
+.act-obj { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface); margin:10px 0 6px; line-height:1.6; }
+.act-steps { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface-variant); padding-left:20px; line-height:1.7; margin-bottom:10px; }
+.act-q { font-size:var(--md-type-body-medium); font-weight:600; margin:10px 0 8px; line-height:1.5; }
+.act-fb { font-size:var(--md-type-body-small); line-height:1.6; margin-top:4px; }
+.status-pill { font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:var(--md-shape-full); white-space:nowrap; }
+.status-pill.ok { background:#14532d; color:#bbf7d0; }
+.status-pill.todo { background:var(--md-sys-color-surface-container-high); color:var(--md-sys-color-on-surface-variant); }
+.level-title { font-size:var(--md-type-title-small); font-weight:700; color:var(--md-sys-color-secondary); margin:18px 4px 8px; }
+.trail-row { display:flex; gap:12px; align-items:flex-start; }
+.trail-row .trail-ico { font-size:1.6rem; line-height:1; }
+.trail-row .trail-body { flex:1; min-width:0; }
+.trail-row h3 { font-size:var(--md-type-body-large); font-weight:700; margin-bottom:4px; }
+.trail-row p { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface-variant); line-height:1.5; }
+.mini-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:8px; }
+.mini-table th, .mini-table td { border:1px solid var(--md-sys-color-outline-variant); padding:4px 5px; text-align:center; }
+.mini-table th { background:var(--md-sys-color-surface-container-high); font-weight:700; }
+.mini-table td.diag { background:rgba(74,222,128,0.15); font-weight:700; }
+.table-wrap { overflow-x:auto; }
+.seg2 { display:flex; gap:6px; margin-bottom:10px; }
+.seg2 button { flex:1; }
+.quiz-exp { font-size:var(--md-type-body-small); line-height:1.6; color:var(--md-sys-color-on-surface-variant); background:var(--md-sys-color-surface-container-high); border-radius:var(--md-shape-md); padding:10px 12px; margin-bottom:12px; }
+:focus-visible { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
 
@@ -948,6 +980,8 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
     </div>
     <!-- Scrollable chip tabs -->
     <div class="chip-tabs" id="chip-tabs">
+      <button class="chip-tab" data-tab="trail"><span class="chip-icon">🎯</span><span class="chip-label">Trilha</span></button>
+      <button class="chip-tab" data-tab="quiz"><span class="chip-icon">❓</span><span class="chip-label">Quiz</span></button>
       <button class="chip-tab" data-tab="game"><span class="chip-icon">🃏</span><span class="chip-label">Jogo</span></button>
       <button class="chip-tab" data-tab="lab"><span class="chip-icon">🔬</span><span class="chip-label">Espalhamento</span></button>
       <button class="chip-tab" data-tab="classify"><span class="chip-icon">🗺️</span><span class="chip-label">Classificação</span></button>
@@ -961,8 +995,33 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   ============================================================= -->
   <main id="content-area">
 
+    <!-- ===== ABA TRILHA ===== -->
+    <div id="trail" class="tab-content active">
+      <h2 class="section-title">🎯 Trilha de Aprendizagem</h2>
+      <div class="m3-card">
+        <p style="font-size:var(--md-type-body-medium);line-height:1.6;">Siga os módulos na ordem sugerida: dos princípios físicos às aplicações na lavoura. Cada módulo tem um objetivo, um roteiro prático e um desafio. Responda ao desafio dentro do próprio módulo para concluí-lo.</p>
+        <label style="display:block;margin-top:12px;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);" for="trailName">Seu nome (aparece apenas no relatório)</label>
+        <input id="trailName" class="m3-input" style="margin-top:4px;" placeholder="Ex.: Maria Souza" autocomplete="name">
+        <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:var(--md-type-label-medium);">
+          <span>Progresso geral</span><strong id="trailPct">0%</strong>
+        </div>
+        <div class="progress-bar" style="margin-top:6px;margin-bottom:4px;"><div class="progress-fill" id="trailFill" style="width:0%"></div></div>
+        <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);">O progresso fica salvo neste aparelho.</p>
+      </div>
+      <div id="trailLevels"></div>
+      <div class="m3-card">
+        <div class="m3-card-title">📋 Relatório de progresso</div>
+        <p style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:10px;">Envie ao professor ao fim da aula. Inclui módulos concluídos, desempenho no quiz e acurácia da classificação.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-filled" style="flex:1;" onclick="copyReport()">Copiar relatório</button>
+          <button class="btn-outlined" style="flex:1;" onclick="downloadReport()">Baixar .txt</button>
+        </div>
+        <button class="btn-text" style="margin-top:8px;font-size:var(--md-type-label-small);color:var(--md-sys-color-error);" onclick="resetProgress()">Apagar meu progresso</button>
+      </div>
+    </div>
+
     <!-- ===== ABA ESPECTRO ===== -->
-    <div id="spectrum" class="tab-content active">
+    <div id="spectrum" class="tab-content">
       <h2 class="section-title">🌈 Espectro Eletromagnético</h2>
       <div class="m3-card">
         <p class="m3-card-subtitle">Toque em uma faixa para ver informações detalhadas</p>
@@ -992,9 +1051,10 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <button id="backToVideoBtn" class="btn-outlined hidden" style="flex:1;">↩ Câmera</button>
         </div>
         <p style="padding:0 16px 12px;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);">
-          Toque na imagem capturada para selecionar pontos e medir reflectância.
+          Toque na imagem capturada para selecionar pontos. Marque primeiro uma folha de papel branco como referência para obter a reflectância relativa.
         </p>
       </div>
+      <div class="info-panel">A câmera do celular registra apenas o visível (R, G, B), sem infravermelho próximo, e não é calibrada. Os valores servem para comparar alvos entre si, não como reflectância absoluta.</div>
       <div class="m3-card">
         <div class="m3-card-title">📍 Pontos Selecionados</div>
         <div id="pointsList" style="max-height:260px;overflow-y:auto;"></div>
@@ -1013,14 +1073,15 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div id="quizContainer">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <span style="font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);">
-              Pergunta <span id="currentQuestion">1</span> de 30
+              Pergunta <span id="currentQuestion">1</span> de <span id="quizTotal">30</span>
             </span>
             <span class="data-chip data-chip-primary" id="quiz-score-chip">0 acertos</span>
           </div>
           <div class="progress-bar"><div class="progress-fill" id="quiz-progress-fill" style="width:3.33%"></div></div>
           <div id="quizQuestion" style="font-size:var(--md-type-body-large);font-weight:600;margin-bottom:16px;line-height:1.5;"></div>
           <div id="quizOptions" style="margin-bottom:12px;"></div>
-          <div id="quizFeedback" style="font-size:var(--md-type-label-large);font-weight:700;margin-bottom:12px;min-height:24px;"></div>
+          <div id="quizFeedback" style="font-size:var(--md-type-label-large);font-weight:700;margin-bottom:8px;min-height:24px;"></div>
+          <div id="quizExplain" class="quiz-exp hidden"></div>
           <div style="display:flex;justify-content:space-between;gap:10px;">
             <button id="quizPrevBtn" class="btn-outlined" style="flex:1;" disabled>‹ Anterior</button>
             <button id="quizNextBtn" class="btn-filled" style="flex:1;">Próxima ›</button>
@@ -1039,7 +1100,9 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
               <div class="stat-value" style="color:var(--md-sys-color-error);" id="errorCount">0</div>
             </div>
           </div>
-          <button id="quizRestartBtn" class="btn-filled btn-full" style="margin-top:16px;">🔄 Recomeçar</button>
+          <p id="quizPctText" style="font-size:var(--md-type-body-medium);margin-top:4px;"></p>
+          <button id="quizReviewBtn" class="btn-filled-tonal btn-filled btn-full hidden" style="margin-top:16px;">Refazer só as que errei</button>
+          <button id="quizRestartBtn" class="btn-filled btn-full" style="margin-top:8px;">🔄 Recomeçar em nova ordem</button>
         </div>
       </div>
     </div>
@@ -1096,6 +1159,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div id="computerCard"></div>
       </div>
       <div id="gameMessage" style="text-align:center;font-size:var(--md-type-title-large);font-weight:800;margin:12px 0;min-height:32px;"></div>
+      <div id="gameExplain" class="info-panel hidden"></div>
       <button id="newGameBtn" class="btn-filled btn-full">▶ Nova Rodada</button>
     </div>
 
@@ -1106,13 +1170,13 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <canvas id="scatteringCanvas" width="600" height="360" style="width:100%;border-radius:var(--md-shape-lg);"></canvas>
         <div style="margin-top:14px;">
           <label style="display:flex;justify-content:space-between;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">
-            <span>Tamanho da partícula (µm)</span>
-            <span class="data-chip data-chip-primary" id="particleSizeValue">0.5</span>
+            <span>Diâmetro da partícula (escala logarítmica)</span>
+            <span class="data-chip data-chip-primary" id="particleSizeValue">0.0003 µm</span>
           </label>
-          <input type="range" id="particleSizeSlider" min="0.1" max="3" step="0.1" value="0.5"
+          <input type="range" id="particleSizeSlider" min="-3.6" max="1.6" step="0.05" value="-3.5" aria-label="Diâmetro da partícula"
             style="width:100%;accent-color:var(--md-sys-color-primary);cursor:pointer;">
         </div>
-        <div class="info-panel" style="margin-top:10px;margin-bottom:0;" id="scatteringType"></div>
+        <div class="info-panel" style="margin-top:10px;margin-bottom:0;line-height:1.6;" id="scatteringType"></div>
       </div>
     </div>
 
@@ -1121,15 +1185,15 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <h2 class="section-title">🗺️ Classificação Supervisionada</h2>
 
       <div class="info-panel" style="margin-bottom:12px;">
-        <strong>Como usar:</strong> Selecione uma classe, clique nos pixels da cena real para coletar amostras de treinamento e clique em <strong>Classificar</strong>.
+        <strong>Como usar:</strong> (1) no modo <strong>Treinamento</strong>, escolha uma classe e toque em pixels da cena; (2) clique em <strong>Classificar</strong>; (3) passe ao modo <strong>Validação</strong>, marque outros pixels de cada classe e veja a acurácia do mapa.
       </div>
 
       <!-- Seletor de classe -->
       <div class="m3-card" style="padding:12px 14px;">
         <div class="m3-card-title" style="margin-bottom:10px;">🎨 Classes de Cobertura</div>
         <div id="class-buttons" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="class-btn active" data-class="0" style="background:#16653422;border:2px solid #166534;color:#166534;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
-            <span style="width:12px;height:12px;border-radius:50%;background:#166534;display:inline-block;flex-shrink:0;"></span> 🌿 Vegetação
+          <button class="class-btn active" data-class="0" style="background:#2f9e4422;border:2px solid #2f9e44;color:#2f9e44;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#2f9e44;display:inline-block;flex-shrink:0;"></span> 🌿 Vegetação
           </button>
           <button class="class-btn" data-class="1" style="background:#f9731622;border:2px solid #f97316;color:#f97316;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
             <span style="width:12px;height:12px;border-radius:50%;background:#f97316;display:inline-block;flex-shrink:0;"></span> 🟫 Solo Exposto
@@ -1137,12 +1201,12 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <button class="class-btn" data-class="2" style="background:#3b82f622;border:2px solid #3b82f6;color:#3b82f6;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
             <span style="width:12px;height:12px;border-radius:50%;background:#3b82f6;display:inline-block;flex-shrink:0;"></span> 💧 Água
           </button>
-          <button class="class-btn" data-class="3" style="background:#86efac22;border:2px solid #86efac;color:#4a7c59;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+          <button class="class-btn" data-class="3" style="background:#86efac22;border:2px solid #86efac;color:#86efac;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
             <span style="width:12px;height:12px;border-radius:50%;background:#86efac;display:inline-block;flex-shrink:0;"></span> 🐄 Pastagem
           </button>
         </div>
         <div style="margin-top:10px;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);">
-          Classe ativa: <strong id="active-class-label" style="color:#166534;">🌿 Vegetação</strong>
+          Classe ativa: <strong id="active-class-label" style="color:#2f9e44;">🌿 Vegetação</strong>
         </div>
       </div>
 
@@ -1168,9 +1232,14 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
       <!-- Amostras coletadas -->
       <div class="m3-card">
-        <div class="m3-card-title">📋 Amostras de Treinamento</div>
+        <div class="m3-card-title">📋 Amostras</div>
+        <div class="seg2" role="group" aria-label="Tipo de amostra">
+          <button id="mode-train" class="btn-filled" onclick="setClassifyMode('train')">Treinamento</button>
+          <button id="mode-val" class="btn-outlined" onclick="setClassifyMode('val')">Validação</button>
+        </div>
+        <p id="mode-hint" style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:10px;">Amostras de treinamento (círculos) ensinam o algoritmo. Use pelo menos 5 pixels por classe, espalhados pela cena.</p>
         <div id="sample-counts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div class="stat-tile"><div class="stat-label">🌿 Vegetação</div><div class="stat-value" id="cnt-0" style="color:#166534;">0</div></div>
+          <div class="stat-tile"><div class="stat-label">🌿 Vegetação</div><div class="stat-value" id="cnt-0" style="color:#2f9e44;">0</div></div>
           <div class="stat-tile"><div class="stat-label">🟫 Solo</div><div class="stat-value" id="cnt-1" style="color:#f97316;">0</div></div>
           <div class="stat-tile"><div class="stat-label">💧 Água</div><div class="stat-value" id="cnt-2" style="color:#3b82f6;">0</div></div>
           <div class="stat-tile"><div class="stat-label">🐄 Pastagem</div><div class="stat-value" id="cnt-3" style="color:#86efac;">0</div></div>
@@ -1187,12 +1256,17 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div class="m3-card-title">✅ Mapa de Classificação</div>
         <canvas id="classifyResult" width="320" height="195" style="width:100%;border-radius:var(--md-shape-md);display:block;border:2px solid var(--md-sys-color-outline-variant);"></canvas>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:var(--md-type-label-small);">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#166534;border-radius:3px;display:inline-block;"></span>Vegetação</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#2f9e44;border-radius:3px;display:inline-block;"></span>Vegetação</span>
           <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#f97316;border-radius:3px;display:inline-block;"></span>Solo Exposto</span>
           <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#3b82f6;border-radius:3px;display:inline-block;"></span>Água</span>
           <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#86efac;border-radius:3px;display:inline-block;"></span>Pastagem</span>
         </div>
         <div id="classify-stats" style="margin-top:10px;font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);line-height:1.7;"></div>
+        <div class="m3-card-title" style="margin-top:14px;">📈 Assinatura espectral média das classes</div>
+        <canvas id="sigCanvas" width="340" height="200" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
+        <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Quanto mais parecidas as curvas de duas classes, maior a chance de o classificador confundi-las.</p>
+        <div class="m3-card-title" style="margin-top:14px;">📏 Avaliação da acurácia</div>
+        <div id="accuracyBox" style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);line-height:1.6;">Passe ao modo <strong>Validação</strong> e marque pixels de referência (quadrados) para calcular a matriz de confusão.</div>
       </div>
 
       <!-- Explicação didática -->
@@ -1204,6 +1278,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
             <p style="margin-top:6px;"><strong>2. Atributos espectrais:</strong> Para cada pixel amostrado, os valores reais das bandas B8 (NIR), B4 (Red), B3 (Green) e B2 (Blue) do Sentinel-2 formam o vetor de características.</p>
             <p style="margin-top:6px;"><strong>3. Classificador (mínima distância):</strong> O algoritmo calcula a média espectral de cada classe e atribui cada pixel à classe cuja média é mais próxima no espaço 4D.</p>
             <p style="margin-top:6px;"><strong>4. Mapa temático:</strong> O resultado é uma imagem onde cada pixel recebe a cor da classe classificada.</p>
+            <p style="margin-top:6px;"><strong>5. Validação:</strong> Pixels de referência, diferentes dos de treinamento, são comparados ao mapa. A matriz de confusão mostra os acertos (diagonal) e as confusões entre classes. A exatidão global é a proporção de acertos; o índice Kappa desconta a concordância esperada ao acaso.</p>
             <p style="margin-top:8px;font-size:0.65rem;">Na composição falsa cor, vegetação saudável aparece em vermelho vivo (alto NIR), água em azul escuro (baixo NIR e Red), solo exposto em tons alaranjados.</p>
           </div>
         </details>
@@ -1213,7 +1288,9 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
     <!-- ===== ABA GLOSSÁRIO ===== -->
     <div id="glossary" class="tab-content">
       <h2 class="section-title">📖 Glossário</h2>
+      <input id="glossSearch" class="m3-input" type="search" placeholder="Buscar termo ou definição…" aria-label="Buscar no glossário" style="margin-bottom:12px;">
       <div id="glossaryList"></div>
+      <p id="glossEmpty" class="hidden" style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);">Nenhum termo encontrado. Tente outra palavra.</p>
     </div>
 
     <!-- ===== ABA GRANDEZAS ===== -->
@@ -1228,6 +1305,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <div class="info-panel">
         <span id="bandStatusMessage">Aguardando carregamento das bandas…</span>
         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button id="loadSentinelBtn" class="btn-filled" style="font-size:var(--md-type-label-medium);">🛰️ Cena Sentinel-2</button>
           <button id="loadLocalBandsBtn" class="btn-filled-tonal btn-filled" style="font-size:var(--md-type-label-medium);">📂 Pasta /bands</button>
           <button id="loadSyntheticBtn" class="btn-outlined" style="font-size:var(--md-type-label-medium);">🧪 Dados sintéticos</button>
         </div>
@@ -1291,7 +1369,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <div id="viewRgb" class="view-content">
           <canvas id="rgbCanvas" width="400" height="300" style="width:100%;"></canvas>
-          <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:4px;text-align:center;" id="rgbDescription">Vermelho (B3), Verde (B2), Azul (B1)</p>
+          <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:4px;text-align:center;" id="rgbDescription">Carregue as bandas para ver a composição</p>
         </div>
         <div id="viewIndex" class="view-content hidden">
           <canvas id="indexCanvas" width="400" height="300" style="width:100%;"></canvas>
@@ -1303,6 +1381,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
             <span>Max: <strong id="indexMax">—</strong></span>
             <span>Média: <strong id="indexMean">—</strong></span>
           </div>
+          <div id="pixelInfo" class="info-panel" style="margin-top:8px;margin-bottom:0;">👆 Toque na imagem do índice para inspecionar um pixel.</div>
         </div>
         <div id="viewHistogram" class="view-content hidden">
           <canvas id="histogramCanvas" width="400" height="220" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
@@ -1326,6 +1405,31 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
             <p><strong>EVI</strong> = 2,5 × (NIR − R) / (NIR + 6R − 7,5B + 1)</p>
             <p><strong>NDWI</strong> = (G − NIR) / (G + NIR)</p>
           </div>
+        </details>
+      </div>
+      <div class="m3-card">
+        <div class="m3-card-title">✂️ Limiar: quanto da área tem vegetação?</div>
+        <p style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">Defina o valor do índice a partir do qual um pixel é considerado vegetação. O mapa mostra a máscara resultante.</p>
+        <label style="display:flex;justify-content:space-between;font-size:var(--md-type-label-medium);margin-bottom:6px;">
+          <span>Limiar</span><span class="data-chip data-chip-primary" id="thrValue">0.30</span>
+        </label>
+        <input type="range" id="thrSlider" min="-1" max="1" step="0.01" value="0.3" style="width:100%;accent-color:var(--md-sys-color-primary);" aria-label="Limiar do índice">
+        <div id="thrResult" class="info-panel" style="margin-top:10px;margin-bottom:0;">Calcule um índice para usar o limiar.</div>
+      </div>
+      <div class="m3-card">
+        <details>
+          <summary style="cursor:pointer;font-weight:700;color:var(--md-sys-color-primary);font-size:var(--md-type-body-medium);">🌾 Como interpretar o NDVI na agronomia</summary>
+          <div class="table-wrap">
+          <table class="mini-table" style="font-size:0.75rem;">
+            <tr><th>NDVI</th><th>Interpretação usual</th></tr>
+            <tr><td>&lt; 0</td><td style="text-align:left;">Água, nuvem, sombra</td></tr>
+            <tr><td>0 – 0,2</td><td style="text-align:left;">Solo exposto, palhada, área recém-preparada</td></tr>
+            <tr><td>0,2 – 0,4</td><td style="text-align:left;">Vegetação esparsa, pastagem degradada, cultura no início do ciclo</td></tr>
+            <tr><td>0,4 – 0,6</td><td style="text-align:left;">Vegetação moderada, cultura em desenvolvimento</td></tr>
+            <tr><td>&gt; 0,6</td><td style="text-align:left;">Vegetação densa e vigorosa, cultura no pico vegetativo, mata</td></tr>
+          </table>
+          </div>
+          <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:8px;line-height:1.6;">Faixas de referência para reflectância de superfície. A cena embutida usa valores de 8 bits esticados por banda, então os números aqui são relativos: compare áreas da mesma imagem, não com a tabela ao pé da letra.</p>
         </details>
       </div>
     </div>
@@ -1572,6 +1676,222 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
 <script>
 // ================================================================
+//  TRILHA DE APRENDIZAGEM · PROGRESSO · ATIVIDADES GUIADAS
+// ================================================================
+const SL_KEY = 'sensorlab_progresso_v1';
+function slLoad(){ try { return JSON.parse(localStorage.getItem(SL_KEY)) || {}; } catch(e){ return {}; } }
+let PROG = Object.assign({ name:'', visited:{}, done:{}, tries:{}, quiz:{best:0, last:0, attempts:0}, classify:{oa:null, kappa:null}, game:{rounds:0} }, slLoad());
+function slSave(){ try { localStorage.setItem(SL_KEY, JSON.stringify(PROG)); } catch(e){} }
+
+const LEVELS = [
+  { n:1, titulo:'Nível 1 · Fundamentos físicos' },
+  { n:2, titulo:'Nível 2 · Sensores e coleta de dados' },
+  { n:3, titulo:'Nível 3 · Processamento e aplicações agronômicas' }
+];
+
+const MODULES = [
+  { id:'spectrum', tab:'spectrum', nivel:1, icon:'🌈', titulo:'Espectro eletromagnético',
+    obj:'Relacionar cada faixa do espectro com sua interação na atmosfera e com aplicações na agricultura.',
+    passos:['Toque nas faixas Visível, IV e Micro-ondas e leia como cada uma interage com a atmosfera.','Anote qual faixa revela o vigor da vegetação e qual atravessa nuvens.','Responda ao desafio abaixo.'],
+    q:{ texto:'No período chuvoso, com nuvens quase todos os dias, um produtor precisa acompanhar a lavoura de soja. Qual faixa garante imagens mesmo com nuvens?',
+        ops:['Visível','Infravermelho próximo','Micro-ondas (radar)','Ultravioleta'], certa:2,
+        dica:'Pense em qual faixa tem comprimento de onda muito maior que as gotículas das nuvens.',
+        exp:'As micro-ondas (comprimentos de onda de centímetros) atravessam nuvens e funcionam dia e noite. Por isso sensores radar, como o Sentinel-1, são usados no monitoramento agrícola em regiões tropicais chuvosas.' } },
+  { id:'lab', tab:'lab', nivel:1, icon:'🔬', titulo:'Espalhamento atmosférico',
+    obj:'Distinguir os espalhamentos Rayleigh, Mie e não-seletivo pela relação entre tamanho da partícula e comprimento de onda.',
+    passos:['Mova o controle da menor para a maior partícula.','Observe como muda a intensidade relativa do espalhamento no azul, verde, vermelho e NIR.','Identifique em que faixa de tamanho estaria a fumaça das queimadas.'],
+    q:{ texto:'Nas imagens de agosto e setembro no Tocantins, a fumaça das queimadas (partículas de 0,1 a 1 µm) reduz o contraste da cena. Qual espalhamento predomina?',
+        ops:['Rayleigh','Mie','Não-seletivo','Absorção pelo ozônio'], certa:1,
+        dica:'Compare o tamanho das partículas da fumaça com o comprimento de onda da luz visível (0,4 a 0,7 µm).',
+        exp:'Partículas com tamanho da mesma ordem do comprimento de onda produzem espalhamento Mie. A fumaça aumenta a radiância no visível, reduz o contraste e altera índices como o NDVI; por isso a correção atmosférica é importante.' } },
+  { id:'quantities', tab:'quantities', nivel:1, icon:'📊', titulo:'Grandezas radiométricas',
+    obj:'Diferenciar número digital, radiância e reflectância e saber qual usar em análises multitemporais.',
+    passos:['Leia os cartões de DN, radiância e reflectância.','Note quais dependem da calibração do sensor e da iluminação solar.','Responda ao desafio.'],
+    q:{ texto:'Para comparar o NDVI de um mesmo talhão em duas datas da safra, qual grandeza deve ser usada?',
+        ops:['Número digital (DN)','Radiância sem correção','Reflectância de superfície','Temperatura de brilho'], certa:2,
+        dica:'Qual grandeza elimina o efeito de diferentes condições de iluminação e de atmosfera entre as datas?',
+        exp:'A reflectância de superfície é uma razão (refletida/incidente), corrigida dos efeitos atmosféricos. Ela é comparável entre datas e sensores; o DN e a radiância mudam com a iluminação e a calibração.' } },
+  { id:'quiz', tab:'quiz', nivel:1, icon:'❓', titulo:'Quiz: princípios físicos',
+    obj:'Verificar a compreensão dos princípios físicos do sensoriamento remoto.',
+    passos:['Responda às 30 questões e leia a explicação de cada uma.','Ao final, refaça apenas as que errou.','Meta: acertar pelo menos 70%.'],
+    auto:true },
+  { id:'game', tab:'game', nivel:2, icon:'🃏', titulo:'Trunfo dos satélites',
+    obj:'Comparar sensores pelas resoluções espacial, espectral e temporal e escolher o mais adequado para cada aplicação.',
+    passos:['Jogue pelo menos 5 rodadas.','Depois de cada rodada, leia o que significa o atributo escolhido.','Pense em qual satélite usaria para monitorar uma cultura de ciclo curto.'],
+    q:{ texto:'Para acompanhar semanalmente uma lavoura de feijão de ciclo de 90 dias, qual característica do sensor é a mais crítica?',
+        ops:['Ano de lançamento','Resolução temporal (revisita)','Número de bandas termais','Tamanho do satélite'], certa:1,
+        dica:'O que importa é ter imagens com frequência durante um ciclo curto.',
+        exp:'Em culturas de ciclo curto, a resolução temporal é decisiva: com revisita de 16 dias e nuvens, podem restar poucas imagens úteis. Sentinel-2 (5 dias) ou PlanetScope (diário) atendem melhor.' } },
+  { id:'camera', tab:'camera', nivel:2, icon:'📷', titulo:'Radiometria com a câmera',
+    obj:'Medir e comparar a resposta espectral de alvos no visível usando uma referência branca.',
+    passos:['Capture uma cena com uma folha verde, uma folha seca (ou solo) e uma folha de papel branco.','Toque no papel e marque-o como referência branca.','Toque nos outros alvos e compare a reflectância relativa nos canais R, G e B.'],
+    q:{ texto:'Por que a folha verde sadia apresenta maior valor no canal verde do que no vermelho?',
+        ops:['Porque a clorofila absorve fortemente o azul e o vermelho','Porque a folha emite luz verde','Porque a água da folha reflete o verde','Porque a câmera tem mais pixels verdes'], certa:0,
+        dica:'Lembre o papel dos pigmentos fotossintéticos na absorção da luz.',
+        exp:'A clorofila absorve a radiação nas faixas do azul (~450 nm) e do vermelho (~670 nm) para a fotossíntese e reflete parte do verde. Folhas senescentes perdem clorofila e passam a refletir mais o vermelho.' } },
+  { id:'location', tab:'location', nivel:2, icon:'🧭', titulo:'GPS e coordenadas UTM',
+    obj:'Registrar pontos de campo e converter coordenadas geográficas para UTM.',
+    passos:['Obtenha sua posição na aba GPS e observe a acurácia horizontal.','Copie as coordenadas e converta-as na aba UTM.','Verifique o fuso UTM de Gurupi (22 S).'],
+    q:{ texto:'Você coletará amostras de solo em grade de 50 × 50 m e depois as localizará numa imagem Sentinel-2. Qual sistema de coordenadas facilita medir as distâncias?',
+        ops:['Graus decimais','Graus, minutos e segundos','UTM (em metros)','Coordenadas polares'], certa:2,
+        dica:'Qual sistema expressa posições diretamente em metros?',
+        exp:'O UTM usa coordenadas planas em metros (Easting e Northing), o que facilita traçar grades de amostragem e relacionar pontos aos pixels de 10 m do Sentinel-2.' } },
+  { id:'indices', tab:'indices', nivel:3, icon:'🌱', titulo:'Índices de vegetação',
+    obj:'Calcular e interpretar índices de vegetação e estimar a área vegetada de uma cena.',
+    passos:['Carregue a cena Sentinel-2 e calcule o NDVI.','Toque em pixels de água, mata e solo exposto e compare os valores.','Use o limiar para estimar a porcentagem e a área (ha) com vegetação.','Compare NDVI e SAVI em áreas de solo exposto.'],
+    q:{ texto:'Em uma pastagem degradada, com muito solo exposto entre as touceiras, qual índice reduz a influência do brilho do solo?',
+        ops:['NDVI','NDWI','SAVI','Composição cor natural'], certa:2,
+        dica:'Procure o índice que tem um fator de ajuste do solo na fórmula.',
+        exp:'O SAVI inclui o fator L (geralmente 0,5) que reduz o efeito do solo em áreas de cobertura vegetal incompleta, comum em pastagens degradadas e no início do ciclo das culturas.' } },
+  { id:'classify', tab:'classify', nivel:3, icon:'🗺️', titulo:'Classificação supervisionada',
+    obj:'Produzir um mapa de uso e cobertura e avaliar sua qualidade com matriz de confusão e índice Kappa.',
+    passos:['Colete pelo menos 5 amostras de treinamento por classe.','Classifique e observe as assinaturas espectrais médias.','No modo Validação, marque outros pixels de referência de cada classe.','Leia a matriz de confusão: quais classes foram mais confundidas?'],
+    q:{ texto:'Seu mapa confundiu Pastagem com Vegetação. Qual a causa espectral mais provável?',
+        ops:['As duas classes têm assinaturas espectrais parecidas, com NIR alto','A água reflete muito no NIR','O classificador ignora a banda vermelha','O mapa está em projeção UTM'], certa:0,
+        dica:'Observe o gráfico das assinaturas espectrais médias das classes.',
+        exp:'Pastagem e vegetação arbórea refletem bastante no NIR e absorvem no vermelho; com apenas 4 bandas e um classificador de mínima distância, suas médias ficam próximas. Mais amostras, bandas SWIR ou dados multitemporais ajudam a separá-las.' } }
+];
+
+function moduleDone(m){ return m.auto ? (PROG.quiz.best >= 70) : !!PROG.done[m.id]; }
+
+function trailPercent(){
+  const n = MODULES.filter(moduleDone).length;
+  return Math.round(n / MODULES.length * 100);
+}
+
+function renderTrail(){
+  const box = document.getElementById('trailLevels'); if(!box) return;
+  const nameIn = document.getElementById('trailName');
+  if (nameIn && document.activeElement !== nameIn) nameIn.value = PROG.name || '';
+  const pct = trailPercent();
+  document.getElementById('trailPct').textContent = pct + '%';
+  document.getElementById('trailFill').style.width = pct + '%';
+  box.innerHTML = LEVELS.map(L => {
+    const mods = MODULES.filter(m => m.nivel === L.n);
+    const nd = mods.filter(moduleDone).length;
+    return `<div class="level-title">${L.titulo} <span style="font-weight:500;color:var(--md-sys-color-on-surface-variant);">(${nd}/${mods.length})</span></div>` +
+      mods.map(m => {
+        const d = moduleDone(m);
+        const extra = m.id==='quiz' && PROG.quiz.attempts ? ` · melhor resultado: ${PROG.quiz.best}%` :
+                      m.id==='classify' && PROG.classify.oa!=null ? ` · exatidão global: ${PROG.classify.oa}%` : '';
+        return `<div class="m3-card act-card ${d?'done':''}" style="padding:12px 14px;">
+          <div class="trail-row">
+            <div class="trail-ico" aria-hidden="true">${m.icon}</div>
+            <div class="trail-body">
+              <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
+                <h3>${m.titulo}</h3>
+                <span class="status-pill ${d?'ok':'todo'}">${d?'Concluído':(PROG.visited[m.tab]?'Em andamento':'Não iniciado')}</span>
+              </div>
+              <p>${m.obj}${extra}</p>
+              <button class="btn-text" style="padding:6px 0;margin-top:4px;" onclick="showPage('${m.tab}')">${d?'Revisar módulo':'Abrir módulo'}</button>
+            </div>
+          </div></div>`;
+      }).join('');
+  }).join('');
+}
+
+function renderActivity(m){
+  const host = document.getElementById('act-'+m.id); if(!host) return;
+  const d = moduleDone(m);
+  let qHtml = '';
+  if (m.auto) {
+    qHtml = `<p class="act-fb" style="color:${d?'#4ade80':'var(--md-sys-color-on-surface-variant)'};">${d ? '✅ Meta atingida! Melhor resultado: '+PROG.quiz.best+'%' : (PROG.quiz.attempts ? 'Melhor resultado até agora: '+PROG.quiz.best+'%. Meta: 70%.' : 'Meta: acertar pelo menos 70% das questões.')}</p>`;
+  } else {
+    const ans = PROG.done[m.id] ? m.q.certa : null;
+    qHtml = `<div class="act-q">🧩 Desafio: ${m.q.texto}</div>` +
+      m.q.ops.map((o,i) => `<button class="quiz-opt ${ans===i?'correct':''}" data-i="${i}" ${d?'disabled':''}>${String.fromCharCode(65+i)}) ${o}</button>`).join('') +
+      `<div class="act-fb" id="actfb-${m.id}">${d ? '<span style="color:#4ade80;font-weight:700;">✅ Correto!</span> '+m.q.exp : ''}</div>`;
+  }
+  host.innerHTML = `<details ${d?'':'open'}>
+      <summary><span>🎯 Atividade guiada</span><span class="status-pill ${d?'ok':'todo'}">${d?'Concluída':'Nível '+m.nivel}</span></summary>
+      <p class="act-obj"><strong>Objetivo:</strong> ${m.obj}</p>
+      <ol class="act-steps">${m.passos.map(p=>`<li>${p}</li>`).join('')}</ol>
+      ${qHtml}
+    </details>`;
+  host.classList.toggle('done', d);
+  if (!m.auto && !d) {
+    host.querySelectorAll('.quiz-opt').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.i;
+      PROG.tries[m.id] = (PROG.tries[m.id]||0) + 1;
+      const fb = document.getElementById('actfb-'+m.id);
+      if (i === m.q.certa) {
+        PROG.done[m.id] = true; slSave();
+        renderActivity(m); renderTrail();
+        snack('🎉 Módulo concluído: ' + m.titulo);
+      } else {
+        slSave();
+        b.classList.add('incorrect'); b.disabled = true;
+        fb.innerHTML = `<span style="color:var(--md-sys-color-error);font-weight:700;">Ainda não.</span> 💡 ${m.q.dica}`;
+      }
+    }));
+  }
+}
+
+function mountActivities(){
+  MODULES.forEach(m => {
+    const tab = document.getElementById(m.tab); if(!tab) return;
+    if (document.getElementById('act-'+m.id)) return;
+    const card = document.createElement('div');
+    card.className = 'm3-card act-card'; card.id = 'act-'+m.id;
+    const title = tab.querySelector('.section-title');
+    title ? title.insertAdjacentElement('afterend', card) : tab.prepend(card);
+    renderActivity(m);
+  });
+}
+function refreshActivity(id){ const m = MODULES.find(x=>x.id===id); if(m) renderActivity(m); renderTrail(); }
+
+function slRecordQuiz(correct, total){
+  const pct = Math.round(correct/total*100);
+  PROG.quiz.attempts++; PROG.quiz.last = pct; PROG.quiz.best = Math.max(PROG.quiz.best, pct);
+  slSave(); refreshActivity('quiz');
+}
+function slRecordClassify(oa, kappa){
+  PROG.classify = { oa, kappa }; slSave(); renderTrail();
+}
+
+function buildReport(){
+  const now = new Date();
+  const lines = [
+    'SensorLab – UFT · Relatório de progresso',
+    'Estudante: ' + (PROG.name || '(não informado)'),
+    'Data: ' + now.toLocaleString('pt-BR'),
+    'Progresso geral: ' + trailPercent() + '%', ''
+  ];
+  LEVELS.forEach(L => {
+    lines.push(L.titulo);
+    MODULES.filter(m=>m.nivel===L.n).forEach(m => {
+      let st = moduleDone(m) ? 'concluído' : (PROG.visited[m.tab] ? 'em andamento' : 'não iniciado');
+      if (!m.auto && PROG.tries[m.id]) st += ` (tentativas no desafio: ${PROG.tries[m.id]})`;
+      lines.push(`  [${moduleDone(m)?'x':' '}] ${m.titulo}: ${st}`);
+    });
+  });
+  lines.push('', `Quiz: melhor ${PROG.quiz.best}% · último ${PROG.quiz.last}% · tentativas ${PROG.quiz.attempts}`);
+  lines.push(`Classificação: exatidão global ${PROG.classify.oa ?? '—'}% · Kappa ${PROG.classify.kappa ?? '—'}`);
+  lines.push(`Trunfo: ${PROG.game.rounds} rodadas jogadas`);
+  return lines.join('\n');
+}
+function copyReport(){
+  const t = buildReport();
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject())
+    .then(()=>snack('✅ Relatório copiado. Cole no e-mail ou no AVA.'))
+    .catch(()=>{ downloadReport(); });
+}
+function downloadReport(){
+  const blob = new Blob([buildReport()], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sensorlab_progresso_' + (PROG.name||'estudante').replace(/\s+/g,'_') + '.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function resetProgress(){
+  if (!confirm('Apagar todo o progresso salvo neste aparelho?')) return;
+  PROG = { name:'', visited:{}, done:{}, tries:{}, quiz:{best:0,last:0,attempts:0}, classify:{oa:null,kappa:null}, game:{rounds:0} };
+  slSave(); MODULES.forEach(renderActivity); renderTrail(); snack('Progresso apagado.');
+}
+
+</script>
+<script>
+// ================================================================
 //  NAVIGATION
 // ================================================================
 const chipTabs = document.getElementById('chip-tabs');
@@ -1595,7 +1915,7 @@ function showPage(tabId) {
   document.getElementById('content-area').scrollTop = 0;
 
   // Trigger lazy loads
-  if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadLandsatBands();
+  if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadSentinelBands();
   if (tabId === 'location') { compassStart(); drawCompass(compassCurrentAngle); }
 }
 
@@ -1667,6 +1987,16 @@ const glossaryTerms = [
     { termo: 'Sensor remoto', definicao: 'Instrumento que detecta radiação eletromagnética da superfície. Passivos (dependem do sol) e ativos (emitem sua própria radiação, ex.: radar).' },
     { termo: 'Transmitância', definicao: 'Fração da radiação que atravessa um material sem ser absorvida ou refletida.' },
     { termo: 'Vegetação — resposta espectral', definicao: 'Três regiões: visível (400–700 nm, absorção pela clorofila), red edge (transição abrupta), NIR (700–1300 nm, alta reflectância pela estrutura celular).' },
+    { termo: 'SAVI', definicao: 'Índice de Vegetação Ajustado ao Solo: SAVI = ((NIR − R)/(NIR + R + L))·(1 + L), com L ≈ 0,5. Reduz a influência do solo em áreas de cobertura vegetal incompleta (pastagens degradadas, início do ciclo).' },
+    { termo: 'Resolução espacial', definicao: 'Tamanho da menor área no terreno representada por um pixel (ex.: 10 m no Sentinel-2, 30 m no Landsat). Define o menor talhão ou feição detectável.' },
+    { termo: 'Resolução espectral', definicao: 'Número e largura das bandas do sensor. Mais bandas estreitas permitem distinguir alvos com respostas parecidas (ex.: red edge para nutrição de culturas).' },
+    { termo: 'Resolução radiométrica', definicao: 'Número de níveis de cinza que o sensor registra (8 bits = 256; 12 bits = 4096). Maior resolução capta diferenças sutis de reflectância.' },
+    { termo: 'Resolução temporal', definicao: 'Intervalo entre duas passagens do sensor sobre o mesmo local (revisita). Crucial para acompanhar o ciclo das culturas.' },
+    { termo: 'Composição colorida falsa cor', definicao: 'Atribuição de bandas fora do visível aos canais RGB. Na composição NIR-R-G, a vegetação sadia aparece em vermelho intenso.' },
+    { termo: 'Classificação supervisionada', definicao: 'Atribuição de classes aos pixels a partir de amostras de treinamento fornecidas pelo analista (ex.: mínima distância, máxima verossimilhança, Random Forest).' },
+    { termo: 'Matriz de confusão', definicao: 'Tabela que cruza a classe de referência (verdade de campo) com a classe do mapa. A diagonal contém os acertos; fora dela, as confusões entre classes.' },
+    { termo: 'Índice Kappa', definicao: 'Medida de concordância entre mapa e referência que desconta os acertos esperados ao acaso. Varia de −1 a 1; acima de 0,8 indica concordância quase perfeita (Landis & Koch, 1977).' },
+    { termo: 'UTM', definicao: 'Sistema Universal Transverso de Mercator: divide a Terra em 60 fusos de 6° e expressa posições em metros (Easting, Northing). Gurupi (TO) está no fuso 22 S.' },
     { termo: 'Referências Clássicas', definicao: 'Campbell & Wynne — Introduction to Remote Sensing (5ª ed.); Jensen — Remote Sensing of the Environment; Ponzoni & Shimabukuro — Sensoriamento Remoto no Estudo da Vegetação; Novo — Sensoriamento Remoto: Princípios e Aplicações.' }
 ];
 
@@ -1735,9 +2065,11 @@ async function startCamera() {
         video.style.display = 'block'; canvas.style.display = 'none';
         backBtn.classList.add('hidden'); captureBtn.classList.remove('hidden');
         imageCaptured = false;
-    } catch (err) { snack('Não foi possível acessar a câmera.'); }
+    } catch (err) { snack('Não foi possível acessar a câmera. Verifique a permissão do navegador.'); }
 }
-startCamera();
+function stopCamera() {
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+}
 
 captureBtn.addEventListener('click', () => {
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
@@ -1775,11 +2107,11 @@ function updatePointsList() {
     pointsListDiv.innerHTML = points.map((p,i) => {
         const rR=(p.r/255).toFixed(3), rG=(p.g/255).toFixed(3), rB=(p.b/255).toFixed(3);
         let ref = '';
-        if (whiteRef) ref = `<br>Refl: R=${(p.r/whiteRef.r).toFixed(3)} G=${(p.g/whiteRef.g).toFixed(3)} B=${(p.b/whiteRef.b).toFixed(3)}`;
+        if (whiteRef) ref = `<br>Reflectância relativa: R=${(p.r/whiteRef.r).toFixed(3)} G=${(p.g/whiteRef.g).toFixed(3)} B=${(p.b/whiteRef.b).toFixed(3)}`;
         return `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:8px 10px;margin-bottom:6px;font-size:var(--md-type-body-small);">
             <strong>Ponto ${i+1}</strong> (${p.x},${p.y}) &nbsp;
             <span style="font-family:monospace;">DN R=${p.r} G=${p.g} B=${p.b}</span><br>
-            Rad: R=${rR} G=${rG} B=${rB}${ref}
+            DN normalizado (0–1): R=${rR} G=${rG} B=${rB}${ref}
         </div>`;
     }).join('');
 }
@@ -1853,6 +2185,7 @@ function newGame() {
     renderCard(playerCard, playerCardDiv, true);
     renderCard(computerCard, computerCardDiv, false);
     gameMessage.textContent = '';
+    document.getElementById('gameExplain')?.classList.add('hidden');
     const attrs = [
         { key:'resolucao', label:'Resolução', better:'lower' },
         { key:'bandas',    label:'Bandas',    better:'higher' },
@@ -1863,7 +2196,8 @@ function newGame() {
     attrs.forEach(a => {
         const btn = document.createElement('button');
         btn.className = 'attr-btn';
-        btn.textContent = a.label;
+        btn.textContent = a.label + (a.better==='lower' ? ' ↓' : ' ↑');
+        btn.title = a.better==='lower' ? 'Vence o menor valor' : 'Vence o maior valor';
         btn.onclick = () => {
             const pv = playerCard[a.key], cv = computerCard[a.key];
             const pw = a.better === 'lower' ? pv < cv : pv > cv;
@@ -1884,10 +2218,20 @@ function newGame() {
             round++;
             updateScoreboard();
             attrBtnsDiv.querySelectorAll('.attr-btn').forEach(b => b.disabled = true);
+            const ex = document.getElementById('gameExplain');
+            ex.innerHTML = '📚 ' + GAME_EXPLAIN[a.key];
+            ex.classList.remove('hidden');
+            PROG.game.rounds++; slSave();
         };
         attrBtnsDiv.appendChild(btn);
     });
 }
+const GAME_EXPLAIN = {
+    resolucao: '<strong>Resolução espacial</strong> (vence o menor valor): é o tamanho do pixel no terreno. Pixels menores revelam talhões pequenos, falhas de plantio e bordaduras, mas cada imagem cobre uma área menor.',
+    bandas:    '<strong>Resolução espectral</strong> (vence o maior número): mais bandas permitem separar alvos parecidos. Bandas red edge e SWIR ajudam a avaliar nutrição e umidade das culturas.',
+    revisit:   '<strong>Resolução temporal</strong> (vence a menor revisita): é o intervalo entre passagens. Em culturas de ciclo curto e regiões com muitas nuvens, revisitas frequentes aumentam as chances de imagens úteis.',
+    ano:       '<strong>Ano de lançamento</strong> (vence o mais recente): sensores recentes tendem a ter melhor calibração e resolução radiométrica, mas séries antigas, como Landsat desde 1972, são valiosas para estudos de longo prazo.'
+};
 newGameBtn.addEventListener('click', newGame);
 updateScoreboard();
 newGame();
@@ -1895,71 +2239,115 @@ newGame();
 // ================================================================
 //  QUIZ
 // ================================================================
-let currentQuizIndex = 0;
+const QUIZ_EXP = [
+  'A radiação eletromagnética é energia que se propaga como ondas de campos elétrico e magnético oscilantes, inclusive no vácuo, à velocidade da luz.',
+  'A velocidade da luz é o produto do comprimento de onda pela frequência (c = λν). Logo, quanto maior a frequência, menor o comprimento de onda.',
+  'No modelo corpuscular, a energia viaja em pacotes discretos chamados fótons. Ondas e fótons são duas descrições complementares da mesma radiação.',
+  'Pela equação de Planck, E = hν: a energia do fóton cresce com a frequência. Por isso o UV transporta mais energia por fóton do que o infravermelho.',
+  'Sensores passivos registram a energia solar refletida (ou a emitida pela Terra no termal). O Sol é a principal fonte para as faixas do visível e do infravermelho refletido.',
+  'A Lei de Stefan-Boltzmann (M = σT⁴) dá a energia total emitida por um corpo negro. Wien informa o pico; Planck, a distribuição completa.',
+  'A energia emitida cresce com a quarta potência da temperatura: dobrar a temperatura absoluta multiplica a emissão por 16.',
+  'Wien: λmáx = 2898/T (µm·K). O Sol (~5800 K) tem pico no visível (~0,5 µm); a Terra (~300 K), no termal (~9,7 µm).',
+  'A energia incidente se divide em refletida (ρ), absorvida (α) e transmitida (τ); a soma das frações é 1. Cada alvo tem proporções próprias em cada comprimento de onda.',
+  'Espalhamento é o desvio da radiação por partículas e moléculas da atmosfera. Ele adiciona brilho à imagem e reduz o contraste entre alvos.',
+  'O espalhamento Rayleigh ocorre com partículas muito menores que o comprimento de onda, como as moléculas de N₂ e O₂.',
+  'Como o Rayleigh é proporcional a λ⁻⁴, o azul é espalhado cerca de 5 vezes mais que o vermelho, deixando o céu azul.',
+  'O Mie ocorre com partículas de tamanho próximo ao comprimento de onda: aerossóis, poeira e fumaça de queimadas, muito comuns no Cerrado na estação seca.',
+  'Partículas bem maiores que o comprimento de onda, como gotículas de nuvem, espalham todas as faixas igualmente. Por isso as nuvens parecem brancas.',
+  'O ozônio (O₃) da estratosfera absorve a maior parte do UV solar, protegendo os seres vivos e limitando o uso dessa faixa em sensores orbitais.',
+  'Janelas atmosféricas são faixas em que a atmosfera é transparente. As bandas dos sensores são posicionadas nelas (visível, NIR, SWIR, termal, micro-ondas).',
+  'Reflectância é a razão entre a energia refletida e a incidente, entre 0 e 1. É a grandeza adequada para comparar alvos e datas.',
+  'A estrutura interna das folhas (mesofilo esponjoso) espalha fortemente o NIR; por isso a vegetação sadia reflete 40% a 60% nessa faixa.',
+  'A água absorve quase toda a radiação NIR, ficando escura nessa banda. Isso facilita mapear rios, açudes e áreas alagadas.',
+  'Superfícies rugosas em relação ao comprimento de onda espalham a energia em várias direções (reflexão difusa), como solo arado ou dossel de culturas.',
+  'Superfícies lisas, como água parada, refletem em uma só direção (especular), causando brilho intenso (sunglint) ou áreas muito escuras na imagem.',
+  'Radiância é o fluxo radiante por unidade de área e de ângulo sólido, em uma direção. É o que o sensor efetivamente mede (W·m⁻²·sr⁻¹·µm⁻¹).',
+  'Irradiância é o fluxo que chega a uma superfície por unidade de área (W·m⁻²), sem depender de direção.',
+  'O olho humano percebe de cerca de 0,4 µm (violeta) a 0,7 µm (vermelho). Fora disso estão o UV e o infravermelho.',
+  'O NIR é a faixa mais usada para vegetação: reflete o vigor e a biomassa e, combinado ao vermelho, gera os índices de vegetação.',
+  'O NDVI explora o contraste entre a absorção do vermelho pela clorofila e a alta reflexão do NIR pela estrutura foliar.',
+  'Radares (SAR) emitem pulsos de micro-ondas e medem o retroespalhamento. Exemplos: Sentinel-1 (banda C) e ALOS (banda L).',
+  'Por usar micro-ondas e ter fonte própria, o radar opera sob nuvens e à noite, essencial no monitoramento agrícola em período chuvoso.',
+  'O espectro organiza a radiação pelo comprimento de onda ou, equivalentemente, pela frequência, das ondas de rádio aos raios gama.',
+  'O que o sensor registra resulta da interação da radiação com o alvo (reflexão, absorção, emissão) e com a atmosfera. É isso que permite identificar os alvos.'
+];
+let quizOrder = quizQuestions.map((_, i) => i);
+let qPos = 0;
+let quizFullRun = true;
 const userAnswers = new Array(quizQuestions.length).fill(null);
-let quizLocked = false;
 
 const quizQuestion  = document.getElementById('quizQuestion');
 const quizOptions   = document.getElementById('quizOptions');
 const quizFeedback  = document.getElementById('quizFeedback');
+const quizExplain   = document.getElementById('quizExplain');
 const quizNextBtn   = document.getElementById('quizNextBtn');
 const quizPrevBtn   = document.getElementById('quizPrevBtn');
 const quizContainer = document.getElementById('quizContainer');
 const quizResult    = document.getElementById('quizResult');
 const quizRestartBtn= document.getElementById('quizRestartBtn');
+const quizReviewBtn = document.getElementById('quizReviewBtn');
 const correctCountSpan = document.getElementById('correctCount');
 const errorCountSpan   = document.getElementById('errorCount');
 
+function shuffled(a){ const r=[...a]; for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+
 function renderQuiz() {
-    const q = quizQuestions[currentQuizIndex];
-    document.getElementById('currentQuestion').textContent = currentQuizIndex + 1;
-    document.getElementById('quiz-progress-fill').style.width = ((currentQuizIndex+1)/quizQuestions.length*100)+'%';
-    const acertos = userAnswers.filter((a,i) => a === quizQuestions[i].correct).length;
-    document.getElementById('quiz-score-chip').textContent = `${acertos} acertos`;
+    const qi = quizOrder[qPos], q = quizQuestions[qi], ans = userAnswers[qi];
+    document.getElementById('currentQuestion').textContent = qPos + 1;
+    document.getElementById('quizTotal').textContent = quizOrder.length;
+    document.getElementById('quiz-progress-fill').style.width = ((qPos+1)/quizOrder.length*100)+'%';
+    const acertos = quizOrder.filter(i => userAnswers[i] === quizQuestions[i].correct).length;
+    document.getElementById('quiz-score-chip').textContent = `${acertos} acerto${acertos===1?'':'s'}`;
     quizQuestion.textContent = q.q;
     const opts = [['A',q.a],['B',q.b],['C',q.c],['D',q.d]];
     quizOptions.innerHTML = opts.map(([k,v]) => {
         let cls = '';
-        if (userAnswers[currentQuizIndex]) {
-            if (k === q.correct) cls = ' correct';
-            else if (k === userAnswers[currentQuizIndex]) cls = ' incorrect';
-        }
-        return `<button class="quiz-opt${cls}" data-key="${k}" ${quizLocked?'disabled':''}>${k}) ${v}</button>`;
+        if (ans) { if (k === q.correct) cls = ' correct'; else if (k === ans) cls = ' incorrect'; }
+        return `<button class="quiz-opt${cls}" data-key="${k}" ${ans?'disabled':''}>${k}) ${v}</button>`;
     }).join('');
-    quizOptions.querySelectorAll('.quiz-opt').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (quizLocked) return;
-            userAnswers[currentQuizIndex] = btn.dataset.key;
-            quizLocked = true;
-            const correct = btn.dataset.key === q.correct;
-            quizFeedback.textContent = correct ? '✅ Correto!' : `❌ Errado. Certa: ${q.correct}`;
-            quizFeedback.style.color = correct ? '#4ade80' : 'var(--md-sys-color-error)';
-            renderQuiz();
-        });
-    });
-    quizFeedback.textContent = quizLocked && userAnswers[currentQuizIndex]
-        ? (userAnswers[currentQuizIndex]===q.correct ? '✅ Correto!' : `❌ Errado. Certa: ${q.correct}`) : '';
-    quizFeedback.style.color = userAnswers[currentQuizIndex]===q.correct ? '#4ade80' : 'var(--md-sys-color-error)';
-    quizPrevBtn.disabled = currentQuizIndex === 0;
-}
-quizPrevBtn.addEventListener('click', () => {
-    if (currentQuizIndex > 0) { currentQuizIndex--; quizLocked = userAnswers[currentQuizIndex]!==null; renderQuiz(); }
-});
-quizNextBtn.addEventListener('click', () => {
-    if (currentQuizIndex < quizQuestions.length-1) {
-        currentQuizIndex++; quizLocked = userAnswers[currentQuizIndex]!==null; renderQuiz();
+    quizOptions.querySelectorAll('.quiz-opt').forEach(btn => btn.addEventListener('click', () => {
+        if (userAnswers[qi]) return;
+        userAnswers[qi] = btn.dataset.key;
+        renderQuiz();
+    }));
+    if (ans) {
+        const ok = ans === q.correct;
+        quizFeedback.textContent = ok ? '✅ Correto!' : `❌ Resposta correta: ${q.correct}`;
+        quizFeedback.style.color = ok ? '#4ade80' : 'var(--md-sys-color-error)';
+        quizExplain.innerHTML = '💡 ' + QUIZ_EXP[qi];
+        quizExplain.classList.remove('hidden');
     } else {
-        const c = userAnswers.filter((a,i)=>a===quizQuestions[i].correct).length;
-        correctCountSpan.textContent = c; errorCountSpan.textContent = quizQuestions.length - c;
-        quizContainer.classList.add('hidden'); quizResult.classList.remove('hidden');
+        quizFeedback.textContent = '';
+        quizExplain.classList.add('hidden');
     }
-});
-quizRestartBtn.addEventListener('click', () => {
-    currentQuizIndex = 0; userAnswers.fill(null); quizLocked = false;
-    quizFeedback.textContent = '';
+    quizPrevBtn.disabled = qPos === 0;
+    quizNextBtn.textContent = qPos === quizOrder.length-1 ? 'Ver resultado ›' : 'Próxima ›';
+}
+function showQuizResult(){
+    const c = quizOrder.filter(i => userAnswers[i] === quizQuestions[i].correct).length;
+    const wrong = quizOrder.filter(i => userAnswers[i] !== quizQuestions[i].correct);
+    const pct = Math.round(c / quizOrder.length * 100);
+    correctCountSpan.textContent = c; errorCountSpan.textContent = wrong.length;
+    document.getElementById('quizPctText').textContent = quizFullRun
+        ? `Você acertou ${pct}% das questões. ${pct>=70?'Meta de 70% atingida!':'A meta é 70%: revise as que errou e tente de novo.'}`
+        : `Revisão: ${c} de ${quizOrder.length} corrigidas.`;
+    if (quizFullRun) slRecordQuiz(c, quizOrder.length);
+    quizReviewBtn.classList.toggle('hidden', wrong.length === 0);
+    quizReviewBtn.onclick = () => startQuiz(wrong, false);
+    quizContainer.classList.add('hidden'); quizResult.classList.remove('hidden');
+}
+function startQuiz(order, full){
+    quizOrder = order; quizFullRun = full; qPos = 0;
+    order.forEach(i => userAnswers[i] = null);
     quizContainer.classList.remove('hidden'); quizResult.classList.add('hidden');
     renderQuiz();
+}
+quizPrevBtn.addEventListener('click', () => { if (qPos > 0) { qPos--; renderQuiz(); } });
+quizNextBtn.addEventListener('click', () => {
+    if (!userAnswers[quizOrder[qPos]]) { snack('Responda à questão antes de avançar.'); return; }
+    if (qPos < quizOrder.length-1) { qPos++; renderQuiz(); } else showQuizResult();
 });
+quizRestartBtn.addEventListener('click', () => startQuiz(shuffled(quizQuestions.map((_,i)=>i)), true));
 renderQuiz();
 
 // ================================================================
@@ -1970,24 +2358,85 @@ const particleSlider    = document.getElementById('particleSizeSlider');
 const particleSizeValue = document.getElementById('particleSizeValue');
 const scatteringType    = document.getElementById('scatteringType');
 
+// Modelo didático: intensidade relativa ∝ λ^(-k)
+// k = 4 (Rayleigh) → decresce até 0 (não-seletivo), em escala log do diâmetro
+const SCAT_BANDS = [
+    { nome:'Azul',     lambda:0.49,  cor:'#3b82f6' },
+    { nome:'Verde',    lambda:0.56,  cor:'#22c55e' },
+    { nome:'Vermelho', lambda:0.665, cor:'#ef4444' },
+    { nome:'NIR',      lambda:0.842, cor:'#a855f7' }
+];
+function scatExponent(d){
+    const lo = Math.log10(0.03), hi = Math.log10(5), x = Math.log10(d);
+    if (x <= lo) return 4;
+    if (x >= hi) return 0;
+    return 4 * (1 - (x - lo) / (hi - lo));
+}
+function fmtD(d){ return d < 0.01 ? d.toPrecision(1) : d < 1 ? d.toFixed(2) : d.toFixed(1); }
 function drawScattering() {
-    const size = parseFloat(particleSlider.value);
-    particleSizeValue.textContent = size.toFixed(1);
+    const d = Math.pow(10, parseFloat(particleSlider.value));
+    const k = scatExponent(d);
+    particleSizeValue.textContent = fmtD(d).replace('.', ',') + ' µm';
     const ctx = scatteringCanvas.getContext('2d');
     const w = scatteringCanvas.width, h = scatteringCanvas.height;
     ctx.clearRect(0,0,w,h);
-    const grd = ctx.createLinearGradient(0,0,0,h);
-    grd.addColorStop(0,'#87CEEB'); grd.addColorStop(1,'#F0F8FF');
-    ctx.fillStyle = grd; ctx.fillRect(0,0,w,h);
-    for (let i=0;i<80;i++) {
-        const x=Math.random()*w, y=Math.random()*h, r=size*3;
-        ctx.beginPath(); ctx.arc(x,y,r,0,2*Math.PI);
-        ctx.fillStyle = size<0.5?'rgba(0,0,255,0.3)':size<1.5?'rgba(255,255,255,0.6)':'rgba(128,128,128,0.7)';
-        ctx.fill();
+    ctx.fillStyle = '#0f1420'; ctx.fillRect(0,0,w,h);
+
+    // Intensidades relativas (azul = 1)
+    const I = SCAT_BANDS.map(b => Math.pow(b.lambda, -k));
+    const ref = I[0];
+    const rel = I.map(v => v / ref);
+
+    // Céu simulado: cor resultante do espalhamento no visível
+    const rgb = [rel[2], rel[1], rel[0]];
+    const mx = Math.max(...rgb);
+    const sky = rgb.map(v => Math.round(70 + 185 * v / mx));
+    const gH = 120;
+    const grd = ctx.createLinearGradient(0,0,0,gH);
+    grd.addColorStop(0, `rgb(${sky[0]},${sky[1]},${sky[2]})`);
+    grd.addColorStop(1, `rgb(${Math.min(255,sky[0]+40)},${Math.min(255,sky[1]+40)},${Math.min(255,sky[2]+40)})`);
+    ctx.fillStyle = grd; ctx.fillRect(0,0,w,gH);
+    // partículas (posições fixas, raio em escala log)
+    const r = Math.max(1.5, 3 + (Math.log10(d) + 3.6) * 3.2);
+    ctx.fillStyle = k > 3 ? 'rgba(255,255,255,0.35)' : k > 0.5 ? 'rgba(200,190,170,0.55)' : 'rgba(255,255,255,0.8)';
+    for (let i = 0; i < 40; i++) {
+        const x = (i * 97) % w, y = 10 + (i * 53) % (gH - 20);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI); ctx.fill();
     }
-    if (size<0.5) scatteringType.textContent = '☁️ Espalhamento Rayleigh — partículas pequenas → céu azul';
-    else if (size<1.5) scatteringType.textContent = '⬜ Espalhamento Mie — partículas médias → nuvens brancas';
-    else scatteringType.textContent = '🌫️ Espalhamento não-seletivo — partículas grandes → névoa cinza';
+    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('Cor aparente do céu', 12, 22);
+
+    // Barras de intensidade relativa por banda
+    const top = gH + 30, base = h - 34, bw = 90, gap = (w - 4*bw) / 5;
+    ctx.fillStyle = '#cbd5e1'; ctx.font = '14px sans-serif';
+    ctx.fillText('Espalhamento relativo por banda (azul = 1)', 12, gH + 20);
+    const maxRel = Math.max(...rel, 1);
+    SCAT_BANDS.forEach((b, i) => {
+        const x = gap + i * (bw + gap);
+        const bh = (base - top - 16) * rel[i] / maxRel;
+        ctx.fillStyle = b.cor; ctx.fillRect(x, base - bh, bw, bh);
+        ctx.fillStyle = '#e2e8f0'; ctx.textAlign = 'center';
+        ctx.fillText(rel[i].toFixed(2).replace('.', ','), x + bw/2, base - bh - 6);
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(`${b.nome} (${String(b.lambda).replace('.', ',')} µm)`, x + bw/2, base + 18);
+    });
+    ctx.textAlign = 'left';
+
+    let tipo, exemplo, agro;
+    if (d < 0.05) {
+        tipo = '🔵 <strong>Espalhamento Rayleigh</strong> (partícula ≪ λ; intensidade ∝ λ⁻⁴)';
+        exemplo = 'Moléculas de N₂ e O₂ (~0,0003 µm).';
+        agro = 'Afeta sobretudo o azul: a banda azul fica "enevoada" e de baixo contraste. A correção atmosférica remove esse efeito antes do cálculo de índices.';
+    } else if (d < 5) {
+        tipo = '🟤 <strong>Espalhamento Mie</strong> (partícula ≈ λ; dependência fraca de λ)';
+        exemplo = 'Fumaça de queimadas (0,1–1 µm), poeira e poluição (1–5 µm).';
+        agro = 'Comum no Cerrado na estação seca: a fumaça reduz o contraste da cena e altera o NDVI. Prefira imagens de datas sem queimadas ou aplique correção atmosférica.';
+    } else {
+        tipo = '⚪ <strong>Espalhamento não-seletivo</strong> (partícula ≫ λ; todas as bandas igualmente)';
+        exemplo = 'Gotículas de nuvem e neblina (5–100 µm).';
+        agro = 'Nuvens bloqueiam o sinal óptico: use máscara de nuvens, composições de várias datas ou radar (micro-ondas).';
+    }
+    scatteringType.innerHTML = `${tipo}<br>📍 Exemplo: ${exemplo}<br>🌾 ${agro}`;
 }
 particleSlider.addEventListener('input', drawScattering);
 drawScattering();
@@ -1995,17 +2444,28 @@ drawScattering();
 // ================================================================
 //  ESPECTRO
 // ================================================================
+const BAND_EXTRA = {
+    gama:   { nome:'Raios gama', faixa:'< 0,01 nm', agro:'Gamaespectrometria aérea mapeia potássio, urânio e tório, apoiando o mapeamento de solos.' },
+    x:      { nome:'Raios X', faixa:'0,01 – 10 nm', agro:'A fluorescência de raios X (XRF) analisa nutrientes em amostras de solo e tecido vegetal.' },
+    uv:     { nome:'Ultravioleta', faixa:'10 – 400 nm', agro:'Pouco usado em satélites; a radiação UV-B afeta a fisiologia e a qualidade das plantas.' },
+    visivel:{ nome:'Visível', faixa:'0,4 – 0,7 µm', agro:'A clorofila absorve o azul e o vermelho. A banda vermelha é base do NDVI e as composições em cor natural ajudam a reconhecer talhões.' },
+    iv:     { nome:'Infravermelho', faixa:'0,7 µm – 1 mm', agro:'NIR: vigor e biomassa; SWIR: umidade de folhas e solos; termal: estresse hídrico e evapotranspiração.' },
+    micro:  { nome:'Micro-ondas', faixa:'1 mm – 1 m', agro:'Radares (ex.: Sentinel-1) monitoram lavouras sob nuvens e estimam a umidade do solo.' },
+    radio:  { nome:'Rádio', faixa:'> 1 m', agro:'Telemetria de estações meteorológicas e de sensores de campo usa ondas de rádio.' }
+};
 document.querySelectorAll('[data-band]').forEach(div => {
     div.addEventListener('click', () => {
         const band = div.dataset.band, info = bandInfo[band];
         if (!info) return;
         const el = document.getElementById('bandInfo');
         el.innerHTML = `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:12px;margin-top:8px;">
-            <strong style="font-size:var(--md-type-title-small);color:var(--md-sys-color-primary);">${band.toUpperCase()}</strong>
+            <strong style="font-size:var(--md-type-title-small);color:var(--md-sys-color-primary);">${BAND_EXTRA[band].nome}</strong>
+            <span class="data-chip" style="margin-left:6px;">λ: ${BAND_EXTRA[band].faixa}</span>
             <div style="font-size:var(--md-type-body-small);margin-top:8px;line-height:1.7;color:var(--md-sys-color-on-surface-variant);">
                 <p>📡 <strong>Fontes:</strong> ${info.fontes}</p>
                 <p>🌍 <strong>Interação:</strong> ${info.interacao}</p>
                 <p>🛰️ <strong>Aplicações:</strong> ${info.aplicacao}</p>
+                <p>🌾 <strong>Na agronomia:</strong> ${BAND_EXTRA[band].agro}</p>
                 <p style="margin-top:8px;color:var(--md-sys-color-primary);">💡 ${info.curiosidade}</p>
             </div>
         </div>`;
@@ -2034,6 +2494,18 @@ glossaryTerms.forEach(term => {
     <div class="gloss-body">${term.definicao}</div>`;
     item.querySelector('.gloss-header').addEventListener('click', () => item.classList.toggle('open'));
     glossaryList.appendChild(item);
+});
+document.getElementById('glossSearch').addEventListener('input', e => {
+    const t = e.target.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    let shown = 0;
+    glossaryList.querySelectorAll('.gloss-item').forEach(it => {
+        const txt = it.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        const ok = !t || txt.includes(t);
+        it.classList.toggle('hidden', !ok);
+        if (ok) shown++;
+        if (t && ok) it.classList.add('open');
+    });
+    document.getElementById('glossEmpty').classList.toggle('hidden', shown > 0);
 });
 
 // ================================================================
@@ -2067,7 +2539,53 @@ const histogramCanvas  = document.getElementById('histogramCanvas');
 const indexBtns        = document.querySelectorAll('.index-btn');
 const viewSegBtns      = document.querySelectorAll('.view-seg-btn');
 
+// Rótulos dos seletores RGB conforme a origem das bandas
+const BAND_LABELS = {
+    landsat:  {1:'B1 (Azul)', 2:'B2 (Verde)', 3:'B3 (Vermelho)', 4:'B4 (NIR)', 5:'B5 (SWIR)'},
+    sentinel: {1:'B2 (Azul)', 2:'B3 (Verde)', 3:'B4 (Vermelho)', 4:'B8 (NIR)', 5:'SWIR (indisponível nesta cena)'}
+};
+function setBandLabels(src) {
+    const defaults = {redChannel:'3', greenChannel:'2', blueChannel:'1'};
+    Object.keys(defaults).forEach(id => {
+        const sel = document.getElementById(id); if (!sel) return;
+        [...sel.options].forEach(o => {
+            o.textContent = BAND_LABELS[src][o.value];
+            o.disabled = (src === 'sentinel' && o.value === '5');
+        });
+        if (src === 'sentinel' && sel.value === '5') sel.value = defaults[id];
+    });
+}
+
+// Usa a mesma cena Sentinel-2 da aba Classificação
+// Chaves internas: 1=Azul(B2), 2=Verde(B3), 3=Vermelho(B4), 4=NIR(B8)
+function loadSentinelBands() {
+    if (typeof window.getSentinelScene !== 'function') {
+        bandStatus.innerHTML = '❌ Cena Sentinel-2 indisponível.'; return;
+    }
+    bandStatus.innerHTML = '⏳ Lendo a cena Sentinel-2…';
+    const sc = window.getSentinelScene();           // {w, h, px:[NIR,RED,GRN,BLU,...]}
+    const w = sc.w, h = sc.h, n = w * h, px = sc.px;
+    const nir = new Float32Array(n), red = new Float32Array(n),
+          grn = new Float32Array(n), blu = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+        const k = i * 4;
+        nir[i] = px[k] / 255; red[i] = px[k+1] / 255;
+        grn[i] = px[k+2] / 255; blu[i] = px[k+3] / 255;
+    }
+    bandData = {1: blu, 2: grn, 3: red, 4: nir};
+    bandImages = {1:{width:w,height:h}, 2:{width:w,height:h}, 3:{width:w,height:h}, 4:{width:w,height:h}};
+    setBandLabels('sentinel'); window.bandSource = 'sentinel';
+    bandStatus.innerHTML = '✅ Sentinel-2 MSI · 10 m · bandas B2, B3, B4 e B8 (mesma cena da Classificação)';
+    bandStatusMessage.textContent = 'Cena Sentinel-2 carregada. Valores em 8 bits (0–255) normalizados para 0–1.';
+    processBtn.disabled = false; applyRGBBtn.disabled = false;
+    indexBtns.forEach(b => b.disabled = false);
+    renderRGB();
+    const nd = calculateNDVI();
+    if (nd) { lastIndexData = nd; lastIndexName = 'NDVI'; renderIndex(nd, indexCanvas); drawHistogram(nd, 'NDVI'); }
+}
+
 function loadLandsatBands() {
+    setBandLabels('landsat'); window.bandSource = 'landsat';
     bandStatus.innerHTML = '⏳ Carregando bandas da pasta /bands…';
     bandStatusMessage.textContent = 'Carregando bandas…';
     const bandPaths={1:'bands/band1.png',2:'bands/band2.png',3:'bands/band3.png',4:'bands/band4.png',5:'bands/band5.png'};
@@ -2103,6 +2621,7 @@ function processBands() {
     });
 }
 function loadSyntheticData() {
+    setBandLabels('landsat'); window.bandSource = 'synthetic';
     bandStatus.innerHTML='🧪 Gerando dados sintéticos…';
     const w=400,h=300;
     function gen(o){ const d=new Float32Array(w*h);
@@ -2184,7 +2703,67 @@ function renderIndex(indexData,canvas){
     document.getElementById('indexMin').textContent=mn.toFixed(3);
     document.getElementById('indexMax').textContent=mx.toFixed(3);
     document.getElementById('indexMean').textContent=(sum/(w*h)).toFixed(3);
+    updateThreshold(false);
 }
+
+// ---- Interpretação didática de valores de NDVI/SAVI/EVI ----
+function interpretVeg(v){
+    if (v < 0)   return 'água, nuvem ou sombra';
+    if (v < 0.2) return 'solo exposto ou palhada';
+    if (v < 0.4) return 'vegetação esparsa ou pastagem degradada';
+    if (v < 0.6) return 'vegetação moderada';
+    return 'vegetação densa e vigorosa';
+}
+function interpretIndex(name, v){
+    if (/NDWI/i.test(name)) return v > 0 ? 'provável água ou alvo muito úmido' : 'alvo seco ou vegetado';
+    return interpretVeg(v);
+}
+
+// ---- Inspetor de pixel ----
+indexCanvas.addEventListener('click', e => {
+    if (!lastIndexData || !bandImages[1]) return;
+    const w = bandImages[1].width, h = bandImages[1].height;
+    const r = indexCanvas.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) * w / r.width);
+    const y = Math.floor((e.clientY - r.top) * h / r.height);
+    if (x<0||y<0||x>=w||y>=h) return;
+    const i = y * w + x, v = lastIndexData[i];
+    const f = k => bandData[k] ? bandData[k][i].toFixed(2) : '—';
+    document.getElementById('pixelInfo').innerHTML =
+        `📍 Pixel (${x}, ${y}) · <strong>${lastIndexName} = ${v.toFixed(3)}</strong> → ${interpretIndex(lastIndexName, v)}<br>` +
+        `<span style="font-size:0.7rem;">Azul ${f(1)} · Verde ${f(2)} · Vermelho ${f(3)} · NIR ${f(4)} (valores normalizados 0–1)</span>`;
+});
+
+// ---- Limiar e estimativa de área ----
+const thrSlider = document.getElementById('thrSlider');
+function updateThreshold(drawMask){
+    const out = document.getElementById('thrResult');
+    const t = parseFloat(thrSlider.value);
+    document.getElementById('thrValue').textContent = t.toFixed(2);
+    if (!lastIndexData || !bandImages[1]) { out.textContent = 'Calcule um índice para usar o limiar.'; return; }
+    let n = 0; const N = lastIndexData.length;
+    for (let i = 0; i < N; i++) if (lastIndexData[i] >= t) n++;
+    const pct = (n / N * 100).toFixed(1).replace('.', ',');
+    let area = '';
+    if (window.bandSource === 'sentinel') {
+        const ha = n * 100 / 10000, tot = N * 100 / 10000;   // pixel de 10 m = 100 m²
+        area = ` ≈ <strong>${ha.toLocaleString('pt-BR',{maximumFractionDigits:1})} ha</strong> de ${tot.toLocaleString('pt-BR')} ha da cena (pixel de 10 × 10 m = 0,01 ha)`;
+    }
+    out.innerHTML = `${lastIndexName} ≥ ${t.toFixed(2)}: <strong>${pct}%</strong> dos pixels${area}.`;
+    if (drawMask) {
+        const w = bandImages[1].width, h = bandImages[1].height;
+        indexCanvas.width = w; indexCanvas.height = h;
+        const ctx = indexCanvas.getContext('2d'), id = ctx.createImageData(w, h);
+        for (let i = 0; i < N; i++) {
+            const k = i*4, on = lastIndexData[i] >= t;
+            id.data[k] = on ? 34 : 60; id.data[k+1] = on ? 197 : 60; id.data[k+2] = on ? 94 : 70; id.data[k+3] = 255;
+        }
+        ctx.putImageData(id, 0, 0);
+        switchView('index');
+    }
+}
+thrSlider.addEventListener('input', () => updateThreshold(true));
+
 
 
 // ================================================================
@@ -2305,6 +2884,7 @@ function drawHistogram(indexData, label) {
 }
 
 loadLocalBandsBtn.addEventListener('click', loadLandsatBands);
+document.getElementById('loadSentinelBtn').addEventListener('click', loadSentinelBands);
 loadSyntheticBtn.addEventListener('click', loadSyntheticData);
 applyRGBBtn.addEventListener('click', () => { renderRGB(); switchView('rgb'); });
 indexBtns.forEach(btn => {
@@ -2334,7 +2914,7 @@ function switchView(view) {
     if (view === 'histogram') drawHistogram(lastIndexData, lastIndexName);
 }
 document.querySelector('[data-tab="indices"]')?.addEventListener('click', () => {
-    if(Object.keys(bandImages).length===0) loadLandsatBands();
+    if(Object.keys(bandImages).length===0) loadSentinelBands();
 });
 
 // ================================================================
@@ -2658,9 +3238,13 @@ let activeComposite = 'fc'; // 'fc' | 'tc'
 let samples    = [[],[],[],[]];
 let activeClass = 0;
 let overlayMarks = [];
+let valSamples = [[],[],[],[]];
+let classifyMode = 'train';
+let classMap = null;     // Uint8Array com a classe de cada pixel
+let lastMeans = null;
 
-const CLASS_COLORS     = ['#166534','#f97316','#3b82f6','#86efac'];
-const CLASS_COLORS_RGB = [[22,101,52],[249,115,22],[59,130,246],[134,239,172]];
+const CLASS_COLORS     = ['#2f9e44','#f97316','#3b82f6','#86efac'];
+const CLASS_COLORS_RGB = [[47,158,68],[249,115,22],[59,130,246],[134,239,172]];
 const CLASS_LABELS     = ['🌿 Vegetação','🟫 Solo Exposto','💧 Água','🐄 Pastagem'];
 
 // Decode base64 → Uint8Array
@@ -2737,14 +3321,16 @@ function initClassifyCanvas(){
     if(x<0||x>=SCENE_W||y<0||y>=SCENE_H) return;
     const bi=(y*SCENE_W+x)*4;
     // Store 4 real spectral bands [NIR, RED, GRN, BLU]
-    samples[activeClass].push({
+    const target = classifyMode === 'val' ? valSamples : samples;
+    target[activeClass].push({
       nir:pixelBands[bi], red:pixelBands[bi+1],
       grn:pixelBands[bi+2], blu:pixelBands[bi+3],
       x, y
     });
-    overlayMarks.push({x,y,cls:activeClass});
+    overlayMarks.push({x,y,cls:activeClass,val:classifyMode==='val'});
     updateSampleCounts();
     drawOverlay();
+    if (classifyMode === 'val' && classMap) assessAccuracy();
   }
 
   canvas.addEventListener('click', addSample);
@@ -2756,9 +3342,9 @@ function drawOverlay(){
   if(!ov) return;
   const ctx = ov.getContext('2d');
   ctx.clearRect(0,0,SCENE_W,SCENE_H);
-  overlayMarks.forEach(({x,y,cls})=>{
+  overlayMarks.forEach(({x,y,cls,val})=>{
     ctx.beginPath();
-    ctx.arc(x,y,5,0,Math.PI*2);
+    if (val) ctx.rect(x-4,y-4,8,8); else ctx.arc(x,y,5,0,Math.PI*2);
     ctx.fillStyle = CLASS_COLORS[cls];
     ctx.fill();
     ctx.strokeStyle = '#fff';
@@ -2770,7 +3356,7 @@ function drawOverlay(){
 function updateSampleCounts(){
   for(let c=0;c<4;c++){
     const el=document.getElementById('cnt-'+c);
-    if(el) el.textContent=samples[c].length;
+    if(el) el.textContent = samples[c].length + (valSamples[c].length ? ' · ' + valSamples[c].length + 'v' : '');
   }
 }
 
@@ -2814,6 +3400,7 @@ function runClassification(){
     const pixelCounts={};
     active.forEach(c=>pixelCounts[c]=0);
     const total = SCENE_W * SCENE_H;
+    const cm = new Uint8Array(total);
 
     for(let i=0;i<total;i++){
       const bi = i*4;
@@ -2825,8 +3412,10 @@ function runClassification(){
       const col=CLASS_COLORS_RGB[best.cls];
       out.data[bi]=col[0]; out.data[bi+1]=col[1]; out.data[bi+2]=col[2]; out.data[bi+3]=255;
       pixelCounts[best.cls]=(pixelCounts[best.cls]||0)+1;
+      cm[i]=best.cls;
     }
     ctx.putImageData(out,0,0);
+    classMap = cm; lastMeans = means;
 
     let statsHtml='<strong>Área relativa por classe:</strong><br>';
     active.forEach(c=>{
@@ -2839,12 +3428,17 @@ function runClassification(){
 
     const card=document.getElementById('classify-result-card');
     if(card){card.style.display='block';card.scrollIntoView({behavior:'smooth',block:'start'});}
-    if(msgEl) msgEl.textContent='✅ Classificação concluída!';
+    const few = active.filter(c=>samples[c].length<5).map(c=>CLASS_LABELS[c]);
+    if(msgEl) msgEl.textContent = few.length ? '⚠️ Classificado, mas com poucas amostras em: ' + few.join(', ') + '. Recomenda-se pelo menos 5 por classe.' : '✅ Classificação concluída! Agora valide o mapa.';
+    drawSignatures(means);
+    assessAccuracy();
   }, 80);
 }
 
 function resetClassify(){
   samples=[[],[],[],[]];
+  valSamples=[[],[],[],[]];
+  classMap=null; lastMeans=null;
   overlayMarks=[];
   updateSampleCounts();
   drawOverlay();
@@ -2871,10 +3465,90 @@ document.querySelectorAll('.class-btn').forEach(btn=>{
   });
 });
 
+
+// ── Modo de coleta: treinamento × validação ──
+function setClassifyMode(mode){
+  classifyMode = mode;
+  const t = document.getElementById('mode-train'), v = document.getElementById('mode-val');
+  t.className = mode==='train' ? 'btn-filled' : 'btn-outlined';
+  v.className = mode==='val'   ? 'btn-filled' : 'btn-outlined';
+  document.getElementById('mode-hint').textContent = mode==='train'
+    ? 'Amostras de treinamento (círculos) ensinam o algoritmo. Use pelo menos 5 pixels por classe, espalhados pela cena.'
+    : 'Amostras de validação (quadrados) são a "verdade de campo". Marque pixels diferentes dos de treinamento, pelo menos 5 por classe.';
+  if (mode==='val' && !classMap) snack('Classifique primeiro; depois marque os pixels de validação.');
+}
+
+// ── Assinatura espectral média (B, G, R, NIR) ──
+function drawSignatures(means){
+  const cv = document.getElementById('sigCanvas'); if(!cv) return;
+  const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pL = 40, pR = 12, pT = 12, pB = 30, gW = W-pL-pR, gH = H-pT-pB;
+  ctx.fillStyle = '#0a0d14'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = '#1e2a3a'; ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+  for (let g=0; g<=4; g++){ const y = pT + gH - g/4*gH; ctx.beginPath(); ctx.moveTo(pL,y); ctx.lineTo(pL+gW,y); ctx.stroke(); ctx.fillText(Math.round(g*255/4), pL-5, y+3); }
+  const labels = ['Azul','Verde','Vermelho','NIR'], keys = ['blu','grn','red','nir'];
+  ctx.textAlign = 'center';
+  labels.forEach((l,i)=> ctx.fillText(l, pL + i*gW/3, H-10));
+  means.forEach(({cls, mean})=>{
+    ctx.strokeStyle = CLASS_COLORS[cls]; ctx.fillStyle = CLASS_COLORS[cls]; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    keys.forEach((k,i)=>{ const x = pL + i*gW/3, y = pT + gH - mean[k]/255*gH; i ? ctx.lineTo(x,y) : ctx.moveTo(x,y); });
+    ctx.stroke();
+    keys.forEach((k,i)=>{ const x = pL + i*gW/3, y = pT + gH - mean[k]/255*gH; ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fill(); });
+  });
+  ctx.lineWidth = 1;
+}
+
+// ── Matriz de confusão, exatidão global e Kappa ──
+function assessAccuracy(){
+  const box = document.getElementById('accuracyBox'); if(!box) return;
+  if (!classMap) return;
+  const nVal = valSamples.reduce((a,s)=>a+s.length,0);
+  if (nVal === 0) {
+    box.innerHTML = 'Passe ao modo <strong>Validação</strong> e marque pixels de referência (quadrados) para calcular a matriz de confusão.';
+    return;
+  }
+  const cls = [0,1,2,3].filter(c => valSamples[c].length || samples[c].length);
+  const M = {}; cls.forEach(r => { M[r] = {}; cls.forEach(c => M[r][c] = 0); });
+  let N = 0, diag = 0;
+  cls.forEach(r => valSamples[r].forEach(p => {
+    const c = classMap[p.y*SCENE_W + p.x];
+    if (M[r][c] === undefined) return;
+    M[r][c]++; N++; if (r === c) diag++;
+  }));
+  if (!N) return;
+  const rowT = r => cls.reduce((a,c)=>a+M[r][c],0);
+  const colT = c => cls.reduce((a,r)=>a+M[r][c],0);
+  const po = diag / N;
+  const pe = cls.reduce((a,k)=>a + rowT(k)*colT(k), 0) / (N*N);
+  const kappa = pe < 1 ? (po - pe) / (1 - pe) : 1;
+  const short = ['Veg.','Solo','Água','Past.'];
+  let t = '<div class="table-wrap"><table class="mini-table"><tr><th>Ref. ↓ / Mapa →</th>' + cls.map(c=>`<th style="color:${CLASS_COLORS[c]}">${short[c]}</th>`).join('') + '<th>Exat. produtor</th></tr>';
+  cls.forEach(r => {
+    const rt = rowT(r);
+    t += `<tr><th style="color:${CLASS_COLORS[r]}">${short[r]}</th>` + cls.map(c=>`<td class="${r===c?'diag':''}">${M[r][c]}</td>`).join('') +
+         `<td>${rt ? Math.round(M[r][r]/rt*100)+'%' : '—'}</td></tr>`;
+  });
+  t += '<tr><th>Exat. usuário</th>' + cls.map(c=>{ const ct=colT(c); return `<td>${ct?Math.round(M[c][c]/ct*100)+'%':'—'}</td>`; }).join('') + '<td></td></tr></table></div>';
+  const k = kappa;
+  const kTxt = k < 0.2 ? 'fraca' : k < 0.4 ? 'razoável' : k < 0.6 ? 'moderada' : k < 0.8 ? 'substancial' : 'quase perfeita';
+  // maior confusão fora da diagonal
+  let worst = null;
+  cls.forEach(r => cls.forEach(c => { if (r!==c && M[r][c] && (!worst || M[r][c] > worst.n)) worst = {r,c,n:M[r][c]}; }));
+  const oa = Math.round(po*1000)/10;
+  box.innerHTML = t +
+    `<p style="margin-top:8px;"><strong>Exatidão global:</strong> ${oa.toString().replace('.',',')}% (${diag} de ${N} pixels) · <strong>Kappa:</strong> ${k.toFixed(2).replace('.',',')} (concordância ${kTxt}, Landis & Koch)</p>` +
+    (worst ? `<p>🔎 Maior confusão: ${worst.n} pixel(s) de <strong>${CLASS_LABELS[worst.r]}</strong> classificados como <strong>${CLASS_LABELS[worst.c]}</strong>. Compare as curvas dessas classes no gráfico acima.</p>` : '<p>✅ Nenhuma confusão entre as amostras de validação.</p>') +
+    (N < 20 ? `<p style="color:var(--md-sys-color-error);">⚠️ Apenas ${N} pixels de validação: o resultado ainda é pouco confiável. Marque mais pontos.</p>` : '');
+  if (typeof slRecordClassify === 'function') slRecordClassify(oa, Math.round(k*100)/100);
+}
+
 // Expose globals
 window.runClassification = runClassification;
+window.setClassifyMode   = setClassifyMode;
 window.resetClassify     = resetClassify;
 window.setComposite      = setComposite;
+window.getSentinelScene  = function(){ ensureBands(); return {w:SCENE_W, h:SCENE_H, px:pixelBands}; };
 
 // Init scene when tab is first shown
 const origShowPage = window.showPage;
@@ -2890,7 +3564,20 @@ window.showPage = function(tabId){
 // ================================================================
 //  ACTIVE CHIP SYNC on load
 // ================================================================
-document.querySelector('.chip-tab[data-tab="game"]')?.classList.add('active');
+(function(){
+  const prevShow = window.showPage;
+  window.showPage = function(tabId){
+    prevShow(tabId);
+    if (tabId === 'camera') { if (!stream) startCamera(); } else stopCamera();
+    PROG.visited[tabId] = true; if (tabId === 'converter') PROG.visited.location = true;
+    slSave();
+    if (tabId === 'trail') renderTrail();
+  };
+})();
+document.getElementById('trailName').addEventListener('input', e => { PROG.name = e.target.value; slSave(); });
+mountActivities();
+renderTrail();
+showPage('trail');
 
 // ================================================================
 //  PWA
