@@ -1542,6 +1542,57 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 }
 @media (max-width: 360px) { .metric { padding: 8px; } .metric b { font-size: 16px; } .cmp-cardinal { font-size: 38px; } .cmp-deg { font-size: 26px; } }
 
+
+/* ================================================================
+   APRENDER — espectro, Planck, assinaturas, atmosfera e grandezas
+   ================================================================ */
+.spec-svg svg { width: 100%; height: auto; display: block; overflow: visible; }
+.spec-svg { margin: 6px 0 4px; }
+.sv-t { fill: var(--md-sys-color-on-surface-variant); font: 20px 'Nunito', sans-serif; }
+.sv-small { font-size: 18px; }
+.sv-strong { fill: var(--md-sys-color-on-surface); font: 800 20px 'Nunito', sans-serif; }
+.sv-prim { fill: var(--md-sys-color-primary); }
+.sv-axis { stroke: var(--md-sys-color-outline); stroke-width: 1.5; fill: none; }
+.sv-grid { stroke: var(--md-sys-color-outline-variant); stroke-width: 1; stroke-dasharray: 3 4; }
+.sv-reg { cursor: pointer; stroke: var(--md-sys-color-surface-container); stroke-width: 1; }
+.sv-selbox { fill: none; stroke: var(--md-sys-color-on-surface); stroke-width: 3; }
+.sv-trans { fill: var(--md-sys-color-primary); fill-opacity: 0.22; stroke: var(--md-sys-color-primary); stroke-width: 2; }
+.sv-lab { fill: #FFFFFF; font: 800 18px 'Nunito', sans-serif; }
+.sv-dark { fill: #06302B; }
+.sv-band { stroke: var(--md-sys-color-surface-container); stroke-width: 0.8; }
+.spec-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.spec-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px; border-radius: var(--md-shape-full);
+  border: 1.5px solid var(--md-sys-color-outline-variant); background: transparent; color: var(--md-sys-color-on-surface);
+  font: inherit; font-size: var(--md-type-label-large); font-weight: 600; cursor: pointer;
+}
+.spec-chip i { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.spec-chip[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); border-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.region-card { background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-md); padding: 12px 14px; font-size: var(--md-type-body-medium); line-height: 1.55; animation: fadeIn var(--md-duration-medium2) var(--md-motion-decel); }
+.region-card p { margin-top: 6px; }
+.region-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.region-head strong { font-size: var(--md-type-title-medium); color: var(--md-sys-color-primary); margin-right: 4px; }
+.plot-canvas { width: 100%; height: auto; display: block; border-radius: var(--md-shape-md); margin-top: 6px; }
+.rng-label { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: var(--md-type-label-large); color: var(--md-sys-color-on-surface-variant); margin: 10px 0 4px; }
+.rng { width: 100%; min-height: 32px; accent-color: var(--md-sys-color-primary); cursor: pointer; }
+.haze-canvas { width: 100%; height: auto; display: block; image-rendering: pixelated; border-radius: var(--md-shape-md); margin: 10px 0 2px; border: 1px solid var(--md-sys-color-outline-variant); }
+.haze-note, .qty-foot { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); line-height: 1.5; margin-top: 8px; }
+.qty-chain { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+.qstep { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: var(--md-shape-md); background: var(--md-sys-color-surface-container-high); }
+.qstep strong { display: block; font-size: var(--md-type-body-medium); }
+.qstep small { display: block; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); line-height: 1.35; }
+.qstep b { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 15px; white-space: nowrap; text-align: right; }
+.qstep.ok { background: var(--sl-success-container); color: var(--sl-on-success-container); }
+.qstep.ok small { color: inherit; }
+.qnum { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-weight: 800; font-size: 13px; }
+.mini-table tr.hl td { font-weight: 800; outline: 2px solid var(--md-sys-color-primary); outline-offset: -2px; }
+.sig-chip { display: inline-flex; align-items: center; gap: 6px; }
+.sig-chip[aria-pressed="true"]::before { content: none; }
+.sig-alvo { display: flex; align-items: center; gap: 8px; font-size: var(--md-type-body-medium); margin-bottom: 6px; }
+.sig-alvo i { width: 14px; height: 14px; border-radius: 3px; }
+#sigReadout .metrics, #hazeOut .metrics { margin-top: 8px; }
+.sub-tabs:has(.sub-tab:nth-child(4)) .sub-tab { font-size: var(--md-type-label-medium); padding: 8px 4px; }
+
 /* Classes: o texto usa a cor de leitura; a cor da classe fica no marcador (legível em qualquer tema) */
 .class-btn { color: var(--md-sys-color-on-surface) !important; }
 .class-btn > span { border: 1px solid var(--md-sys-color-outline); }
@@ -1607,20 +1658,42 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <!-- ===== ABA ESPECTRO ===== -->
     <div id="spectrum" class="tab-content">
-      <h2 class="section-title">🌈 Espectro Eletromagnético</h2>
+      <h2 class="section-title">🌈 Espectro eletromagnético</h2>
       <div class="m3-card">
-        <p class="m3-card-subtitle">Toque em uma faixa para ver informações detalhadas</p>
-        <div class="spectrum-bar" role="group" aria-label="Faixas do espectro eletromagnético">
-          <div class="spec-band" style="background:#6d28d9;color:#fff;" data-band="gama" role="button" tabindex="0" aria-pressed="false" aria-label="Raios gama">Gama</div>
-          <div class="spec-band" style="background:#4338ca;color:#fff;" data-band="x" role="button" tabindex="0" aria-pressed="false" aria-label="Raios X">Raio-X</div>
-          <div class="spec-band" style="background:#2563eb;color:#fff;" data-band="uv" role="button" tabindex="0" aria-pressed="false" aria-label="Ultravioleta">UV</div>
-          <div class="spec-band" style="background:linear-gradient(90deg,#7c3aed,#dc2626);color:#fff;" data-band="visivel" role="button" tabindex="0" aria-pressed="false" aria-label="Luz visível">Visível</div>
-          <div class="spec-band" style="background:#ea580c;color:#fff;" data-band="iv" role="button" tabindex="0" aria-pressed="false" aria-label="Infravermelho">IV</div>
-          <div class="spec-band" style="background:#ca8a04;color:#fff;" data-band="micro" role="button" tabindex="0" aria-pressed="false" aria-label="Micro-ondas">Micro</div>
-          <div class="spec-band" style="background:#b45309;color:#fff;" data-band="radio" role="button" tabindex="0" aria-pressed="false" aria-label="Ondas de rádio">Rádio</div>
+        <div class="m3-card-title">Todo o espectro, em escala logarítmica</div>
+        <p class="m3-card-subtitle">Cada marca vale dez vezes a anterior. Toque numa região para ver suas características.</p>
+        <div class="spec-svg" id="specOverview"></div>
+        <div class="spec-chips" id="specChips" role="group" aria-label="Regiões do espectro"></div>
+        <div id="bandInfo" aria-live="polite"></div>
+      </div>
+
+      <div class="m3-card">
+        <div class="m3-card-title">Onde os sensores enxergam</div>
+        <p class="m3-card-subtitle">A área colorida mostra quanto a atmosfera deixa passar. As bandas dos satélites ficam nas <strong>janelas atmosféricas</strong>, onde a transmitância é alta.</p>
+        <div class="spec-svg" id="specOptical"></div>
+        <div class="info-panel" style="margin:10px 0 0;">Repare: o Landsat 9 tem duas bandas no termal (10–12 µm), em plena janela de 8–14 µm. O CBERS-4A e o Amazonia-1 só cobrem visível e NIR.</div>
+      </div>
+
+      <div class="m3-card">
+        <div class="m3-card-title">Bandas de radar</div>
+        <p class="m3-card-subtitle">Na região das micro-ondas, cada banda tem uma letra. Quanto maior o comprimento de onda, mais o sinal penetra no dossel.</p>
+        <div class="spec-svg" id="specRadar"></div>
+        <div class="info-panel" style="margin:10px 0 0;">A banda <strong>X</strong> interage com o topo do dossel; a <strong>C</strong>, com folhas e galhos finos; a <strong>L</strong> atravessa a copa e responde a troncos e à umidade do solo; a <strong>P</strong> chega ao solo sob florestas.</div>
+      </div>
+
+      <div class="m3-card">
+        <div class="m3-card-title">Emissão de corpo negro (Lei de Planck)</div>
+        <p class="m3-card-subtitle">Todo corpo emite radiação conforme sua temperatura. Mude a temperatura e veja o pico se deslocar (Lei de Wien). As curvas estão normalizadas: na prática, o Sol emite cerca de 140 mil vezes mais por metro quadrado que a Terra.</p>
+        <canvas id="planckCanvas" width="700" height="430" class="plot-canvas" role="img" aria-label="Curvas de emissão de corpo negro do Sol, da Terra e da temperatura escolhida"></canvas>
+        <div class="chip-row" style="margin:10px 0;" role="group" aria-label="Temperaturas de referência">
+          <button type="button" class="chip-choice" data-tk="300" aria-pressed="false">Terra · 300 K</button>
+          <button type="button" class="chip-choice" data-tk="1000" aria-pressed="false">Queimada · 1000 K</button>
+          <button type="button" class="chip-choice" data-tk="2800" aria-pressed="false">Lâmpada · 2800 K</button>
+          <button type="button" class="chip-choice" data-tk="5800" aria-pressed="false">Sol · 5800 K</button>
         </div>
-        <div class="spec-scale" aria-hidden="true"><span>&lt; 0,01 nm</span><span>400–700 nm</span><span>&gt; 1 mm</span></div>
-        <div id="bandInfo" class="hidden"></div>
+        <label class="rng-label" for="planckSlider"><span>Temperatura</span><span class="data-chip data-chip-primary" id="planckT">300 K</span></label>
+        <input type="range" id="planckSlider" class="rng" min="200" max="6000" step="10" value="300">
+        <div class="metrics" id="planckOut" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -1744,18 +1817,29 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <!-- ===== ABA ESPALHAMENTO ===== -->
     <div id="lab" class="tab-content">
-      <h2 class="section-title">🌫️ Simulação de Espalhamento</h2>
+      <h2 class="section-title">🌫️ Atmosfera: espalhamento e correção</h2>
       <div class="m3-card" style="padding:12px;">
         <canvas id="scatteringCanvas" width="600" height="380" style="width:100%;border-radius:var(--md-shape-lg);"></canvas>
         <div style="margin-top:14px;">
-          <label style="display:flex;justify-content:space-between;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">
-            <span>Diâmetro da partícula (escala logarítmica)</span>
-            <span class="data-chip data-chip-primary" id="particleSizeValue">0.0003 µm</span>
-          </label>
-          <input type="range" id="particleSizeSlider" min="-3.6" max="1.6" step="0.05" value="-3.5" aria-label="Diâmetro da partícula"
-            style="width:100%;accent-color:var(--md-sys-color-primary);cursor:pointer;">
+          <label class="rng-label" for="particleSizeSlider"><span>Diâmetro da partícula (escala logarítmica)</span><span class="data-chip data-chip-primary" id="particleSizeValue">0.0003 µm</span></label>
+          <input type="range" id="particleSizeSlider" class="rng" min="-3.6" max="1.6" step="0.05" value="-3.5" aria-label="Diâmetro da partícula">
         </div>
         <div class="info-panel" style="margin-top:10px;margin-bottom:0;line-height:1.6;" id="scatteringType"></div>
+      </div>
+
+      <div class="m3-card">
+        <div class="m3-card-title">Névoa sobre a cena Sentinel-2</div>
+        <p class="m3-card-subtitle">A névoa usa o tipo de espalhamento escolhido acima. Ela soma brilho a cada banda e reduz o contraste; veja o efeito no NDVI e o que a correção recupera.</p>
+        <div class="seg-mini cv-seg" role="group" aria-label="Versão da imagem">
+          <button type="button" data-hview="orig" aria-pressed="false">Original</button>
+          <button type="button" data-hview="nevoa" aria-pressed="true">Com névoa</button>
+          <button type="button" data-hview="cor" aria-pressed="false">Corrigida</button>
+        </div>
+        <canvas id="hazeCanvas" width="320" height="195" class="haze-canvas" role="img" aria-label="Cena Sentinel-2 em cor natural na versão escolhida"></canvas>
+        <label class="rng-label" for="hazeAmt"><span>Densidade da névoa</span><span class="data-chip data-chip-primary" id="hazeAmtTxt">60%</span></label>
+        <input type="range" id="hazeAmt" class="rng" min="0" max="100" step="5" value="60">
+        <button type="button" class="fbtn ghost btn-full" id="hazeFumaca" style="margin-top:8px;">Simular fumaça de queimada (setembro no Tocantins)</button>
+        <div id="hazeOut" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -1874,8 +1958,45 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <!-- ===== ABA GRANDEZAS ===== -->
     <div id="quantities" class="tab-content">
-      <h2 class="section-title">📊 Grandezas Radiométricas</h2>
-      <div id="quantitiesList"></div>
+      <h2 class="section-title">📊 Grandezas radiométricas</h2>
+      <div class="m3-card">
+        <div class="m3-card-title">Do Sol ao sensor: a cadeia de conversões</div>
+        <p class="m3-card-subtitle">Um alvo em Gurupi, visto numa banda do infravermelho próximo. Mude a hora e a data: veja o que muda e o que permanece igual.</p>
+        <span class="poe-label">Alvo</span><div class="chip-row" id="qAlvos" role="group" aria-label="Alvo"></div>
+        <span class="poe-label">Data</span><div class="chip-row" id="qDatas" role="group" aria-label="Data"></div>
+        <label class="rng-label" for="qHora" style="margin-top:12px;"><span>Hora solar</span><span class="data-chip data-chip-primary" id="qHoraTxt">10 h30</span></label>
+        <input type="range" id="qHora" class="rng" min="7" max="17" step="0.25" value="10.5">
+        <div id="qtyChain" class="qty-chain" aria-live="polite"></div>
+        <div id="qtyTable" style="margin-top:10px;"></div>
+        <p class="qty-foot">Situação ideal, sem atmosfera e com superfície lambertiana. ESUN = 950 W·m⁻²·µm⁻¹, ganho = 0,00589 e offset = −29,4 são valores ilustrativos de uma banda NIR; nas imagens reais eles vêm do arquivo de metadados.</p>
+      </div>
+      <details class="m3-card">
+        <summary class="fsummary">Definições das grandezas</summary>
+        <div id="quantitiesList" style="margin-top:10px;"></div>
+      </details>
+    </div>
+
+    <!-- ===== ABA ASSINATURAS ===== -->
+    <div id="signatures" class="tab-content">
+      <h2 class="section-title">📈 Assinaturas espectrais</h2>
+      <div class="m3-card">
+        <p class="m3-card-subtitle" style="margin-bottom:10px;">Reflectância de alvos agrícolas de 0,4 a 2,5 µm. Escolha o alvo e o sensor: as bandas aparecem sobre o gráfico, e o app calcula os índices.</p>
+        <div class="chip-row" id="sigTargets" role="group" aria-label="Alvo destacado"></div>
+        <div class="palette-row"><span class="poe-label">Sensor</span><div class="seg-mini" id="sigSensor" role="group" aria-label="Sensor"></div></div>
+        <canvas id="sigPlot" width="700" height="420" class="plot-canvas" role="img" aria-label="Curvas de reflectância dos alvos, com as bandas do sensor escolhido"></canvas>
+        <div id="sigReadout" style="margin-top:10px;" aria-live="polite"></div>
+      </div>
+      <details class="m3-card">
+        <summary class="fsummary">Como ler as curvas</summary>
+        <div class="fdetail">
+          <p><strong>Vegetação:</strong> baixa no azul e no vermelho (clorofila), pico no verde, salto no red edge e patamar alto no NIR (estrutura da folha). No SWIR, as quedas em 1,45 e 1,94 µm são absorção pela água da folha.</p>
+          <p><strong>Estresse:</strong> o vermelho sobe, o red edge se desloca para comprimentos menores, o NIR cai e o SWIR sobe porque há menos água na folha.</p>
+          <p><strong>Palhada:</strong> sobe de forma contínua, sem o salto do red edge, e tem uma depressão em 2,1 µm causada por celulose e lignina.</p>
+          <p><strong>Solo:</strong> o Latossolo tem óxidos de ferro (inclinação no visível e feição perto de 0,87 µm). Úmido, fica mais escuro em todo o espectro.</p>
+          <p><strong>Água:</strong> reflete pouco no visível e quase nada a partir do NIR. Sedimentos elevam a reflectância no verde e no vermelho.</p>
+          <p class="muted">Curvas didáticas aproximadas, baseadas no comportamento típico descrito em bibliotecas espectrais (USGS, ECOSTRESS) e em Ponzoni & Shimabukuro.</p>
+        </div>
+      </details>
     </div>
 
     <!-- ===== ABA ÍNDICES ===== -->
@@ -2275,20 +2396,31 @@ const MODULES = [
     obj:'Relacionar cada faixa do espectro com sua interação na atmosfera e com aplicações na agricultura.',
     poe:{ prever:'Em qual faixa uma folha verde e sadia reflete MAIS energia?',
       ops:['Verde, por isso a vemos verde','Azul','Vermelho','Infravermelho próximo (NIR)'], esperado:3,
-      observar:'Toque nas faixas Visível e IV e procure o que cada uma diz sobre a vegetação. Depois toque em Micro-ondas.',
+      observar:'Toque em Visível, Infravermelho próximo e Infravermelho termal: qual energia é refletida e qual é emitida? Depois veja onde ficam as janelas atmosféricas.',
       resultado:'A folha sadia reflete de 40% a 60% no NIR e apenas cerca de 10% a 15% no verde. O verde é só o pico dentro do visível, a faixa que nossos olhos percebem. No NIR, o mesofilo esponjoso espalha a radiação e quase nada é absorvido. Prever “verde” é a concepção prévia mais comum: confunde o que enxergamos com o que a folha reflete. É por isso que o NIR é a base do NDVI.' },
-    passos:['Toque em Visível e em IV e leia o campo “Na agronomia”.','Anote qual faixa revela o vigor da vegetação.','Toque em Micro-ondas e anote qual faixa atravessa nuvens.'],
+    passos:['Toque em Visível e em Infravermelho próximo e leia o campo “Na agronomia”.','Compare a natureza da energia no NIR (refletida) e no termal (emitida).','No gráfico das janelas, veja onde ficam as bandas do Sentinel-2.','No simulador de Planck, compare o pico do Sol e o da Terra.'],
     q:{ texto:'No período chuvoso, com nuvens quase todos os dias, um produtor precisa acompanhar a lavoura de soja. Qual faixa garante imagens mesmo com nuvens?',
         ops:['Visível','Infravermelho próximo','Micro-ondas (radar)','Ultravioleta'], certa:2,
         dica:'Pense em qual faixa tem comprimento de onda muito maior que as gotículas das nuvens.',
         exp:'As micro-ondas (comprimentos de onda de centímetros) atravessam nuvens e funcionam dia e noite. Por isso sensores radar, como o Sentinel-1, são usados no monitoramento agrícola em regiões tropicais chuvosas.' } },
-  { id:'lab', tab:'lab', nivel:1, icon:'🌫️', titulo:'Espalhamento atmosférico',
+  { id:'signatures', tab:'signatures', nivel:1, icon:'📈', titulo:'Assinaturas espectrais',
+    obj:'Reconhecer a resposta espectral de vegetação, solo, palhada e água e relacioná-la aos índices.',
+    poe:{ prever:'Uma lavoura de soja entra em estresse hídrico. Em qual região a reflectância da folha muda de forma mais clara?',
+      ops:['Azul','Verde','Infravermelho de ondas curtas (SWIR)','Infravermelho termal'], esperado:2,
+      observar:'Compare a vegetação sadia com a estressada e veja onde as curvas se afastam. Depois troque o sensor e acompanhe o NDVI e o NDMI.',
+      resultado:'A água da folha absorve fortemente no SWIR, com mínimos em 1,45 e 1,94 µm. Quando a folha perde água, essa absorção diminui e a reflectância no SWIR sobe, antes de a clorofila se degradar e de o NDVI cair. Por isso índices com SWIR, como o NDMI, detectam estresse hídrico mais cedo. O dossel também esquenta, mas isso é emissão termal, não reflectância.' },
+    passos:['Toque em “Vegetação sadia” e depois em “Vegetação estressada”.','Veja em que faixas as duas curvas se afastam.','Compare palhada e Latossolo seco: onde eles se distinguem?','Troque o sensor para CBERS-4A e observe o que deixa de ser calculado.'],
+    q:{ texto:'No início da safra, um agrônomo quer separar palhada de soja de solo exposto, ambos secos. Qual faixa ajuda mais?',
+        ops:['Vermelho','Infravermelho próximo','SWIR em torno de 2,1 µm','Azul'], certa:2,
+        dica:'Procure, no gráfico, uma depressão que aparece na palhada e não no solo.',
+        exp:'Celulose e lignina da palhada absorvem em torno de 2,1 µm, criando uma feição que o solo não tem. Índices como o CAI (Cellulose Absorption Index) exploram essa região; com apenas visível e NIR as duas superfícies ficam parecidas.' } },
+  { id:'lab', tab:'lab', nivel:1, icon:'🌫️', titulo:'Espalhamento e correção atmosférica',
     obj:'Distinguir os espalhamentos Rayleigh, Mie e não-seletivo pela relação entre tamanho da partícula e comprimento de onda.',
     poe:{ prever:'Quando a partícula cresce, de uma molécula de gás até uma gotícula de nuvem, o que acontece com o espalhamento do azul em relação ao vermelho?',
       ops:['O azul fica cada vez mais dominante','A diferença diminui até todas as cores espalharem igual','O vermelho passa a ser mais espalhado que o azul','Nada muda: só depende do comprimento de onda'], esperado:1,
-      observar:'Mova o controle devagar, da menor para a maior partícula. Observe a altura das barras e a cor do céu.',
+      observar:'Mova o controle devagar, da menor para a maior partícula. Observe as barras e a cor do céu. Depois aplique a névoa sobre a cena e compare o NDVI antes e depois da correção.',
       resultado:'Com partículas muito menores que o comprimento de onda (Rayleigh), o espalhamento é proporcional a λ⁻⁴: o azul é espalhado de 3 a 5 vezes mais que o vermelho, e o céu fica azul. À medida que a partícula cresce (Mie), essa dependência enfraquece. Com partículas muito maiores que λ (não-seletivo), todas as faixas são espalhadas por igual: por isso nuvens e neblina são brancas.' },
-    passos:['Comece com o controle todo à esquerda (moléculas de gás).','Avance até a faixa da fumaça de queimadas (0,1 a 1 µm).','Termine na faixa das gotículas de nuvem e compare as barras.'],
+    passos:['Comece com o controle todo à esquerda (moléculas de gás).','Avance até a faixa da fumaça de queimadas (0,1 a 1 µm).','Termine na faixa das gotículas de nuvem e compare as barras.','Use “Simular fumaça de queimada” e alterne entre Original, Com névoa e Corrigida.'],
     q:{ texto:'Nas imagens de agosto e setembro no Tocantins, a fumaça das queimadas (partículas de 0,1 a 1 µm) reduz o contraste da cena. Qual espalhamento predomina?',
         ops:['Rayleigh','Mie','Não-seletivo','Absorção pelo ozônio'], certa:1,
         dica:'Compare o tamanho das partículas da fumaça com o comprimento de onda da luz visível (0,4 a 0,7 µm).',
@@ -2297,9 +2429,9 @@ const MODULES = [
     obj:'Diferenciar número digital, radiância e reflectância e saber qual usar em análises multitemporais.',
     poe:{ prever:'O mesmo talhão foi imageado às 10 h e ao meio-dia do mesmo dia, sem nuvens. O número digital (DN) do pixel será:',
       ops:['Igual, porque o alvo é o mesmo','Maior ao meio-dia','Menor ao meio-dia','Impossível de prever'], esperado:1,
-      observar:'Leia os cartões de DN, radiância, irradiância e reflectância. Para cada um, pergunte: esse valor depende da iluminação do Sol?',
+      observar:'Na cadeia de conversões, mova a hora de 8 h a 16 h e troque a data. Observe quais valores mudam e qual permanece igual.',
       resultado:'Ao meio-dia o Sol está mais alto, a irradiância na superfície é maior e o alvo envia mais energia ao sensor: o DN e a radiância aumentam. A reflectância é uma razão (energia refletida dividida pela incidente) e por isso praticamente não muda. É ela a grandeza comparável entre horários, datas e sensores.' },
-    passos:['Leia os cartões de DN, radiância e reflectância.','Marque quais dependem da calibração do sensor.','Marque quais dependem da iluminação solar.'],
+    passos:['Escolha um alvo e mova o controle de hora.','Troque a data entre junho e dezembro.','Compare as colunas DN e ρ na tabela.','Abra “Definições das grandezas” e confira as fórmulas.'],
     q:{ texto:'Para comparar o NDVI de um mesmo talhão em duas datas da safra, qual grandeza deve ser usada?',
         ops:['Número digital (DN)','Radiância sem correção','Reflectância de superfície','Temperatura de brilho'], certa:2,
         dica:'Qual grandeza elimina o efeito de diferentes condições de iluminação e de atmosfera entre as datas?',
@@ -2671,13 +2803,13 @@ function resetProgress(){
 // ================================================================
 // Grupos estáveis da barra inferior; a Trilha é a tela inicial
 const GROUPS = [
-  { id:'aprender', titulo:'Aprender',             tabs:['spectrum','lab','quantities'] },
+  { id:'aprender', titulo:'Aprender',             tabs:['spectrum','signatures','lab','quantities'] },
   { id:'labs',     titulo:'Laboratórios',         tabs:['indices','classify','camera'] },
   { id:'campo',    titulo:'Campo',                tabs:['location','converter','compass'] },
   { id:'praticar', titulo:'Consultar e praticar', tabs:['glossary','quiz','game'] }
 ];
 const TAB_META = {
-  spectrum:{icon:'🌈',label:'Espectro'}, lab:{icon:'🌫️',label:'Espalhamento'}, quantities:{icon:'📊',label:'Grandezas'},
+  spectrum:{icon:'🌈',label:'Espectro'}, signatures:{icon:'📈',label:'Assinaturas'}, lab:{icon:'🌫️',label:'Atmosfera'}, quantities:{icon:'📊',label:'Grandezas'},
   indices:{icon:'🌱',label:'Índices'}, classify:{icon:'🗺️',label:'Classificação'}, camera:{icon:'📷',label:'Câmera'},
   location:{icon:'📡',label:'GPS'}, converter:{icon:'🗺️',label:'UTM'}, compass:{icon:'🧭',label:'Bússola'},
   glossary:{icon:'📖',label:'Glossário'}, quiz:{icon:'❓',label:'Quiz'}, game:{icon:'🃏',label:'Trunfo'}
@@ -2721,6 +2853,7 @@ function showPage(tabId) {
   // Carregamentos sob demanda
   if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadSentinelBands();
   fieldOnShow(tabId, gid);
+  if (tabId === 'lab') hazeInit();
 }
 
 // Barra inferior: abre a última subaba visitada do grupo
@@ -2775,12 +2908,12 @@ const cards = [{"id": 1,"nome": "Landsat 9","sensor": "OLI-2 / TIRS-2","sigla": 
 const GAME_EVENTS = [{"id": "chuva", "titulo": "Safra chuvosa", "tipo": "forca", "flag": "radar", "texto": "Nuvens cobrem a lavoura quase todo dia. Se só uma carta for radar, ela vence em qualquer atributo.", "porque": "Micro-ondas atravessam nuvens; sensores ópticos dependem de céu limpo."}, {"id": "nutri", "titulo": "Diagnóstico nutricional", "tipo": "forca", "flag": "redEdge", "texto": "A cooperativa quer detectar falta de nitrogênio. Se só uma carta tiver red edge, ela vence.", "porque": "A transição red edge se desloca sob estresse nutricional, antes de o sintoma aparecer."}, {"id": "hidrico", "titulo": "Estresse hídrico na soja", "tipo": "forca", "flag": "swir_termal", "texto": "Veranico em janeiro. Se só uma carta tiver SWIR ou termal, ela vence.", "porque": "O SWIR responde à água na folha; o termal, à temperatura do dossel."}, {"id": "orcamento", "titulo": "Orçamento zero", "tipo": "forca", "flag": "gratuito", "texto": "O projeto não tem verba para imagens. Se só uma carta for gratuita, ela vence.", "porque": "Dados abertos (Landsat, Sentinel, CBERS, Amazonia) viabilizam pesquisa e extensão rural."}, {"id": "queimadas", "titulo": "Temporada de queimadas", "tipo": "dobro", "attr": "revisit", "texto": "Agosto e setembro no Tocantins. Vitória em revisita vale 2 fichas.", "porque": "Focos de fogo duram horas: só a revisita frequente os detecta a tempo."}, {"id": "falha", "titulo": "Falha de plantio no talhão", "tipo": "dobro", "attr": "resolucao", "texto": "Linhas falhadas de 1 a 2 m. Vitória em resolução vale 2 fichas.", "porque": "Só pixels menores que a falha a revelam; num pixel grande ela se mistura."}, {"id": "estado", "titulo": "Estimativa da safra estadual", "tipo": "dobro", "attr": "faixa", "texto": "Mapear a soja de todo o Tocantins. Vitória em faixa imageada vale 2 fichas.", "porque": "Faixas largas cobrem o estado em poucas passagens."}, {"id": "solo", "titulo": "Mapeamento de solos", "tipo": "dobro", "attr": "bandas", "texto": "Identificar minerais e matéria orgânica. Vitória em bandas vale 2 fichas.", "porque": "Bandas estreitas e contínuas revelam feições de absorção de minerais."}];
 
 const quantities = [
-    { nome: 'Número Digital (DN)', definicao: 'Valor bruto registrado pelo sensor, sem correção.', unidade: 'adimensional (0-255, 0-1023...)', obtencao: 'Leitura direta do pixel.', aplicacao: 'Base para conversões, visualização.' },
-    { nome: 'Radiância espectral', definicao: 'Fluxo radiante por unidade de área, ângulo sólido e comprimento de onda.', unidade: 'W/m²/sr/μm', obtencao: 'Conversão de DN com coeficientes de calibração.', aplicacao: 'Estimativa de reflectância, temperatura.' },
-    { nome: 'Reflectância', definicao: 'Razão entre radiância refletida e irradiância incidente.', unidade: 'adimensional (0-1)', obtencao: 'Radiância / (irradiância solar/π) com correção.', aplicacao: 'Índices de vegetação, classificação.' },
-    { nome: 'Irradiância', definicao: 'Potência radiante incidente por unidade de área.', unidade: 'W/m²', obtencao: 'Medida com sensores ou modelagem.', aplicacao: 'Balanço de radiação.' },
-    { nome: 'Emitância', definicao: 'Potência radiante emitida por unidade de área.', unidade: 'W/m²', obtencao: 'Relacionada à temperatura (Lei de Stefan-Boltzmann).', aplicacao: 'Sensoriamento térmico.' },
-    { nome: 'Temperatura de brilho', definicao: 'Temperatura equivalente de um corpo negro que emitiria a mesma radiância.', unidade: 'K', obtencao: 'Inversão da Lei de Planck.', aplicacao: 'Monitoramento de incêndios, urbanismo.' }
+    { nome: 'Número digital (DN)', definicao: 'Valor inteiro gravado pelo sensor para cada pixel e banda, proporcional à radiância recebida.', unidade: 'adimensional (8, 12 ou 16 bits)', obtencao: 'Leitura direta da imagem bruta.', aplicacao: 'Visualização e ponto de partida das conversões. Não é comparável entre sensores nem entre datas.' },
+    { nome: 'Irradiância espectral (E)', definicao: 'Fluxo radiante que incide sobre uma superfície, por unidade de área e de comprimento de onda.', unidade: 'W·m⁻²·µm⁻¹', obtencao: 'No topo da atmosfera: E = ESUN · cos θz / d², em que ESUN é a irradiância solar média da banda e d a distância Terra–Sol em unidades astronômicas.', aplicacao: 'Denominador da reflectância; varia com a hora, a data e a latitude.' },
+    { nome: 'Radiância espectral (L)', definicao: 'Fluxo radiante que sai de uma superfície numa direção, por unidade de área, de ângulo sólido e de comprimento de onda. É o que o sensor mede.', unidade: 'W·m⁻²·sr⁻¹·µm⁻¹', obtencao: 'L = ganho · DN + offset, com os coeficientes de calibração do arquivo de metadados.', aplicacao: 'Etapa intermediária para reflectância e temperatura de brilho.' },
+    { nome: 'Reflectância (ρ)', definicao: 'Razão entre a energia refletida e a incidente. Propriedade do alvo, independente da iluminação.', unidade: 'adimensional (0 a 1 ou %)', obtencao: 'No topo da atmosfera: ρ = π · L · d² / (ESUN · cos θz). A reflectância de superfície exige ainda a correção atmosférica.', aplicacao: 'Índices de vegetação, classificação e séries temporais.' },
+    { nome: 'Exitância radiante (M)', definicao: 'Fluxo radiante emitido por unidade de área de uma superfície, em todas as direções.', unidade: 'W·m⁻²', obtencao: 'Para um corpo negro, M = σT⁴ (Lei de Stefan-Boltzmann); para corpos reais, M = εσT⁴, com emissividade ε < 1.', aplicacao: 'Sensoriamento termal e balanço de energia.' },
+    { nome: 'Temperatura de brilho', definicao: 'Temperatura de um corpo negro que emitiria a mesma radiância medida pelo sensor.', unidade: 'K', obtencao: 'Inversão da Lei de Planck a partir da radiância da banda termal.', aplicacao: 'Temperatura de superfície, estresse hídrico, focos de calor.' }
 ];
 
 const glossaryTerms = [
@@ -2819,18 +2952,13 @@ const glossaryTerms = [
     { termo: 'Matriz de confusão', definicao: 'Tabela que cruza a classe de referência (verdade de campo) com a classe do mapa. A diagonal contém os acertos; fora dela, as confusões entre classes.' },
     { termo: 'Índice Kappa', definicao: 'Medida de concordância entre mapa e referência que desconta os acertos esperados ao acaso. Varia de −1 a 1; acima de 0,8 indica concordância quase perfeita (Landis & Koch, 1977).' },
     { termo: 'UTM', definicao: 'Sistema Universal Transverso de Mercator: divide a Terra em 60 fusos de 6° e expressa posições em metros (Easting, Northing). Gurupi (TO) está no fuso 22 S.' },
+    { termo: 'Janela atmosférica', definicao: 'Faixa do espectro em que a atmosfera é transparente o bastante para o sensoriamento remoto, como o visível e o NIR, 1,55–1,75 µm, 2,05–2,35 µm, 3–5 µm, 8–14 µm e as micro-ondas.' },
+    { termo: 'Exitância radiante', definicao: 'Fluxo radiante emitido por unidade de área (W·m⁻²). Para um corpo negro vale σT⁴. Termo atual para a antiga “emitância”.' },
+    { termo: 'NDMI', definicao: 'Normalized Difference Moisture Index = (NIR − SWIR) / (NIR + SWIR). Responde à água na folha e detecta estresse hídrico antes do NDVI.' },
+    { termo: 'Subtração do pixel escuro (DOS)', definicao: 'Correção atmosférica simples: supõe que o pixel mais escuro da cena deveria ter reflectância quase nula e subtrai seu valor de toda a banda, removendo o brilho somado pela névoa.' },
+    { termo: 'Lei de Wien', definicao: 'O comprimento de onda de máxima emissão de um corpo negro é λmax = 2898 / T (µm, com T em kelvin). O Sol (5800 K) tem pico em cerca de 0,5 µm; a Terra (300 K), em cerca de 10 µm.' },
     { termo: 'Referências Clássicas', definicao: 'Campbell & Wynne — Introduction to Remote Sensing (5ª ed.); Jensen — Remote Sensing of the Environment; Ponzoni & Shimabukuro — Sensoriamento Remoto no Estudo da Vegetação; Novo — Sensoriamento Remoto: Princípios e Aplicações.' }
 ];
-
-const bandInfo = {
-    gama: { fontes: 'Núcleos atômicos, explosões solares', interacao: 'Absorvido pela atmosfera', aplicacao: 'Astronomia, medicina', curiosidade: 'Os raios gama possuem tanta energia que atravessam materiais densos e são usados para detectar elementos radioativos no espaço.' },
-    x: { fontes: 'Átomos excitados, raios-X', interacao: 'Absorvido pela atmosfera', aplicacao: 'Radiografia, astronomia', curiosidade: 'Sensores de raios X analisam a composição química de rochas em missões espaciais, estudando geologia planetária sem coletar amostras.' },
-    uv: { fontes: 'Sol, lâmpadas UV', interacao: 'Parcialmente absorvido (ozônio)', aplicacao: 'Detecção de hidrocarbonetos', curiosidade: 'A camada de ozônio bloqueia a maior parte do UV solar. Sem essa proteção, a vida na Terra como a conhecemos não existiria.' },
-    visivel: { fontes: 'Sol, luz artificial', interacao: 'Espalhamento Rayleigh, absorção por pigmentos', aplicacao: 'Sensoriamento óptico, cores', curiosidade: 'A faixa visível coincide com o pico de emissão do Sol e com a sensibilidade dos olhos humanos — resultado de milhões de anos de evolução.' },
-    iv: { fontes: 'Corpos aquecidos', interacao: 'Absorção por vapor d\'água, CO₂', aplicacao: 'Temperatura da superfície, vegetação', curiosidade: 'Vegetação saudável reflete muito no NIR, permitindo detectar estresse hídrico antes de qualquer sintoma visível a olho nu.' },
-    micro: { fontes: 'Magnetrons, corpos frios', interacao: 'Atravessa nuvens', aplicacao: 'Radar, radiometria de micro-ondas', curiosidade: 'Micro-ondas atravessam nuvens, chuva e vegetação, permitindo observar a Terra em qualquer condição climática, 24 horas por dia.' },
-    radio: { fontes: 'Estrelas, rádio-fontes', interacao: 'Pouca interação', aplicacao: 'Rádio astronomia, comunicações', curiosidade: 'Ondas de rádio são usadas para comunicação com satélites, transmitindo dados de sensoriamento remoto da órbita até as estações terrestres.' }
-};
 
 const quizQuestions = [
     { q: "A radiação eletromagnética pode ser definida como:", a: "Fluxo de partículas carregadas", b: "Energia que se propaga em forma de ondas eletromagnéticas", c: "Movimento de matéria no espaço", d: "Emissão exclusiva de calor", correct: "B" },
@@ -3391,46 +3519,198 @@ particleSlider.addEventListener('input', drawScattering);
 drawScattering();
 
 // ================================================================
-//  ESPECTRO
+//  ESPECTRO — escala logarítmica, janelas atmosféricas, bandas dos
+//  sensores, bandas de radar e emissão de corpo negro (Planck)
 // ================================================================
-const BAND_EXTRA = {
-    gama:   { nome:'Raios gama', faixa:'< 0,01 nm', agro:'Gamaespectrometria aérea mapeia potássio, urânio e tório, apoiando o mapeamento de solos.' },
-    x:      { nome:'Raios X', faixa:'0,01 – 10 nm', agro:'A fluorescência de raios X (XRF) analisa nutrientes em amostras de solo e tecido vegetal.' },
-    uv:     { nome:'Ultravioleta', faixa:'10 – 400 nm', agro:'Pouco usado em satélites; a radiação UV-B afeta a fisiologia e a qualidade das plantas.' },
-    visivel:{ nome:'Visível', faixa:'0,4 – 0,7 µm', agro:'A clorofila absorve o azul e o vermelho. A banda vermelha é base do NDVI e as composições em cor natural ajudam a reconhecer talhões.' },
-    iv:     { nome:'Infravermelho', faixa:'0,7 µm – 1 mm', agro:'NIR: vigor e biomassa; SWIR: umidade de folhas e solos; termal: estresse hídrico e evapotranspiração.' },
-    micro:  { nome:'Micro-ondas', faixa:'1 mm – 1 m', agro:'Radares (ex.: Sentinel-1) monitoram lavouras sob nuvens e estimam a umidade do solo.' },
-    radio:  { nome:'Rádio', faixa:'> 1 m', agro:'Telemetria de estações meteorológicas e de sensores de campo usa ondas de rádio.' }
-};
-function selectBand(div){
-    const band = div.dataset.band, info = bandInfo[band];
-    if (!info) return;
-    document.querySelectorAll('.spec-band').forEach(b => {
-        b.classList.toggle('selected', b === div);
-        b.setAttribute('aria-pressed', b === div ? 'true' : 'false');
-    });
-    const el = document.getElementById('bandInfo');
-    el.innerHTML = `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:12px;margin-top:8px;">
-        <strong style="font-size:var(--md-type-title-small);color:var(--md-sys-color-primary);">${BAND_EXTRA[band].nome}</strong>
-        <span class="data-chip" style="margin-left:6px;">λ: ${BAND_EXTRA[band].faixa}</span>
-        <div style="font-size:var(--md-type-body-small);margin-top:8px;line-height:1.7;color:var(--md-sys-color-on-surface-variant);">
-            <p>📡 <strong>Fontes:</strong> ${info.fontes}</p>
-            <p>🌍 <strong>Interação:</strong> ${info.interacao}</p>
-            <p>🛰️ <strong>Aplicações:</strong> ${info.aplicacao}</p>
-            <p>🌾 <strong>Na agronomia:</strong> ${BAND_EXTRA[band].agro}</p>
-            <p style="margin-top:8px;color:var(--md-sys-color-primary);">💡 ${info.curiosidade}</p>
-        </div>
-    </div>`;
-    el.classList.remove('hidden');
+const SPEC_REGIONS = [
+  { id:'gama', nome:'Raios gama', de:1e-13, ate:1e-11, faixa:'< 0,01 nm', cor:'#6d28d9', natureza:'Emitida por núcleos atômicos',
+    fontes:'Decaimento radioativo de potássio, urânio e tório nas rochas e nos solos.',
+    interacao:'Absorvidos pela atmosfera; medidos só a baixa altitude, em aerolevantamentos.',
+    aplicacao:'Gamaespectrometria aérea.', agro:'Mapeia K, U e Th no solo, apoiando levantamentos pedológicos e de fertilidade.' },
+  { id:'x', nome:'Raios X', de:1e-11, ate:1e-8, faixa:'0,01 – 10 nm', cor:'#4338ca', natureza:'Emitida',
+    fontes:'Tubos de raios X; coroa solar.', interacao:'Absorvidos pela atmosfera.',
+    aplicacao:'Radiografia e análise química.', agro:'A fluorescência de raios X (XRF) mede nutrientes em solo e tecido vegetal, em laboratório ou com aparelhos portáteis.' },
+  { id:'uv', nome:'Ultravioleta', de:1e-8, ate:4e-7, faixa:'10 – 400 nm', cor:'#2563eb', natureza:'Refletida (luz do Sol)',
+    fontes:'Sol.', interacao:'O ozônio absorve quase todo o UV abaixo de 0,3 µm; o restante é muito espalhado (Rayleigh).',
+    aplicacao:'Manchas de óleo, fluorescência.', agro:'Pouco usado em satélites; o UV-B afeta a fisiologia e a qualidade das plantas.' },
+  { id:'visivel', nome:'Visível', de:4e-7, ate:7e-7, faixa:'0,4 – 0,7 µm', cor:'#16a34a', natureza:'Refletida (luz do Sol)',
+    fontes:'Sol, cujo pico de emissão fica perto de 0,5 µm.', interacao:'Janela atmosférica, com espalhamento Rayleigh forte no azul.',
+    aplicacao:'Composições em cor natural, cor e turbidez da água.', agro:'A clorofila absorve azul e vermelho e reflete parte do verde. A banda vermelha é base do NDVI.' },
+  { id:'nir', nome:'Infravermelho próximo (NIR)', de:7e-7, ate:1.3e-6, faixa:'0,7 – 1,3 µm', cor:'#b91c1c', natureza:'Refletida (luz do Sol)',
+    fontes:'Sol.', interacao:'Janela atmosférica ampla, com absorções estreitas do vapor d’água em 0,94 e 1,13 µm.',
+    aplicacao:'Vigor e biomassa da vegetação; delimitação de corpos d’água.', agro:'A folha sadia reflete 40% a 60% no NIR por causa da estrutura do mesofilo; a água quase não reflete. É a base do NDVI.' },
+  { id:'swir', nome:'Infravermelho de ondas curtas (SWIR)', de:1.3e-6, ate:3e-6, faixa:'1,3 – 3 µm', cor:'#c2410c', natureza:'Refletida (luz do Sol)',
+    fontes:'Sol.', interacao:'Janelas em 1,55–1,75 e 2,05–2,35 µm; o vapor d’água bloqueia perto de 1,4 e 1,9 µm.',
+    aplicacao:'Umidade da folha e do solo, minerais, áreas queimadas.', agro:'Detecta estresse hídrico (NDMI), separa palhada de solo e mapeia queimadas (NBR).' },
+  { id:'mwir', nome:'Infravermelho médio (MWIR)', de:3e-6, ate:8e-6, faixa:'3 – 8 µm', cor:'#d97706', natureza:'Refletida e emitida',
+    fontes:'Sol e superfícies muito quentes.', interacao:'Janela de 3 a 5 µm; o vapor d’água bloqueia de 5 a 8 µm.',
+    aplicacao:'Detecção de focos de fogo.', agro:'Os focos de queimada usam bandas perto de 4 µm, onde o fogo (cerca de 1000 K) emite muito mais que o terreno.' },
+  { id:'tir', nome:'Infravermelho termal (TIR)', de:8e-6, ate:1.5e-5, faixa:'8 – 15 µm', cor:'#92400e', natureza:'Emitida pela própria superfície',
+    fontes:'A própria Terra, cujo pico de emissão a 300 K fica perto de 10 µm.', interacao:'Janela de 8 a 14 µm, com absorção do ozônio em 9,6 µm.',
+    aplicacao:'Temperatura de superfície e evapotranspiração.', agro:'Dossel com déficit hídrico fecha os estômatos, transpira menos e esquenta: o termal detecta isso.' },
+  { id:'irfar', nome:'Infravermelho distante', de:1.5e-5, ate:1e-3, faixa:'15 µm – 1 mm', cor:'#78716c', natureza:'Emitida',
+    fontes:'Corpos frios, nuvens e gases.', interacao:'Quase todo absorvido pelo vapor d’água e pelo CO₂.',
+    aplicacao:'Astronomia e sondagem atmosférica.', agro:'Pouco usado em agricultura.' },
+  { id:'micro', nome:'Micro-ondas', de:1e-3, ate:1, faixa:'1 mm – 1 m', cor:'#0f766e', natureza:'Emitida (passiva) ou ativa (radar)',
+    fontes:'Emissão natural da superfície, medida por radiômetros passivos, e pulsos emitidos pelo próprio radar (sensor ativo).',
+    interacao:'Atravessa nuvens, fumaça e chuva fraca; funciona de dia e de noite.',
+    aplicacao:'Radar de abertura sintética (SAR), umidade do solo, altimetria.', agro:'Monitora lavouras no período chuvoso e estima umidade do solo e biomassa (Sentinel-1, NISAR).' },
+  { id:'radio', nome:'Rádio', de:1, ate:1e3, faixa:'> 1 m', cor:'#475569', natureza:'Emitida por transmissores',
+    fontes:'Antenas transmissoras e fontes astronômicas.', interacao:'Atravessa a atmosfera; algumas frequências são refletidas pela ionosfera.',
+    aplicacao:'Comunicação e telemetria.', agro:'Transmite os dados dos satélites, das estações meteorológicas e dos sensores de campo.' }
+];
+let specSel = 'nir';
+
+function specOverviewSVG(){
+  const W = 520, x = l => 20 + (Math.log10(l) + 13) / 16 * (W - 40);
+  let s = '<defs><linearGradient id="gVis" x1="0" x2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset=".3" stop-color="#2563eb"/><stop offset=".5" stop-color="#16a34a"/><stop offset=".75" stop-color="#facc15"/><stop offset="1" stop-color="#dc2626"/></linearGradient></defs>';
+  SPEC_REGIONS.forEach(r => {
+    const x1 = x(r.de), w = Math.max(2, x(r.ate) - x1);
+    s += `<rect x="${x1.toFixed(1)}" y="46" width="${w.toFixed(1)}" height="40" fill="${r.id === 'visivel' ? 'url(#gVis)' : r.cor}" class="sv-reg" data-reg="${r.id}"><title>${r.nome} (${r.faixa})</title></rect>`;
+  });
+  const r = SPEC_REGIONS.find(q => q.id === specSel);
+  s += `<rect x="${(x(r.de) - 3).toFixed(1)}" y="41" width="${(Math.max(2, x(r.ate) - x(r.de)) + 6).toFixed(1)}" height="50" rx="3" class="sv-selbox"/>`;
+  for (let e = -13; e <= 3; e++) { const xx = x(10 ** e).toFixed(1); s += `<line x1="${xx}" x2="${xx}" y1="88" y2="94" class="sv-axis"/>`; }
+  [[-12,'1 pm'],[-9,'1 nm'],[-6,'1 µm'],[-3,'1 mm'],[0,'1 m'],[3,'1 km']].forEach(([e, t]) => {
+    const xx = x(10 ** e).toFixed(1); s += `<line x1="${xx}" x2="${xx}" y1="88" y2="100" class="sv-axis"/><text x="${xx}" y="120" text-anchor="middle" class="sv-t">${t}</text>`;
+  });
+  const xv = ((x(4e-7) + x(7e-7)) / 2).toFixed(1);
+  s += `<path d="M${xv} 44 L${xv} 28" class="sv-axis"/><text x="${xv}" y="22" text-anchor="middle" class="sv-strong">visível: só 0,4–0,7 µm</text>`;
+  s += `<text x="20" y="146" class="sv-t">← mais energia por fóton</text><text x="${W - 20}" y="146" text-anchor="end" class="sv-t">maior λ →</text>`;
+  return `<svg viewBox="0 0 ${W} 156" role="img" aria-label="Espectro eletromagnético em escala logarítmica, dos raios gama às ondas de rádio. A faixa visível é uma fatia estreita.">${s}</svg>`;
 }
-document.querySelectorAll('[data-band]').forEach(div => {
-    div.addEventListener('click', () => selectBand(div));
-    div.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectBand(div); }
+
+function renderSpecRegion(){
+  const r = SPEC_REGIONS.find(q => q.id === specSel);
+  document.getElementById('specOverview').innerHTML = specOverviewSVG();
+  document.getElementById('specOverview').querySelectorAll('[data-reg]').forEach(el => el.addEventListener('click', () => { specSel = el.dataset.reg; renderSpecRegion(); }));
+  document.querySelectorAll('.spec-chip').forEach(b => b.setAttribute('aria-pressed', b.dataset.reg === specSel));
+  document.getElementById('bandInfo').innerHTML = `<div class="region-card">
+      <div class="region-head"><strong>${r.nome}</strong><span class="data-chip">λ ${r.faixa}</span><span class="data-chip data-chip-tonal">${r.natureza}</span></div>
+      <p><b>Fontes:</b> ${r.fontes}</p>
+      <p><b>Na atmosfera:</b> ${r.interacao}</p>
+      <p><b>Aplicações:</b> ${r.aplicacao}</p>
+      <p><b>Na agronomia:</b> ${r.agro}</p></div>`;
+}
+function initSpecChips(){
+  const box = document.getElementById('specChips');
+  box.innerHTML = SPEC_REGIONS.map(r => `<button type="button" class="spec-chip" data-reg="${r.id}" aria-pressed="false"><i style="background:${r.id === 'visivel' ? 'linear-gradient(90deg,#7c3aed,#16a34a,#dc2626)' : r.cor}"></i>${r.nome.replace(/ \(.*\)/, '')}</button>`).join('');
+  box.querySelectorAll('.spec-chip').forEach(b => b.addEventListener('click', () => { specSel = b.dataset.reg; renderSpecRegion(); }));
+}
+
+// ---- Janelas atmosféricas e bandas dos sensores (0,3 a 15 µm) ----
+const ATM_T = [[0.30,0],[0.32,0.3],[0.35,0.55],[0.40,0.7],[0.5,0.8],[0.7,0.85],[0.755,0.85],[0.762,0.45],[0.77,0.85],[0.9,0.85],[0.94,0.3],[0.98,0.8],[1.1,0.8],[1.13,0.35],[1.2,0.85],[1.3,0.75],[1.38,0.05],[1.45,0.2],[1.5,0.8],[1.75,0.85],[1.82,0.2],[1.88,0.02],[1.95,0.1],[2.05,0.6],[2.2,0.85],[2.4,0.75],[2.5,0.3],[2.7,0.02],[2.9,0.05],[3.0,0.3],[3.5,0.8],[4.0,0.8],[4.2,0.1],[4.4,0],[4.6,0.5],[4.8,0.6],[5.2,0.3],[5.5,0.05],[6.0,0],[7.0,0.05],[7.5,0.2],[8.0,0.6],[9.0,0.8],[9.5,0.5],[9.9,0.75],[11.0,0.85],[12.5,0.8],[13.5,0.5],[14.5,0.15],[15,0.05]];
+const SENSOR_BANDS = {
+  'Sentinel-2': [[0.433,0.453,'B1'],[0.458,0.523,'B2'],[0.543,0.578,'B3'],[0.650,0.680,'B4'],[0.698,0.713,'B5'],[0.733,0.748,'B6'],[0.773,0.793,'B7'],[0.785,0.900,'B8'],[0.855,0.875,'B8A'],[0.935,0.955,'B9'],[1.360,1.390,'B10'],[1.565,1.655,'B11'],[2.100,2.280,'B12']],
+  'Landsat 9':  [[0.435,0.451,'B1'],[0.452,0.512,'B2'],[0.533,0.590,'B3'],[0.636,0.673,'B4'],[0.851,0.879,'B5'],[1.566,1.651,'B6'],[2.107,2.294,'B7'],[0.503,0.676,'B8 pan'],[1.363,1.384,'B9'],[10.60,11.19,'B10'],[11.50,12.51,'B11']],
+  'CBERS-4A':   [[0.45,0.52,'B1'],[0.52,0.59,'B2'],[0.63,0.69,'B3'],[0.77,0.89,'B4'],[0.45,0.90,'Pan']],
+  'Amazonia-1': [[0.45,0.52,'B1'],[0.52,0.59,'B2'],[0.63,0.69,'B3'],[0.77,0.89,'B4']]
+};
+function bandCor(c){ return c < 0.5 ? '#2563eb' : c < 0.6 ? '#16a34a' : c < 0.69 ? '#dc2626' : c < 0.76 ? '#9d174d' : c < 1.3 ? '#7f1d1d' : c < 3 ? '#c2410c' : '#92400e'; }
+function specOpticalSVG(){
+  const W = 520, L = 104, R = 510, lo = Math.log10(0.3), hi = Math.log10(15);
+  const x = l => L + (Math.log10(l) - lo) / (hi - lo) * (R - L);
+  const T0 = 120, TH = 86;
+  let s = `<text x="${L}" y="22" class="sv-t">Transmitância da atmosfera (aproximada)</text>`;
+  s += `<line x1="${L}" x2="${R}" y1="${T0}" y2="${T0}" class="sv-axis"/>`;
+  s += `<path class="sv-trans" d="M${x(0.3).toFixed(1)} ${T0} ` + ATM_T.map(([l, t]) => `L${x(l).toFixed(1)} ${(T0 - t * TH).toFixed(1)}`).join(' ') + ` L${x(15).toFixed(1)} ${T0} Z"/>`;
+  [[1.88,'H₂O'],[4.3,'CO₂'],[6.4,'H₂O']].forEach(([l, t]) => { s += `<text x="${x(l).toFixed(1)}" y="${T0 - 4}" text-anchor="middle" class="sv-t sv-small">${t}</text>`; });
+  s += `<text x="${x(0.31).toFixed(1)}" y="${T0 - 4}" text-anchor="start" class="sv-t sv-small">O₃</text>`;
+  const regs = [[0.3,0.4,'UV','#2563eb'],[0.4,0.7,'Vis','#16a34a'],[0.7,1.3,'NIR','#b91c1c'],[1.3,3,'SWIR','#c2410c'],[3,8,'MWIR','#d97706'],[8,15,'TIR','#92400e']];
+  regs.forEach(([a, b, t, c]) => {
+    s += `<rect x="${x(a).toFixed(1)}" y="${T0 + 6}" width="${(x(b) - x(a)).toFixed(1)}" height="26" fill="${c}"/>`;
+    s += `<text x="${((x(a) + x(b)) / 2).toFixed(1)}" y="${T0 + 25}" text-anchor="middle" class="sv-lab">${t}</text>`;
+  });
+  [0.4,0.7,1,2,3,5,10].forEach(l => { const xx = x(l).toFixed(1); s += `<line x1="${xx}" x2="${xx}" y1="${T0 + 32}" y2="${T0 + 40}" class="sv-axis"/><text x="${xx}" y="${T0 + 58}" text-anchor="middle" class="sv-t">${String(l).replace('.', ',')}</text>`; });
+  s += `<text x="${R}" y="${T0 + 58}" text-anchor="end" class="sv-t">µm</text>`;
+  Object.entries(SENSOR_BANDS).forEach(([nome, bandas], i) => {
+    const y = T0 + 76 + i * 34;
+    s += `<text x="4" y="${y + 15}" class="sv-strong">${nome}</text><line x1="${L}" x2="${R}" y1="${y + 9}" y2="${y + 9}" class="sv-grid"/>`;
+    bandas.forEach(([a, b, t]) => {
+      const pan = /pan/i.test(t);
+      s += `<rect x="${x(a).toFixed(1)}" y="${pan ? y + 13 : y}" width="${Math.max(2.5, x(b) - x(a)).toFixed(1)}" height="${pan ? 6 : 18}" fill="${pan ? 'var(--md-sys-color-outline)' : bandCor((a + b) / 2)}" class="sv-band"><title>${nome} ${t}: ${String(a).replace('.', ',')}–${String(b).replace('.', ',')} µm</title></rect>`;
     });
-});
-// Pré-seleciona a faixa visível (a mais usada em sensoriamento remoto óptico)
-selectBand(document.querySelector('[data-band="visivel"]'));
+  });
+  const H = T0 + 76 + 4 * 34 + 4;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Janelas atmosféricas de 0,3 a 15 micrômetros e as bandas do Sentinel-2, Landsat 9, CBERS-4A e Amazonia-1. As bandas ficam onde a atmosfera é transparente.">${s}</svg>`;
+}
+
+// ---- Bandas de radar ----
+function specRadarSVG(){
+  const W = 520, L = 20, R = 500, lo = Math.log10(0.6), hi = Math.log10(130);
+  const x = c => L + (Math.log10(c) - lo) / (hi - lo) * (R - L);
+  const B = [[0.75,1.11,'Ka','#5eead4'],[1.67,2.5,'Ku','#2dd4bf'],[2.5,3.75,'X','#14b8a6'],[3.75,7.5,'C','#0d9488'],[7.5,15,'S','#0f766e'],[15,30,'L','#115e59'],[30,100,'P','#134e4a']];
+  let s = '';
+  B.forEach(([a, b, t, c]) => {
+    s += `<rect x="${x(a).toFixed(1)}" y="20" width="${(x(b) - x(a)).toFixed(1)}" height="40" fill="${c}"/>`;
+    s += `<text x="${((x(a) + x(b)) / 2).toFixed(1)}" y="47" text-anchor="middle" class="sv-lab${/K/.test(t) ? ' sv-dark' : ''}">${t}</text>`;
+  });
+  const mk = (c, cor) => { const xx = x(c).toFixed(1); return `<path d="M${xx} 64 l-7 12 h14 z" fill="${cor}" class="sv-mk"/>`; };
+  s += mk(5.55, 'var(--md-sys-color-on-surface)') + mk(9.4, 'var(--md-sys-color-primary)') + mk(24, 'var(--md-sys-color-primary)');
+  s += `<text x="${(x(5.55) + 6).toFixed(1)}" y="98" text-anchor="end" class="sv-strong">Sentinel-1 (C, 5,5 cm)</text>`;
+  s += `<text x="${(x(9.4) - 6).toFixed(1)}" y="122" text-anchor="start" class="sv-strong sv-prim">NISAR (S 9,4 cm · L 24 cm)</text>`;
+  [1,3,10,30,100].forEach(c => { const xx = x(c).toFixed(1); s += `<line x1="${xx}" x2="${xx}" y1="132" y2="140" class="sv-axis"/><text x="${xx}" y="160" text-anchor="middle" class="sv-t">${c} cm</text>`; });
+  return `<svg viewBox="0 0 ${W} 168" role="img" aria-label="Bandas de radar de Ka a P, de cerca de 1 a 100 centímetros. O Sentinel-1 opera na banda C e o NISAR nas bandas S e L.">${s}</svg>`;
+}
+
+// ---- Planck: emissão de corpo negro ----
+const PLANCK_C2 = 14388; // µm·K
+const SIGMA = 5.670374e-8;
+let planckT = 300;
+function planckB(l, T){ return 1 / (Math.pow(l, 5) * (Math.exp(PLANCK_C2 / (l * T)) - 1)); }
+function regionOfLambda(um){ const m = um * 1e-6; return SPEC_REGIONS.find(r => m >= r.de && m < r.ate) || SPEC_REGIONS[0]; }
+function drawPlanck(){
+  const cv = document.getElementById('planckCanvas'); if (!cv) return;
+  const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pL = 70, pR = 680, pT = 30, pB = 350, lo = -1, hi = 2;
+  const X = l => pL + (Math.log10(l) - lo) / (hi - lo) * (pR - pL), Y = v => pB - v * (pB - pT);
+  const C = { bg: cssVar('--sl-plot-bg'), grid: cssVar('--sl-plot-grid'), axis: cssVar('--sl-plot-axis'), text: cssVar('--sl-plot-text'), strong: cssVar('--sl-plot-strong'), prim: cssVar('--md-sys-color-primary') };
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  // faixas de referência
+  const vis = ctx.createLinearGradient(X(0.4), 0, X(0.7), 0);
+  ['#7c3aed','#2563eb','#16a34a','#facc15','#dc2626'].forEach((c, i) => vis.addColorStop(i / 4, c));
+  ctx.globalAlpha = 0.22; ctx.fillStyle = vis; ctx.fillRect(X(0.4), pT, X(0.7) - X(0.4), pB - pT);
+  ctx.fillStyle = '#92400e'; ctx.fillRect(X(8), pT, X(14) - X(8), pB - pT); ctx.globalAlpha = 1;
+  ctx.font = '22px sans-serif'; ctx.fillStyle = C.text; ctx.textAlign = 'center';
+  ctx.fillText('visível', (X(0.4) + X(0.7)) / 2, pT + 24); ctx.fillText('janela termal', (X(8) + X(14)) / 2, pT + 24);
+  // grade
+  [0.1, 1, 10, 100].forEach(l => { ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(X(l), pT); ctx.lineTo(X(l), pB); ctx.stroke(); ctx.fillStyle = C.text; ctx.fillText(String(l).replace('.', ',') + ' µm', X(l), pB + 32); });
+  ctx.strokeStyle = C.axis; ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, pB); ctx.lineTo(pR, pB); ctx.stroke();
+  ctx.save(); ctx.translate(26, (pT + pB) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('emissão relativa', 0, 0); ctx.restore();
+  const curve = (T, cor, dash, wid) => {
+    let mx = 0; const pts = [];
+    for (let i = 0; i <= 300; i++) { const l = 10 ** (lo + (hi - lo) * i / 300), v = planckB(l, T); pts.push([l, v]); if (v > mx) mx = v; }
+    ctx.strokeStyle = cor; ctx.lineWidth = wid; ctx.setLineDash(dash); ctx.beginPath();
+    pts.forEach(([l, v], i) => { const px = X(l), py = Y(v / mx); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.stroke(); ctx.setLineDash([]); ctx.lineWidth = 1;
+  };
+  curve(5800, '#E69F00', [10, 7], 3); curve(300, '#0072B2', [3, 6], 3); curve(planckT, C.prim, [], 5);
+  const lmax = 2898 / planckT;
+  if (lmax > 0.1 && lmax < 100) { ctx.strokeStyle = C.strong; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(X(lmax), pT + 36); ctx.lineTo(X(lmax), pB); ctx.stroke(); ctx.setLineDash([]); }
+  ctx.textAlign = 'left'; ctx.font = 'bold 22px sans-serif';
+  ctx.fillStyle = '#E69F00'; ctx.fillText('- - Sol 5800 K', pL + 10, pB + 64);
+  ctx.fillStyle = '#0072B2'; ctx.fillText('· · Terra 300 K', pL + 210, pB + 64);
+  ctx.fillStyle = C.prim; ctx.fillText(`— ${fmtBR(planckT, 0)} K`, pL + 420, pB + 64);
+  // leituras
+  const reg = regionOfLambda(lmax), M = SIGMA * planckT ** 4;
+  document.getElementById('planckT').textContent = fmtBR(planckT, 0) + ' K';
+  document.getElementById('planckOut').innerHTML =
+    `<div class="metric"><span>Pico (Lei de Wien)</span><b>${fmtBR(lmax, lmax < 1 ? 2 : 1)} µm</b><small>${reg.nome.replace(/ \(.*\)/, '')}</small></div>` +
+    `<div class="metric"><span>Exitância radiante (σT⁴)</span><b>${M >= 1e6 ? fmtBR(M / 1e6, 1) + ' MW' : fmtBR(M, 0) + ' W'}</b><small>por m²</small></div>` +
+    `<div class="metric"><span>Em relação à Terra</span><b>×${fmtBR((planckT / 300) ** 4, (planckT / 300) ** 4 < 10 ? 2 : 0)}</b><small>(T/300 K)⁴</small></div>`;
+  document.querySelectorAll('[data-tk]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.tk === planckT));
+}
+function setPlanckT(t){ planckT = t; const s = document.getElementById('planckSlider'); if (s) s.value = t; drawPlanck(); }
+
+function initSpectrum(){
+  initSpecChips(); renderSpecRegion();
+  document.getElementById('specOptical').innerHTML = specOpticalSVG();
+  document.getElementById('specRadar').innerHTML = specRadarSVG();
+  document.getElementById('planckSlider').addEventListener('input', e => { planckT = +e.target.value; drawPlanck(); });
+  document.querySelectorAll('[data-tk]').forEach(b => b.addEventListener('click', () => setPlanckT(+b.dataset.tk)));
+  drawPlanck();
+}
+initSpectrum();
 
 // ================================================================
 //  CURIOSIDADES
@@ -3468,19 +3748,232 @@ document.getElementById('glossSearch').addEventListener('input', e => {
 });
 
 // ================================================================
-//  GRANDEZAS
+//  GRANDEZAS — cadeia Sol → superfície → sensor → número digital
 // ================================================================
-const quantitiesList = document.getElementById('quantitiesList');
-quantities.forEach(q => {
-    const div = document.createElement('div');
-    div.className = 'qty-card';
+const QTY_ALVOS = [ { id:'soja', nome:'Soja sadia', rho:0.45 }, { id:'solo', nome:'Solo exposto', rho:0.25 }, { id:'agua', nome:'Água', rho:0.03 } ];
+const QTY_DATAS = [ { id:'mar', nome:'20 de março', N:79 }, { id:'jun', nome:'21 de junho', N:172 }, { id:'ago', nome:'15 de agosto', N:227 }, { id:'dez', nome:'21 de dezembro', N:355 } ];
+const QTY = { lat:-11.73, esun:950, ganho:0.00589, offset:-29.4 };   // banda NIR; constantes ilustrativas de um arquivo de metadados
+let qAlvo = 'soja', qData = 'jun', qHora = 10.5;
+const D2R = Math.PI / 180;
+function solarGeo(N, hora){
+  const dec = 23.44 * Math.sin(D2R * 360 / 365 * (284 + N));
+  const h = 15 * (hora - 12);
+  const cz = Math.sin(QTY.lat * D2R) * Math.sin(dec * D2R) + Math.cos(QTY.lat * D2R) * Math.cos(dec * D2R) * Math.cos(h * D2R);
+  const d = 1 - 0.01672 * Math.cos(D2R * 0.9856 * (N - 4));
+  return { cz, tz: Math.acos(Math.max(-1, Math.min(1, cz))) / D2R, d };
+}
+function qtyChain(rho, N, hora){
+  const s = solarGeo(N, hora);
+  if (s.cz <= 0.05) return Object.assign({ noite: true }, s);
+  const E = QTY.esun * s.cz / (s.d * s.d);
+  const L = rho * E / Math.PI;
+  const DN = Math.round((L - QTY.offset) / QTY.ganho);
+  const Lb = QTY.ganho * DN + QTY.offset;
+  const rhoB = Math.PI * Lb * s.d * s.d / (QTY.esun * s.cz);
+  return Object.assign({ E, L, DN, rhoB }, s);
+}
+function renderQty(){
+  const alvo = QTY_ALVOS.find(a => a.id === qAlvo), data = QTY_DATAS.find(d => d.id === qData);
+  document.querySelectorAll('[data-qalvo]').forEach(b => b.setAttribute('aria-pressed', b.dataset.qalvo === qAlvo));
+  document.querySelectorAll('[data-qdata]').forEach(b => b.setAttribute('aria-pressed', b.dataset.qdata === qData));
+  const hh = Math.floor(qHora), mm = Math.round((qHora - hh) * 60);
+  document.getElementById('qHoraTxt').textContent = `${hh} h${mm ? String(mm).padStart(2, '0') : ''}`;
+  const c = qtyChain(alvo.rho, data.N, qHora);
+  const f = (v, d) => fmtBR(v, d);
+  const box = document.getElementById('qtyChain');
+  if (c.noite) { box.innerHTML = '<p class="poe-note">Sol muito baixo ou abaixo do horizonte: o sensor óptico não recebe energia refletida. Escolha um horário entre 7 h e 17 h.</p>'; }
+  else box.innerHTML = [
+    ['1', 'Ângulo zenital do Sol', `θz = ${f(c.tz, 1)}°`, `Sol a ${f(90 - c.tz, 1)}° de altura em Gurupi (11,7° S)`],
+    ['2', 'Irradiância que chega', `E = ${f(c.E, 0)}`, 'W·m⁻²·µm⁻¹ · E = ESUN · cos θz / d²'],
+    ['3', 'Radiância que sai do alvo', `L = ${f(c.L, 1)}`, `W·m⁻²·sr⁻¹·µm⁻¹ · L = ρ · E / π, com ρ = ${f(alvo.rho, 2)}`],
+    ['4', 'Número digital gravado', `DN = ${f(c.DN, 0)}`, 'DN = (L − offset) / ganho · 16 bits'],
+    ['5', 'Reflectância recuperada', `ρ = ${f(c.rhoB, 3)}`, 'ρ = π · L · d² / (ESUN · cos θz) · igual à do alvo']
+  ].map(([n, t, v, s]) => `<div class="qstep${n === '5' ? ' ok' : ''}"><span class="qnum">${n}</span><div><strong>${t}</strong><small>${s}</small></div><b>${v}</b></div>`).join('');
+  const horas = [8, 10, 10.5, 12, 14, 16];
+  let t = '<div class="table-wrap"><table class="mini-table"><tr><th>Hora</th><th>θz</th><th>E</th><th>L</th><th>DN</th><th>ρ</th></tr>';
+  horas.forEach(h => {
+    const r = qtyChain(alvo.rho, data.N, h);
+    const lbl = h === 10.5 ? '10h30*' : h + ' h';
+    t += r.noite ? `<tr><td>${lbl}</td><td colspan="5">Sol muito baixo</td></tr>`
+      : `<tr${h === qHora ? ' class="hl"' : ''}><td>${lbl}</td><td>${f(r.tz, 0)}°</td><td>${f(r.E, 0)}</td><td>${f(r.L, 1)}</td><td>${f(r.DN, 0)}</td><td class="diag">${f(r.rhoB, 3)}</td></tr>`;
+  });
+  t += '</table></div><p class="qty-foot">* Horário aproximado de passagem do Landsat e do Sentinel-2: satélites sol-síncronos passam sempre no mesmo horário local, mas o ângulo do Sol muda ao longo do ano. Compare as datas.</p>';
+  document.getElementById('qtyTable').innerHTML = t;
+}
+function initQty(){
+  document.getElementById('qAlvos').innerHTML = QTY_ALVOS.map(a => `<button type="button" class="chip-choice" data-qalvo="${a.id}" aria-pressed="false">${a.nome}</button>`).join('');
+  document.getElementById('qDatas').innerHTML = QTY_DATAS.map(d => `<button type="button" class="chip-choice" data-qdata="${d.id}" aria-pressed="false">${d.nome}</button>`).join('');
+  document.querySelectorAll('[data-qalvo]').forEach(b => b.addEventListener('click', () => { qAlvo = b.dataset.qalvo; renderQty(); }));
+  document.querySelectorAll('[data-qdata]').forEach(b => b.addEventListener('click', () => { qData = b.dataset.qdata; renderQty(); }));
+  document.getElementById('qHora').addEventListener('input', e => { qHora = +e.target.value; renderQty(); });
+  renderQty();
+  const list = document.getElementById('quantitiesList');
+  quantities.forEach(q => {
+    const div = document.createElement('div'); div.className = 'qty-card';
     div.innerHTML = `<div class="qty-name">${q.nome}</div>
-        <div class="qty-row"><span class="qty-key">Definição</span><span class="qty-val">${q.definicao}</span></div>
-        <div class="qty-row"><span class="qty-key">Unidade</span><span class="qty-val">${q.unidade}</span></div>
-        <div class="qty-row"><span class="qty-key">Obtenção</span><span class="qty-val">${q.obtencao}</span></div>
-        <div class="qty-row"><span class="qty-key">Aplicação</span><span class="qty-val">${q.aplicacao}</span></div>`;
-    quantitiesList.appendChild(div);
-});
+      <div class="qty-row"><span class="qty-key">Definição</span><span class="qty-val">${q.definicao}</span></div>
+      <div class="qty-row"><span class="qty-key">Unidade</span><span class="qty-val">${q.unidade}</span></div>
+      <div class="qty-row"><span class="qty-key">Obtenção</span><span class="qty-val">${q.obtencao}</span></div>
+      <div class="qty-row"><span class="qty-key">Aplicação</span><span class="qty-val">${q.aplicacao}</span></div>`;
+    list.appendChild(div);
+  });
+}
+initQty();
+
+// ================================================================
+//  ASSINATURAS ESPECTRAIS — curvas didáticas de 0,4 a 2,5 µm
+// ================================================================
+const SIG_TARGETS = [
+  { id:'veg', nome:'Vegetação sadia', cor:'#009E73', dash:[], pts:[[0.40,0.04],[0.45,0.05],[0.50,0.06],[0.55,0.12],[0.60,0.07],[0.65,0.05],[0.68,0.04],[0.70,0.10],[0.72,0.28],[0.75,0.45],[0.80,0.50],[0.90,0.52],[1.00,0.50],[1.10,0.48],[1.20,0.44],[1.30,0.42],[1.40,0.20],[1.45,0.15],[1.55,0.32],[1.65,0.34],[1.75,0.30],[1.85,0.10],[1.95,0.06],[2.05,0.12],[2.20,0.18],[2.30,0.15],[2.40,0.08],[2.50,0.05]] },
+  { id:'est', nome:'Vegetação estressada', cor:'#E69F00', dash:[14,8], pts:[[0.40,0.05],[0.45,0.06],[0.50,0.08],[0.55,0.14],[0.60,0.13],[0.65,0.12],[0.68,0.11],[0.70,0.14],[0.72,0.22],[0.75,0.30],[0.80,0.34],[0.90,0.35],[1.00,0.35],[1.10,0.34],[1.20,0.33],[1.30,0.33],[1.40,0.25],[1.45,0.22],[1.55,0.33],[1.65,0.36],[1.75,0.34],[1.85,0.18],[1.95,0.14],[2.05,0.22],[2.20,0.28],[2.30,0.25],[2.40,0.17],[2.50,0.12]] },
+  { id:'palha', nome:'Palhada (resteva)', cor:'#CC79A7', dash:[16,6,4,6], pts:[[0.40,0.08],[0.50,0.12],[0.60,0.18],[0.70,0.24],[0.80,0.30],[1.00,0.36],[1.20,0.40],[1.40,0.36],[1.60,0.44],[1.80,0.43],[1.95,0.33],[2.00,0.40],[2.10,0.33],[2.20,0.39],[2.30,0.37],[2.50,0.30]] },
+  { id:'solo', nome:'Latossolo seco', cor:'#D55E00', dash:[24,6], pts:[[0.40,0.06],[0.50,0.09],[0.55,0.11],[0.60,0.17],[0.70,0.22],[0.80,0.23],[0.87,0.22],[1.00,0.25],[1.30,0.29],[1.40,0.27],[1.60,0.33],[1.90,0.30],[2.00,0.32],[2.10,0.32],[2.20,0.29],[2.30,0.31],[2.50,0.30]] },
+  { id:'soloum', nome:'Latossolo úmido', cor:'#8C3B00', dash:[4,6], pts:[[0.40,0.04],[0.50,0.05],[0.55,0.06],[0.60,0.09],[0.70,0.12],[0.80,0.13],[0.87,0.12],[1.00,0.14],[1.30,0.15],[1.40,0.08],[1.45,0.07],[1.60,0.15],[1.90,0.06],[1.95,0.05],[2.10,0.12],[2.20,0.11],[2.30,0.11],[2.50,0.09]] },
+  { id:'agua', nome:'Água limpa', cor:'#0072B2', dash:[], pts:[[0.40,0.06],[0.50,0.05],[0.55,0.04],[0.60,0.025],[0.70,0.01],[0.80,0.005],[0.90,0.002],[1.00,0.001],[2.50,0]] },
+  { id:'turva', nome:'Água turva', cor:'#56B4E9', dash:[8,6], pts:[[0.40,0.06],[0.50,0.08],[0.55,0.10],[0.60,0.11],[0.65,0.10],[0.70,0.08],[0.80,0.05],[0.90,0.02],[1.00,0.01],[1.20,0.003],[2.50,0]] }
+];
+const SIG_SENSORS = {
+  'Sentinel-2': [['Azul','B',0.458,0.523],['Verde','G',0.543,0.578],['Vermelho','R',0.650,0.680],['Red edge','RE',0.698,0.713],['NIR','NIR',0.785,0.900],['SWIR 1','S1',1.565,1.655],['SWIR 2','S2',2.100,2.280]],
+  'Landsat 9':  [['Azul','B',0.452,0.512],['Verde','G',0.533,0.590],['Vermelho','R',0.636,0.673],['NIR','NIR',0.851,0.879],['SWIR 1','S1',1.566,1.651],['SWIR 2','S2',2.107,2.294]],
+  'CBERS-4A':   [['Azul','B',0.45,0.52],['Verde','G',0.52,0.59],['Vermelho','R',0.63,0.69],['NIR','NIR',0.77,0.89]]
+};
+let sigActive = 'veg', sigSensor = 'Sentinel-2';
+function sigAt(pts, l){
+  if (l <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) if (l <= pts[i][0]) { const [a, va] = pts[i - 1], [b, vb] = pts[i]; return va + (vb - va) * (l - a) / (b - a); }
+  return pts[pts.length - 1][1];
+}
+function sigMean(pts, a, b){ let s = 0; for (let i = 0; i <= 20; i++) s += sigAt(pts, a + (b - a) * i / 20); return s / 21; }
+function drawSig(){
+  const cv = document.getElementById('sigPlot'); if (!cv) return;
+  const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pL = 78, pR = 684, pT = 70, pB = 380, X = l => pL + (l - 0.4) / 2.1 * (pR - pL), Y = v => pB - v / 0.6 * (pB - pT);
+  const C = { bg: cssVar('--sl-plot-bg'), grid: cssVar('--sl-plot-grid'), axis: cssVar('--sl-plot-axis'), text: cssVar('--sl-plot-text'), strong: cssVar('--sl-plot-strong'), prim: cssVar('--md-sys-color-primary') };
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  // absorção atmosférica (lacunas típicas das imagens orbitais)
+  ctx.fillStyle = C.grid; [[1.35, 1.45], [1.80, 1.95]].forEach(([a, b]) => ctx.fillRect(X(a), pT, X(b) - X(a), pB - pT));
+  // bandas do sensor
+  ctx.font = 'bold 20px sans-serif'; ctx.textAlign = 'center';
+  let lastX = -99, alt = 0;
+  SIG_SENSORS[sigSensor].forEach(([n, c, a, b]) => {
+    ctx.globalAlpha = 0.16; ctx.fillStyle = C.prim; ctx.fillRect(X(a), pT, Math.max(3, X(b) - X(a)), pB - pT); ctx.globalAlpha = 1;
+    const cx = (X(a) + X(b)) / 2; alt = (cx - lastX < 40) ? 1 - alt : 0; lastX = cx;
+    ctx.fillStyle = C.prim; ctx.fillText(c, cx, pT - 10 - alt * 24);
+  });
+  // eixos
+  ctx.font = '22px sans-serif'; ctx.textAlign = 'right';
+  for (let v = 0; v <= 0.6001; v += 0.1) { ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(pL, Y(v)); ctx.lineTo(pR, Y(v)); ctx.stroke(); ctx.fillStyle = C.text; ctx.fillText(Math.round(v * 100) + '%', pL - 8, Y(v) + 7); }
+  ctx.textAlign = 'center';
+  [0.5, 1.0, 1.5, 2.0, 2.5].forEach(l => ctx.fillText(String(l).replace('.', ',') + ' µm', X(l), pB + 32));
+  ctx.strokeStyle = C.axis; ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, pB); ctx.lineTo(pR, pB); ctx.stroke();
+  // curvas
+  const draw = (t, act) => {
+    ctx.strokeStyle = t.cor; ctx.lineWidth = act ? 5 : 2.5; ctx.globalAlpha = act ? 1 : 0.55; ctx.setLineDash(t.dash);
+    ctx.beginPath();
+    for (let i = 0; i <= 210; i++) { const l = 0.4 + 2.1 * i / 210, px = X(l), py = Y(sigAt(t.pts, l)); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; ctx.lineWidth = 1;
+  };
+  SIG_TARGETS.filter(t => t.id !== sigActive).forEach(t => draw(t, false));
+  const at = SIG_TARGETS.find(t => t.id === sigActive); draw(at, true);
+  SIG_SENSORS[sigSensor].forEach(([n, c, a, b]) => {
+    const v = sigMean(at.pts, a, b);
+    ctx.beginPath(); ctx.arc((X(a) + X(b)) / 2, Y(v), 8, 0, Math.PI * 2); ctx.fillStyle = at.cor; ctx.fill(); ctx.strokeStyle = C.strong; ctx.lineWidth = 2; ctx.stroke(); ctx.lineWidth = 1;
+  });
+  ctx.fillStyle = C.text; ctx.font = '20px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('faixas cinza: absorção atmosférica', pL + 8, pB - 12);
+}
+function renderSigReadout(){
+  const at = SIG_TARGETS.find(t => t.id === sigActive), bs = SIG_SENSORS[sigSensor];
+  const v = {}; bs.forEach(([n, c, a, b]) => v[c] = sigMean(at.pts, a, b));
+  const nd = (p, q) => (p + q) ? (p - q) / (p + q) : 0;
+  const f3 = x => x.toFixed(2).replace('.', ',');
+  let t = `<div class="table-wrap"><table class="mini-table"><tr><th>Banda (${sigSensor})</th><th>Faixa (µm)</th><th>Reflectância</th></tr>`;
+  bs.forEach(([n, c, a, b]) => { t += `<tr><td>${n}</td><td>${String(a).replace('.', ',')}–${String(b).replace('.', ',')}</td><td>${Math.round(v[c] * 100)}%</td></tr>`; });
+  t += '</table></div>';
+  const ndvi = nd(v.NIR, v.R);
+  const idx = [`<div class="metric"><span>NDVI</span><b>${f3(ndvi)}</b><small>${typeof interpretVeg === 'function' ? interpretVeg(ndvi) : ''}</small></div>`];
+  idx.push(v.S1 != null ? `<div class="metric"><span>NDMI (NIR × SWIR)</span><b>${f3(nd(v.NIR, v.S1))}</b><small>${ndvi < 0 ? 'água: não descreve folhas' : ndvi < 0.25 ? 'pouca vegetação: use com cautela' : nd(v.NIR, v.S1) > 0.2 ? 'folha hidratada' : nd(v.NIR, v.S1) > -0.1 ? 'água na folha reduzida' : 'folha muito seca'}</small></div>`
+                        : `<div class="metric"><span>NDMI</span><b>—</b><small>${sigSensor} não tem SWIR</small></div>`);
+  idx.push(`<div class="metric"><span>NDWI (verde × NIR)</span><b>${f3(nd(v.G, v.NIR))}</b><small>${nd(v.G, v.NIR) > 0 ? 'indica água' : 'sem água livre'}</small></div>`);
+  document.getElementById('sigReadout').innerHTML = `<p class="sig-alvo"><i style="background:${at.cor}"></i><strong>${at.nome}</strong> medido pelo ${sigSensor}</p>${t}<div class="metrics">${idx.join('')}</div>`;
+}
+function renderSig(){
+  document.querySelectorAll('[data-sig]').forEach(b => b.setAttribute('aria-pressed', b.dataset.sig === sigActive));
+  document.querySelectorAll('[data-sens]').forEach(b => b.setAttribute('aria-pressed', b.dataset.sens === sigSensor));
+  drawSig(); renderSigReadout();
+}
+function initSig(){
+  document.getElementById('sigTargets').innerHTML = SIG_TARGETS.map(t => `<button type="button" class="chip-choice sig-chip" data-sig="${t.id}" aria-pressed="false"><svg width="26" height="10" aria-hidden="true"><line x1="1" y1="5" x2="25" y2="5" stroke="${t.cor}" stroke-width="4" stroke-dasharray="${t.dash.map(d => d / 2).join(' ')}"/></svg>${t.nome}</button>`).join('');
+  document.getElementById('sigSensor').innerHTML = Object.keys(SIG_SENSORS).map(s => `<button type="button" data-sens="${s}" aria-pressed="false">${s}</button>`).join('');
+  document.querySelectorAll('[data-sig]').forEach(b => b.addEventListener('click', () => { sigActive = b.dataset.sig; renderSig(); }));
+  document.querySelectorAll('[data-sens]').forEach(b => b.addEventListener('click', () => { sigSensor = b.dataset.sens; renderSig(); }));
+  renderSig();
+}
+initSig();
+
+// ================================================================
+//  ATMOSFERA — névoa sobre a cena Sentinel-2 e correção pelo pixel escuro
+// ================================================================
+let hazeData = null, hazeView = 'nevoa', hazeAmt = 0.6;
+function hazeInit(){
+  if (hazeData) { hazeRender(); return; }
+  if (typeof window.getSentinelScene !== 'function') return;
+  const sc = window.getSentinelScene(), n = sc.w * sc.h, mask = new Uint8Array(n);
+  for (let i = 0; i < n; i++) { const N = sc.px[i * 4], R = sc.px[i * 4 + 1]; mask[i] = (N + R) > 0 && (N - R) / (N + R) > 0.35 ? 1 : 0; }
+  hazeData = { w: sc.w, h: sc.h, px: sc.px, mask };
+  hazeRender();
+}
+function hazeCompute(){
+  const { w, h, px, mask } = hazeData, n = w * h;
+  const k = scatExponent(Math.pow(10, parseFloat(particleSlider.value)));
+  const I = SCAT_BANDS.map(b => Math.pow(b.lambda, -k)), rel = I.map(v => v / I[0]);   // Azul, Verde, Vermelho, NIR
+  const ord = [3, 2, 1, 0];                    // índice do Azul, Verde, Vermelho, NIR no vetor [NIR, R, G, B]
+  const path = rel.map(r => hazeAmt * 110 * r), trans = rel.map(r => 1 - hazeAmt * 0.3 * r);
+  const hz = [0, 1, 2, 3].map(() => new Float32Array(n));          // na ordem Azul, Verde, Vermelho, NIR
+  for (let b = 0; b < 4; b++) for (let i = 0; i < n; i++) hz[b][i] = Math.min(255, px[i * 4 + ord[b]] * trans[b] + path[b]);
+  const dark = hz.map(arr => { const hist = new Uint32Array(256); arr.forEach(v => hist[Math.round(v)]++); let acc = 0; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * 0.005) return v; } return 0; });
+  const ndviMean = (N, R) => { let s = 0, c = 0; for (let i = 0; i < n; i++) if (mask[i]) { const a = N(i), r = R(i); if (a + r > 0) { s += (a - r) / (a + r); c++; } } return c ? s / c : 0; };
+  return {
+    rel, path, dark, hz,
+    orig: ndviMean(i => px[i * 4], i => px[i * 4 + 1]),
+    nev:  ndviMean(i => hz[3][i], i => hz[2][i]),
+    cor:  ndviMean(i => Math.max(0, hz[3][i] - dark[3]), i => Math.max(0, hz[2][i] - dark[2]))
+  };
+}
+function hazeRender(){
+  if (!hazeData) return;
+  const r = hazeCompute(), { w, h, px } = hazeData, n = w * h;
+  const cv = document.getElementById('hazeCanvas'), ctx = cv.getContext('2d'), img = ctx.createImageData(w, h);
+  for (let i = 0; i < n; i++) {
+    let R, G, B;
+    if (hazeView === 'orig') { R = px[i * 4 + 1]; G = px[i * 4 + 2]; B = px[i * 4 + 3]; }
+    else if (hazeView === 'nevoa') { R = r.hz[2][i]; G = r.hz[1][i]; B = r.hz[0][i]; }
+    else { R = Math.max(0, r.hz[2][i] - r.dark[2]); G = Math.max(0, r.hz[1][i] - r.dark[1]); B = Math.max(0, r.hz[0][i] - r.dark[0]); }
+    const k = i * 4; img.data[k] = R; img.data[k + 1] = G; img.data[k + 2] = B; img.data[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  document.querySelectorAll('[data-hview]').forEach(b => b.setAttribute('aria-pressed', b.dataset.hview === hazeView));
+  document.getElementById('hazeAmtTxt').textContent = Math.round(hazeAmt * 100) + '%';
+  const f = v => v.toFixed(2).replace('.', ',');
+  const perda = r.orig ? Math.round((1 - r.nev / r.orig) * 100) : 0, rec = (r.orig - r.nev) ? Math.round((r.cor - r.nev) / (r.orig - r.nev) * 100) : 100;
+  document.getElementById('hazeOut').innerHTML =
+    `<div class="metrics"><div class="metric"><span>NDVI original</span><b>${f(r.orig)}</b><small>áreas vegetadas</small></div>` +
+    `<div class="metric"><span>Com névoa</span><b>${f(r.nev)}</b><small>${perda > 0 ? '−' + perda + '%' : 'sem perda'}</small></div>` +
+    `<div class="metric"><span>Corrigido</span><b>${f(r.cor)}</b><small>${hazeAmt <= 0 ? '—' : Math.abs(r.cor - r.orig) < 0.02 ? 'voltou ao original' : r.cor > r.orig ? 'acima do original' : 'recuperou ' + Math.max(0, Math.min(99, rec)) + '%'}</small></div></div>` +
+    `<p class="haze-note">Brilho somado pela névoa (números digitais): azul +${Math.round(r.path[0])}, verde +${Math.round(r.path[1])}, vermelho +${Math.round(r.path[2])}, NIR +${Math.round(r.path[3])}. A correção subtrai de cada banda o valor do pixel mais escuro da cena; ela remove o brilho somado, mas não a atenuação causada pela névoa, por isso o NDVI corrigido pode ficar um pouco acima ou abaixo do original.</p>`;
+}
+function initHazeUI(){
+  document.getElementById('hazeAmt').addEventListener('input', e => { hazeAmt = +e.target.value / 100; hazeRender(); });
+  document.querySelectorAll('[data-hview]').forEach(b => b.addEventListener('click', () => { hazeView = b.dataset.hview; hazeInit(); hazeRender(); }));
+  document.getElementById('hazeFumaca').addEventListener('click', () => {
+    particleSlider.value = Math.log10(0.5).toFixed(2); drawScattering();
+    hazeAmt = 0.7; document.getElementById('hazeAmt').value = 70; hazeView = 'nevoa'; hazeInit(); hazeRender();
+    snack('Fumaça de queimada: partículas de 0,5 µm, espalhamento Mie.');
+  });
+  particleSlider.addEventListener('input', () => { if (hazeData) hazeRender(); });
+}
+initHazeUI();
+window.slRedrawAprender = () => { drawPlanck(); drawSig(); };
 
 // ================================================================
 //  ÍNDICES DE VEGETAÇÃO
@@ -4668,6 +5161,7 @@ function applyTheme(pref, persist){
   try { drawScattering(); } catch(e){}
   if (lastIndexData) drawHistogram(lastIndexData, lastIndexName);
   if (window.slRedrawSig) window.slRedrawSig();
+  if (window.slRedrawAprender) window.slRedrawAprender();
 }
 if (mqDark) {
   const onSys = () => { if (getThemePref() === 'auto') applyTheme('auto', false); };
