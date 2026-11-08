@@ -125,6 +125,7 @@ body {
   display: flex;
   flex-direction: column;
   height: calc(100vh - var(--safe-top));
+  height: calc(var(--app-h, 100dvh) - var(--safe-top));
   max-width: 600px;
   margin: 0 auto;
   position: relative;
@@ -1482,7 +1483,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       </div>
       <div id="gameMessage" style="text-align:center;font-size:var(--md-type-title-large);font-weight:800;margin:12px 0;min-height:32px;"></div>
       <div id="gameExplain" class="info-panel hidden"></div>
-      <button id="newGameBtn" class="btn-filled btn-full">▶ Nova Rodada</button>
+      <button id="newGameBtn" class="btn-filled btn-full" style="scroll-margin-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);">▶ Nova Rodada</button>
     </div>
 
     <!-- ===== ABA ESPALHAMENTO ===== -->
@@ -2801,6 +2802,7 @@ function newGame() {
             ex.innerHTML = '📚 ' + GAME_EXPLAIN[a.key];
             ex.classList.remove('hidden');
             PROG.game.rounds++; slSave();
+            setTimeout(() => newGameBtn.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
         };
         attrBtnsDiv.appendChild(btn);
     });
@@ -4216,6 +4218,11 @@ updateColorbar();
 mountActivities();
 renderTrail();
 showPage('trail');
+
+function slSetAppHeight(){ document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); }
+slSetAppHeight();
+window.addEventListener('resize', slSetAppHeight);
+window.addEventListener('orientationchange', () => setTimeout(slSetAppHeight, 200));
 
 // ================================================================
 //  PWA
