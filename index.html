@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- Fallback font stack if Google Sans unavailable -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=Limelight&display=swap');
   </style>
 
 <style>
@@ -1279,6 +1279,109 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--md-sys-color-outline); }
 .cdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: 0; border: 1px solid var(--md-sys-color-outline); }
 
+
+/* ================================================================
+   TRUNFO — mesa de feltro com mão de três cartas
+   ================================================================ */
+.felt {
+  --felt-gold: #E2B84B; --felt-ink: #F6EFD8; --felt-muted: #D3E6DA; --felt-rim: #6B4A12;
+  --card-bg: #FBF6E9; --card-ink: #1E1A12; --card-line: #E4DCC4; --card-accent: #145C3B;
+  --win-bg: #1C7A4E; --win-ink: #FFFFFF; --lose-bg: #E9DCC0; --lose-ink: #3A2E12;
+  position: relative; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;
+  padding: 16px 12px 18px; border-radius: 28px; color: var(--felt-ink);
+  background: radial-gradient(ellipse 120% 75% at 50% 35%, #1C7A4E 0%, #11583A 55%, #0A3524 100%);
+  border: 3px solid var(--felt-rim); box-shadow: inset 0 0 0 2px rgba(226,184,75,0.45), var(--sl-shadow);
+  font-family: 'Nunito', system-ui, sans-serif;
+}
+:root[data-theme="contraste"] .felt {
+  --felt-gold: #000; --felt-ink: #000; --felt-muted: #1A1A1A; --felt-rim: #000;
+  --card-bg: #FFF; --card-ink: #000; --card-line: #000; --card-accent: #000;
+  --win-bg: #005A1E; --win-ink: #FFF; --lose-bg: #FFF; --lose-ink: #000;
+  background: #FFF; box-shadow: none;
+}
+.felt-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.felt-title { font-family: 'Limelight', Georgia, serif; font-size: 25px; line-height: 1.05; color: var(--felt-gold); }
+.felt-sub { font-size: 13px; color: var(--felt-muted); margin-top: 2px; }
+.felt-ghost, .felt-link {
+  min-height: 44px; padding: 0 14px; border-radius: 22px; border: 1.5px solid var(--felt-gold);
+  background: transparent; color: var(--felt-ink); font: 700 13px 'Nunito', sans-serif; cursor: pointer; flex-shrink: 0;
+}
+.felt-link { min-height: 36px; border: none; text-decoration: underline; text-underline-offset: 3px; padding: 0 4px; }
+.felt-rules { font-size: 14px; line-height: 1.55; padding: 12px 14px; border-radius: 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(226,184,75,0.4); }
+.felt-score { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.felt-tile { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 14px; background: rgba(0,0,0,0.22); border: 1px solid rgba(226,184,75,0.35); }
+.felt-tile span { display: block; font-size: 12px; color: var(--felt-muted); }
+.felt-tile strong { display: block; font-size: 19px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.felt-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--felt-muted); margin-top: -6px; }
+.felt-bank { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 44px; }
+.felt-arc { position: absolute; top: 0; left: 50%; width: 330px; max-width: 100%; height: 56px; transform: translateX(-50%); }
+.felt-label { display: block; font-size: 13px; font-weight: 700; color: var(--felt-muted); text-align: center; }
+:root[data-theme="contraste"] .felt-tile, :root[data-theme="contraste"] .felt-rules { background: #FFF; border: 2px solid #000; }
+:root[data-theme="contraste"] .felt-arc text { fill: #000; }
+
+.card-back { width: 100px; height: 140px; border-radius: 10px; background: var(--card-bg); padding: 6px; box-sizing: border-box; box-shadow: 0 8px 18px rgba(0,0,0,0.35); transform: rotate(-3deg); }
+.card-back > div { width: 100%; height: 100%; border-radius: 6px; box-sizing: border-box; border: 1.5px solid #E2B84B; display: grid; place-items: center; background: repeating-linear-gradient(45deg, #7E1F24 0 6px, #94292F 6px 12px); }
+
+.sat-card {
+  display: flex; flex-direction: column; gap: 4px; text-align: left; box-sizing: border-box;
+  background: var(--card-bg); color: var(--card-ink); border: 2px solid var(--card-line); border-radius: 12px;
+  padding: 8px; font-family: 'Nunito', sans-serif; box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+}
+.sc-top { display: flex; align-items: center; justify-content: space-between; }
+.sc-sigla { font-family: 'Limelight', Georgia, serif; font-size: 16px; color: var(--card-accent); }
+.sc-name { font-size: 13px; font-weight: 800; line-height: 1.2; min-height: 2.4em; }
+.sc-rows { display: flex; flex-direction: column; gap: 1px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.sc-row { display: flex; justify-content: space-between; gap: 4px; padding: 2px 4px; margin: 0 -4px; border-radius: 5px; }
+.sc-row b { font-weight: 800; white-space: nowrap; }
+.sc-row.win { background: var(--win-bg); color: var(--win-ink); }
+.sc-row.lose { background: var(--lose-bg); color: var(--lose-ink); text-decoration: line-through; }
+.sc-row.focus { outline: 2px solid var(--card-accent); outline-offset: -1px; }
+
+.hand { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; padding-top: 12px; }
+.hand-card { cursor: pointer; transition: transform var(--md-duration-medium1) var(--md-motion-spring), box-shadow var(--md-duration-medium1); min-height: 44px; }
+.hand-card:nth-child(1) { transform: rotate(-4deg); }
+.hand-card:nth-child(3) { transform: rotate(4deg); }
+.hand-card.sel { transform: translateY(-12px); border-color: var(--felt-gold); box-shadow: 0 0 0 3px rgba(226,184,75,0.45), 0 14px 22px rgba(0,0,0,0.45); }
+:root[data-theme="contraste"] .hand-card.sel { border-width: 4px; box-shadow: 0 0 0 3px #FFD400; }
+.hand-card:disabled { cursor: default; }
+.hand-card:disabled:not(.sel) { opacity: 0.6; }
+.bank-face { width: 168px; transform: rotate(1.5deg); border-color: #C94545; animation: cardFlip var(--md-duration-long1) var(--md-motion-decel) both; }
+.bank-face .sc-rows { font-size: 13px; }
+@keyframes cardFlip { from { transform: rotateY(90deg); } to { transform: rotate(1.5deg); } }
+
+.bets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.bet {
+  min-height: 58px; border-radius: 29px; border: 2px dashed var(--felt-gold); background: rgba(0,0,0,0.18);
+  color: var(--felt-ink); font-family: 'Nunito', sans-serif; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+}
+.bet strong { font-size: 15px; }
+.bet span { font-size: 12px; color: var(--felt-muted); }
+.bet:disabled { cursor: not-allowed; opacity: 0.45; }
+.bet.chosen { opacity: 1; border-style: solid; background: var(--felt-gold); color: #1E1A12; }
+.bet.chosen span { color: #3A2E12; }
+:root[data-theme="contraste"] .bet { background: #FFF; border: 2px solid #000; }
+:root[data-theme="contraste"] .bet.chosen { background: #000; color: #FFF; }
+:root[data-theme="contraste"] .bet.chosen span { color: #FFF; }
+
+.felt-banner { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; }
+.felt-banner.win { background: var(--felt-gold); color: #1E1A12; }
+.felt-banner.lose { background: #F3D6D3; color: #4A0E0E; }
+.felt-banner.tie { background: #E9DCC0; color: #1E1A12; }
+:root[data-theme="contraste"] .felt-banner { background: #FFF; color: #000; border: 3px solid #000; }
+.felt-banner strong { display: block; font-family: 'Limelight', Georgia, serif; font-weight: 400; font-size: 20px; line-height: 1.1; }
+.felt-banner span { display: block; font-size: 14px; font-weight: 700; margin-top: 2px; }
+.felt-box { border-radius: 14px; padding: 12px 14px; background: rgba(0,0,0,0.28); border: 1px solid rgba(226,184,75,0.4); font-size: 14px; line-height: 1.55; display: flex; flex-direction: column; gap: 6px; }
+.felt-box.tip { background: transparent; border: 1.5px dashed rgba(226,184,75,0.65); }
+:root[data-theme="contraste"] .felt-box { background: #FFF; border: 2px solid #000; }
+.felt-cta {
+  min-height: 54px; border-radius: 27px; border: none; background: var(--felt-gold); color: #1E1A12;
+  font: 800 17px 'Nunito', sans-serif; cursor: pointer; box-shadow: 0 6px 0 #8A6416, 0 10px 18px rgba(0,0,0,0.35);
+  scroll-margin-bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px);
+}
+:root[data-theme="contraste"] .felt-cta { background: #000; color: #FFF; box-shadow: none; }
+@media (max-width: 360px) { .sc-name { font-size: 12px; } .hand { gap: 6px; } .felt-tile { padding: 8px; gap: 6px; } .felt-tile svg { width: 30px; } .felt-tile strong { font-size: 16px; white-space: nowrap; } }
+
 /* Classes: o texto usa a cor de leitura; a cor da classe fica no marcador (legível em qualquer tema) */
 .class-btn { color: var(--md-sys-color-on-surface) !important; }
 .class-btn > span { border: 1px solid var(--md-sys-color-outline); }
@@ -1432,58 +1535,47 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <!-- ===== ABA JOGO ===== -->
     <div id="game" class="tab-content">
-      <h2 class="section-title">🃏 Trunfo: Satélites</h2>
+      <h2 class="section-title">🃏 Trunfo dos Satélites</h2>
 
-      <!-- PLACAR -->
-      <div class="m3-card" style="padding:12px 16px;margin-bottom:12px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <div class="m3-card-title" style="margin-bottom:0;">🏆 Placar</div>
-          <button onclick="resetScore()" class="btn-text" style="font-size:var(--md-type-label-small);padding:4px 10px;color:var(--md-sys-color-on-surface-variant);">↺ Zerar</button>
+      <div class="felt" id="felt">
+        <div class="felt-head">
+          <div>
+            <div class="felt-title">Trunfo dos Satélites</div>
+            <div class="felt-sub" id="feltRound">Mesa de sensores · rodada 1</div>
+          </div>
+          <button type="button" class="felt-ghost" id="rulesBtn" aria-expanded="false" aria-controls="feltRules" onclick="toggleGameRules()">Regras</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;">
-          <!-- Jogador -->
-          <div style="text-align:center;">
-            <div style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Você</div>
-            <div id="scorePlayer" style="font-size:2.4rem;font-weight:800;color:var(--sl-success);font-family:'Roboto Mono','Space Mono',monospace;line-height:1;">0</div>
-          </div>
-          <!-- Separador + rodada -->
-          <div style="text-align:center;">
-            <div style="font-size:1.4rem;font-weight:700;color:var(--md-sys-color-on-surface-variant);">×</div>
-            <div style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:2px;">Rodada</div>
-            <div id="scoreRound" style="font-size:1rem;font-weight:700;color:var(--md-sys-color-primary);font-family:'Roboto Mono','Space Mono',monospace;">1</div>
-          </div>
-          <!-- Computador -->
-          <div style="text-align:center;">
-            <div style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">PC</div>
-            <div id="scoreComp" style="font-size:2.4rem;font-weight:800;color:var(--md-sys-color-error);font-family:'Roboto Mono','Space Mono',monospace;line-height:1;">0</div>
-          </div>
+        <div class="felt-rules hidden" id="feltRules">
+          Você recebe <strong>três satélites</strong>. Escolha uma carta da sua mão e um atributo; a banca então revela a carta dela.
+          Vence o melhor valor: em <strong>resolução</strong> e <strong>revisita</strong>, o menor; em <strong>bandas</strong> e <strong>lançamento</strong>, o maior.
+          Cada vitória vale uma ficha. Antes de apostar, compare as três cartas: a melhor jogada depende do atributo.
         </div>
-        <!-- Barra de progresso de vitórias -->
-        <div style="margin-top:10px;">
-          <div style="height:8px;border-radius:var(--md-shape-full);background:var(--md-sys-color-outline-variant);overflow:hidden;position:relative;">
-            <div id="scoreBarPlayer" style="position:absolute;left:0;top:0;height:100%;background:var(--sl-success);border-radius:var(--md-shape-full);transition:width 0.4s cubic-bezier(0.34,1.56,0.64,1);width:50%;"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);margin-top:3px;">
-            <span>Você</span><span id="scoreTies" style="color:var(--md-sys-color-tertiary);">0 empates</span><span>PC</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="m3-card" style="background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-color:transparent;">
-        <div class="m3-card-title" style="color:var(--md-sys-color-on-primary-container);">Sua Carta</div>
-        <div id="playerCard"></div>
-        <div style="margin-top:12px;">
-          <p style="font-size:var(--md-type-label-medium);margin-bottom:8px;color:var(--md-sys-color-on-primary-container);">Escolha um atributo:</p>
-          <div id="attributeButtons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div class="felt-score">
+          <div class="felt-tile"><svg width="38" height="32" viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="27" rx="16" ry="5" fill="#B8862B"/><ellipse cx="20" cy="25" rx="16" ry="5" fill="#E2B84B" stroke="#7A5512"/><ellipse cx="20" cy="19" rx="16" ry="5" fill="#B8862B"/><ellipse cx="20" cy="17" rx="16" ry="5" fill="#E2B84B" stroke="#7A5512"/><ellipse cx="20" cy="17" rx="9" ry="2.6" fill="none" stroke="#7A5512" stroke-dasharray="3 2"/></svg><div><span>Você</span><strong id="scorePlayer">0 fichas</strong></div></div>
+          <div class="felt-tile"><svg width="38" height="32" viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="22" rx="16" ry="5" fill="#8E2B2B"/><ellipse cx="20" cy="20" rx="16" ry="5" fill="#C94545" stroke="#5A1414"/><ellipse cx="20" cy="20" rx="9" ry="2.6" fill="none" stroke="#F6EFD8" stroke-dasharray="3 2"/></svg><div><span>Banca</span><strong id="scoreComp">0 fichas</strong></div></div>
         </div>
+        <div class="felt-meta"><span id="scoreTies">0 empates</span><button type="button" class="felt-link" onclick="resetScore()">Zerar placar</button></div>
+
+        <div class="felt-bank">
+          <svg class="felt-arc" viewBox="0 0 330 56" aria-hidden="true">
+            <path id="feltArcPath" d="M15 54 Q165 -6 315 54" fill="none"/>
+            <path d="M6 56 Q165 -12 324 56" fill="none" stroke="rgba(226,184,75,0.55)" stroke-width="1.5"/>
+            <text font-family="Limelight, Georgia, serif" font-size="13" fill="#E2B84B" letter-spacing="1.5"><textPath href="#feltArcPath" startOffset="50%" text-anchor="middle">a banca paga uma ficha por vitória</textPath></text>
+          </svg>
+          <span class="felt-label">Carta da banca</span>
+          <div id="bankSlot"></div>
+        </div>
+
+        <span class="felt-label" id="handLabel">Sua mão · escolha uma carta</span>
+        <div class="hand" id="hand"></div>
+
+        <span class="felt-label" id="betLabel">Aposte num atributo contra a banca</span>
+        <div class="bets" id="bets"></div>
+
+        <div id="gameResult" class="hidden"></div>
+        <button type="button" id="newGameBtn" class="felt-cta hidden">Nova rodada</button>
       </div>
-      <div class="m3-card" style="background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);border-color:transparent;">
-        <div class="m3-card-title" style="color:var(--md-sys-color-on-error-container);">Carta do Computador</div>
-        <div id="computerCard"></div>
-      </div>
-      <div id="gameMessage" style="text-align:center;font-size:var(--md-type-title-large);font-weight:800;margin:12px 0;min-height:32px;"></div>
-      <div id="gameExplain" class="info-panel hidden"></div>
-      <button id="newGameBtn" class="btn-filled btn-full" style="scroll-margin-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);">▶ Nova Rodada</button>
     </div>
 
     <!-- ===== ABA ESPALHAMENTO ===== -->
@@ -2091,7 +2183,7 @@ const MODULES = [
       ops:['Sim, mais detalhe é sempre melhor','Não: há trocas entre detalhe, área coberta, revisita e custo','Só para culturas perenes','Depende apenas do preço da imagem'], esperado:1,
       observar:'Jogue pelo menos 5 rodadas. Compare WorldView-3 ou PlanetScope com MODIS e Landsat: o que cada um ganha e o que perde?',
       resultado:'Sensores de pixel pequeno costumam cobrir faixas estreitas do terreno e ser comerciais. Sensores de pixel grande, como o MODIS (250 m), revisitam diariamente áreas enormes. A escolha depende da pergunta: detectar falhas de plantio pede pixel de poucos metros; acompanhar a safra de um estado pede revisita frequente e área ampla.' },
-    passos:['Jogue pelo menos 5 rodadas.','Depois de cada rodada, leia o que significa o atributo escolhido.','Anote um satélite bom para detalhe e outro bom para frequência.'],
+    passos:['Jogue pelo menos 5 rodadas.','Antes de apostar, compare as três cartas da sua mão no atributo que pretende escolher.','Depois de cada rodada, leia a explicação e a dica de estratégia.','Anote um satélite bom para detalhe e outro bom para frequência.'],
     q:{ texto:'Para acompanhar semanalmente uma lavoura de feijão de ciclo de 90 dias, qual característica do sensor é a mais crítica?',
         ops:['Ano de lançamento','Resolução temporal (revisita)','Número de bandas termais','Tamanho do satélite'], certa:1,
         dica:'O que importa é ter imagens com frequência durante um ciclo curto.',
@@ -2714,107 +2806,156 @@ clearPointsBtn.addEventListener('click', () => {
 // ================================================================
 //  JOGO
 // ================================================================
-let playerCard, computerCard;
-const playerCardDiv   = document.getElementById('playerCard');
-const computerCardDiv = document.getElementById('computerCard');
-const attrBtnsDiv     = document.getElementById('attributeButtons');
-const gameMessage     = document.getElementById('gameMessage');
-const newGameBtn      = document.getElementById('newGameBtn');
-
-// Placar
-let scoreP = 0, scoreC = 0, scoreTies = 0, round = 1;
-
-function updateScoreboard() {
-    document.getElementById('scorePlayer').textContent = scoreP;
-    document.getElementById('scoreComp').textContent   = scoreC;
-    document.getElementById('scoreRound').textContent  = round;
-    document.getElementById('scoreTies').textContent   = scoreTies + ' empate' + (scoreTies !== 1 ? 's' : '');
-    // Progress bar: proportion of player wins vs total decided rounds
-    const decided = scoreP + scoreC;
-    const pct = decided === 0 ? 50 : Math.round((scoreP / decided) * 100);
-    document.getElementById('scoreBarPlayer').style.width = pct + '%';
-}
-
-function resetScore() {
-    scoreP = 0; scoreC = 0; scoreTies = 0; round = 1;
-    updateScoreboard();
-    newGame();
-    snack('🔄 Placar zerado!');
-}
-
-window.resetScore = resetScore;
-
-function renderCard(card, el, showAttr) {
-    const attrs = [
-        { key:'resolucao', label:'Resolução espacial', unit:'m', better:'lower' },
-        { key:'bandas',    label:'Nº de bandas',       unit:'',  better:'higher' },
-        { key:'revisit',   label:'Revisita',            unit:'d', better:'lower' },
-        { key:'ano',       label:'Ano de lançamento',  unit:'',  better:'higher' },
-    ];
-    el.innerHTML = `<div style="font-size:var(--md-type-title-medium);font-weight:700;margin-bottom:8px;">${card.nome}</div>` +
-        attrs.map(a => `<div style="display:flex;justify-content:space-between;font-size:var(--md-type-body-small);padding:4px 0;border-bottom:1px solid var(--sl-divider);">
-            <span>${a.label}</span><strong>${card[a.key]}${a.unit}</strong>
-        </div>`).join('');
-}
-
-function newGame() {
-    const deck = [...cards];
-    const pi = Math.floor(Math.random()*deck.length);
-    playerCard = deck[pi]; deck.splice(pi,1);
-    computerCard = deck[Math.floor(Math.random()*deck.length)];
-    renderCard(playerCard, playerCardDiv, true);
-    renderCard(computerCard, computerCardDiv, false);
-    gameMessage.textContent = '';
-    document.getElementById('gameExplain')?.classList.add('hidden');
-    const attrs = [
-        { key:'resolucao', label:'Resolução', better:'lower' },
-        { key:'bandas',    label:'Bandas',    better:'higher' },
-        { key:'revisit',   label:'Revisita',  better:'lower' },
-        { key:'ano',       label:'Ano',       better:'higher' },
-    ];
-    attrBtnsDiv.innerHTML = '';
-    attrs.forEach(a => {
-        const btn = document.createElement('button');
-        btn.className = 'attr-btn';
-        btn.textContent = a.label + (a.better==='lower' ? ' ↓' : ' ↑');
-        btn.title = a.better==='lower' ? 'Vence o menor valor' : 'Vence o maior valor';
-        btn.onclick = () => {
-            const pv = playerCard[a.key], cv = computerCard[a.key];
-            const pw = a.better === 'lower' ? pv < cv : pv > cv;
-            const tie = pv === cv;
-            if (tie) {
-                scoreTies++;
-                gameMessage.textContent = `Empate! (${pv} × ${cv})`;
-                gameMessage.style.color = 'var(--md-sys-color-tertiary)';
-            } else if (pw) {
-                scoreP++;
-                gameMessage.textContent = `✅ Você venceu! ${pv} vs ${cv}`;
-                gameMessage.style.color = 'var(--sl-success)';
-            } else {
-                scoreC++;
-                gameMessage.textContent = `❌ Computador venceu! ${pv} vs ${cv}`;
-                gameMessage.style.color = 'var(--md-sys-color-error)';
-            }
-            round++;
-            updateScoreboard();
-            attrBtnsDiv.querySelectorAll('.attr-btn').forEach(b => b.disabled = true);
-            const ex = document.getElementById('gameExplain');
-            ex.innerHTML = '📚 ' + GAME_EXPLAIN[a.key];
-            ex.classList.remove('hidden');
-            PROG.game.rounds++; slSave();
-            setTimeout(() => newGameBtn.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
-        };
-        attrBtnsDiv.appendChild(btn);
-    });
-}
+// ================================================================
+//  JOGO — Trunfo dos Satélites · mesa de feltro, mão de três cartas
+// ================================================================
+const GAME_ATTRS = [
+    { key:'resolucao', label:'Resolução',  nome:'resolução espacial', curto:'Resol.',   unit:' m', better:'lower',  regra:'menor vence' },
+    { key:'bandas',    label:'Bandas',     nome:'número de bandas',   curto:'Bandas',   unit:'',   better:'higher', regra:'maior vence' },
+    { key:'revisit',   label:'Revisita',   nome:'revisita',           curto:'Revisita', unit:' d', better:'lower',  regra:'menor vence' },
+    { key:'ano',       label:'Lançamento', nome:'lançamento',         curto:'Lanç.',    unit:'',   better:'higher', regra:'mais recente vence' }
+];
+const SAT_SIGLA = {1:'L9', 2:'S2', 3:'MOD', 4:'PS', 5:'RE', 6:'SP7', 7:'C4A', 8:'RS2', 9:'WV3', 10:'PRI'};
+const SAT_ICON = (cor, tam) => `<svg width="${tam}" height="${tam}" viewBox="0 0 48 48" fill="none" stroke="${cor}" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="19" y="19" width="10" height="10" rx="1.5"/><rect x="4" y="20" width="12" height="8"/><rect x="32" y="20" width="12" height="8"/><path d="M16 24h3M29 24h3M24 29v6M19 39a7 7 0 0 0 10 0"/></svg>`;
 const GAME_EXPLAIN = {
     resolucao: '<strong>Resolução espacial</strong> (vence o menor valor): é o tamanho do pixel no terreno. Pixels menores revelam talhões pequenos, falhas de plantio e bordaduras, mas cada imagem cobre uma área menor.',
     bandas:    '<strong>Resolução espectral</strong> (vence o maior número): mais bandas permitem separar alvos parecidos. Bandas red edge e SWIR ajudam a avaliar nutrição e umidade das culturas.',
     revisit:   '<strong>Resolução temporal</strong> (vence a menor revisita): é o intervalo entre passagens. Em culturas de ciclo curto e regiões com muitas nuvens, revisitas frequentes aumentam as chances de imagens úteis.',
     ano:       '<strong>Ano de lançamento</strong> (vence o mais recente): sensores recentes tendem a ter melhor calibração e resolução radiométrica, mas séries antigas, como Landsat desde 1972, são valiosas para estudos de longo prazo.'
 };
+const GAME_AGRO = {
+    resolucao: v => `Na lavoura: um pixel de ${String(v).replace('.', ',')} m cobre ${(v*v/10000).toLocaleString('pt-BR', {maximumFractionDigits: 4})} ha; tudo o que estiver dentro dele vira um único valor.`,
+    bandas:    () => 'Na lavoura: com mais bandas, fica mais fácil separar soja de pastagem ou detectar deficiência nutricional antes dos sintomas visíveis.',
+    revisit:   v => `Na lavoura: com revisita de ${v} dias, um ciclo de 90 dias rende no máximo ${Math.floor(90 / v)} passagens, antes de descontar as nuvens.`,
+    ano:       () => 'Na lavoura: um sensor recente nem sempre é o melhor; para comparar safras de décadas, a série histórica pesa mais.'
+};
+
+const newGameBtn = document.getElementById('newGameBtn');
+let hand = [], bankCard = null, pickedIdx = null, lastPlay = null;
+let scoreP = 0, scoreC = 0, scoreTies = 0, round = 1;
+
+const satNome  = c => c.nome.replace(/\s*\(.*\)\s*/, '');
+const fmtAttr  = (a, v) => (a.key === 'ano' ? String(v) : String(v).replace('.', ',')) + a.unit;
+const beats    = (a, x, y) => a.better === 'lower' ? x < y : x > y;
+const fichas   = n => n + (n === 1 ? ' ficha' : ' fichas');
+const juntar   = xs => xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' e ' + xs[xs.length - 1];
+
+function satCardRows(c, marks){
+    return GAME_ATTRS.map(a => `<span class="sc-row ${marks[a.key] || ''}"><span>${a.curto}</span><b>${fmtAttr(a, c[a.key])}</b></span>`).join('');
+}
+function satAria(c){
+    return `${c.nome}: resolução ${fmtAttr(GAME_ATTRS[0], c.resolucao)}, ${c.bandas} bandas, revisita de ${c.revisit} dias, lançada em ${c.ano}`;
+}
+
+function updateScoreboard(){
+    document.getElementById('scorePlayer').textContent = fichas(scoreP);
+    document.getElementById('scoreComp').textContent   = fichas(scoreC);
+    document.getElementById('scoreTies').textContent   = scoreTies + (scoreTies === 1 ? ' empate' : ' empates');
+    document.getElementById('feltRound').textContent   = 'Mesa de sensores · rodada ' + round;
+}
+
+function renderGame(){
+    updateScoreboard();
+    const over = !!lastPlay;
+    // Banca: virada até a aposta
+    const bank = document.getElementById('bankSlot');
+    if (!over) {
+        bank.innerHTML = `<div class="card-back" role="img" aria-label="Carta da banca virada para baixo"><div><svg width="52" height="52" viewBox="0 0 48 48" fill="none" stroke="#E2B84B" stroke-width="1.8" aria-hidden="true"><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-25 24 24)"/><circle cx="24" cy="24" r="6"/><circle cx="40" cy="15" r="2.5" fill="#E2B84B"/></svg></div></div>`;
+    } else {
+        const m = { [lastPlay.attr.key]: lastPlay.res === 'lose' ? 'win' : lastPlay.res === 'win' ? 'lose' : 'focus' };
+        bank.innerHTML = `<div class="sat-card bank-face" role="img" aria-label="Carta da banca: ${satAria(bankCard)}">
+            <span class="sc-top"><span class="sc-sigla">${SAT_SIGLA[bankCard.id] || ''}</span>${SAT_ICON('#8E2B2B', 30)}</span>
+            <span class="sc-name">${bankCard.nome}</span><span class="sc-rows">${satCardRows(bankCard, m)}</span></div>`;
+    }
+    // Mão do estudante
+    const handBox = document.getElementById('hand');
+    handBox.innerHTML = hand.map((c, i) => {
+        const sel = i === pickedIdx;
+        const m = (over && sel) ? { [lastPlay.attr.key]: lastPlay.res === 'win' ? 'win' : lastPlay.res === 'lose' ? 'lose' : 'focus' } : {};
+        return `<button type="button" class="sat-card hand-card${sel ? ' sel' : ''}" data-i="${i}" aria-pressed="${sel}" aria-label="${satAria(c)}" ${over ? 'disabled' : ''}>
+            <span class="sc-top"><span class="sc-sigla">${SAT_SIGLA[c.id] || ''}</span>${SAT_ICON('var(--card-accent)', 24)}</span>
+            <span class="sc-name">${satNome(c)}</span><span class="sc-rows">${satCardRows(c, m)}</span></button>`;
+    }).join('');
+    handBox.querySelectorAll('.hand-card').forEach(b => b.addEventListener('click', () => { if (lastPlay) return; pickedIdx = +b.dataset.i; renderGame(); }));
+    // Apostas
+    document.getElementById('handLabel').textContent = over ? 'Sua mão' : (pickedIdx == null ? 'Sua mão · escolha uma carta' : 'Sua mão · toque em outra carta para trocar');
+    document.getElementById('betLabel').textContent = over ? 'Aposta feita'
+        : pickedIdx == null ? 'Escolha uma carta para liberar as apostas'
+        : `Aposte com ${satNome(hand[pickedIdx])}: escolha o atributo`;
+    const bets = document.getElementById('bets');
+    bets.innerHTML = GAME_ATTRS.map(a => `<button type="button" class="bet${over && lastPlay.attr.key === a.key ? ' chosen' : ''}" data-k="${a.key}" ${(pickedIdx == null || over) ? 'disabled' : ''}><strong>${a.label}</strong><span>${a.regra}</span></button>`).join('');
+    bets.querySelectorAll('.bet').forEach(b => b.addEventListener('click', () => playAttr(b.dataset.k)));
+    // Resultado
+    const res = document.getElementById('gameResult');
+    res.classList.toggle('hidden', !over);
+    newGameBtn.classList.toggle('hidden', !over);
+    if (over) res.innerHTML = resultHTML();
+}
+
+function resultHTML(){
+    const { attr: a, res } = lastPlay, me = hand[pickedIdx];
+    const pv = fmtAttr(a, me[a.key]), cv = fmtAttr(a, bankCard[a.key]);
+    const titulo = res === 'win' ? 'Você venceu a rodada' : res === 'lose' ? 'A banca venceu a rodada' : 'Empate na rodada';
+    const chip = res === 'win'
+        ? '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#B8862B"/><circle cx="20" cy="20" r="15" fill="#F3D27A" stroke="#7A5512"/><circle cx="20" cy="20" r="9" fill="none" stroke="#7A5512" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#5A3A08">+1</text></svg>'
+        : res === 'lose'
+        ? '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#8E2B2B"/><circle cx="20" cy="20" r="15" fill="#C94545" stroke="#5A1414"/><circle cx="20" cy="20" r="9" fill="none" stroke="#F6EFD8" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#FFFFFF">+1</text></svg>'
+        : '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#A89A78"/><circle cx="20" cy="20" r="15" fill="#E9DCC0" stroke="#6B5E3E"/><path d="M13 17h14M13 23h14" stroke="#3A2E12" stroke-width="2.5" stroke-linecap="round"/></svg>';
+    const placar = res === 'win' ? 'A ficha vai para você.' : res === 'lose' ? 'A ficha vai para a banca.' : 'Ninguém leva ficha.';
+
+    // Estratégia: a melhor carta da mão para o atributo escolhido
+    let melhor = 0;
+    hand.forEach((c, i) => { if (beats(a, c[a.key], hand[melhor][a.key])) melhor = i; });
+    let tip;
+    if (hand[melhor][a.key] === me[a.key]) tip = `Você jogou a melhor carta da sua mão para ${a.nome}.`;
+    else {
+        const alt = hand[melhor], venceria = beats(a, alt[a.key], bankCard[a.key]);
+        tip = `Na sua mão, a melhor carta para ${a.nome} era <strong>${satNome(alt)}</strong> (${fmtAttr(a, alt[a.key])}). ${venceria ? 'Ela teria vencido a banca.' : 'Nem ela venceria a banca nesta rodada.'}`;
+    }
+    // Trocas: em que outros atributos a banca venceria esta mesma carta
+    const perde = GAME_ATTRS.filter(x => x.key !== a.key && beats(x, bankCard[x.key], me[x.key])).map(x => x.label.toLowerCase());
+    const troca = perde.length
+        ? `Com ${satNome(me)}, a banca venceria em ${juntar(perde)}. Toda escolha de sensor envolve trocas.`
+        : `Com ${satNome(me)}, você venceria a banca em todos os outros atributos também.`;
+
+    return `<div class="felt-banner ${res}" role="status">${chip}<div><strong>${titulo}</strong><span>${a.label}: ${pv} contra ${cv}. ${a.regra[0].toUpperCase() + a.regra.slice(1)}. ${placar}</span></div></div>
+      <div class="felt-box"><div>${GAME_EXPLAIN[a.key]}</div><div style="color:var(--felt-muted);">${GAME_AGRO[a.key](me[a.key])}</div></div>
+      <div class="felt-box tip"><div>${tip}</div><div>${troca}</div></div>`;
+}
+
+function playAttr(key){
+    if (pickedIdx == null || lastPlay) return;
+    const a = GAME_ATTRS.find(x => x.key === key), me = hand[pickedIdx];
+    const pv = me[key], cv = bankCard[key];
+    const res = pv === cv ? 'tie' : beats(a, pv, cv) ? 'win' : 'lose';
+    if (res === 'win') scoreP++; else if (res === 'lose') scoreC++; else scoreTies++;
+    lastPlay = { attr: a, res };
+    PROG.game.rounds++; slSave();
+    renderGame();
+    setTimeout(() => newGameBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+}
+
+function newGame(){
+    if (lastPlay) round++;
+    const deck = shuffled(cards);
+    hand = deck.slice(0, 3); bankCard = deck[3];
+    pickedIdx = null; lastPlay = null;
+    renderGame();
+    if (document.getElementById('game')?.classList.contains('active')) document.getElementById('felt').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function resetScore(){
+    scoreP = 0; scoreC = 0; scoreTies = 0; round = 1; lastPlay = null;
+    newGame();
+    snack('Placar zerado.');
+}
+function toggleGameRules(){
+    const box = document.getElementById('feltRules'), btn = document.getElementById('rulesBtn');
+    const show = box.classList.contains('hidden');
+    box.classList.toggle('hidden', !show); btn.setAttribute('aria-expanded', show);
+}
+window.resetScore = resetScore;
+window.toggleGameRules = toggleGameRules;
 newGameBtn.addEventListener('click', newGame);
-updateScoreboard();
 newGame();
 
 // ================================================================
