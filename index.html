@@ -1331,6 +1331,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 .sc-top { display: flex; align-items: center; justify-content: space-between; }
 .sc-sigla { font-family: 'Limelight', Georgia, serif; font-size: 16px; color: var(--card-accent); }
 .sc-name { font-size: 13px; font-weight: 800; line-height: 1.2; min-height: 2.4em; }
+.sc-name small { display: block; font-size: 12px; font-weight: 700; color: var(--card-accent); }
 .sc-rows { display: flex; flex-direction: column; gap: 1px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .sc-row { display: flex; justify-content: space-between; gap: 4px; padding: 2px 4px; margin: 0 -4px; border-radius: 5px; }
 .sc-row b { font-weight: 800; white-space: nowrap; }
@@ -1381,6 +1382,30 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   scroll-margin-bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px);
 }
 :root[data-theme="contraste"] .felt-cta { background: #000; color: #FFF; box-shadow: none; }
+/* Trunfo · eventos, selos e carta tripla */
+.ev-card { position: relative; border-radius: 14px; padding: 12px 14px 12px 56px; background: #FBF1D6; color: #2B2108; border: 2px solid var(--felt-gold); box-shadow: 0 6px 14px rgba(0,0,0,0.3); }
+.ev-card svg { position: absolute; left: 12px; top: 12px; }
+.ev-kicker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; font-weight: 800; color: #6B4A12; }
+.ev-pill { padding: 2px 8px; border-radius: 10px; background: #2B2108; color: #FBF1D6; font-weight: 800; }
+.ev-title { font-family: 'Limelight', Georgia, serif; font-size: 19px; line-height: 1.15; margin: 2px 0 3px; }
+.ev-text { font-size: 14px; line-height: 1.45; }
+:root[data-theme="contraste"] .ev-card { background: #FFF; color: #000; border: 3px solid #000; box-shadow: none; }
+:root[data-theme="contraste"] .ev-kicker { color: #000; }
+.sc-meta { font-size: 12px; color: #5B5240; line-height: 1.25; }
+.sc-tags { display: flex; flex-wrap: wrap; gap: 3px; min-height: 18px; }
+.sc-tag { font-size: 12px; line-height: 1; padding: 3px 5px; border-radius: 5px; background: #E9DCC0; color: #3A2E12; font-weight: 700; }
+.sc-tag.cat { background: #2B2108; color: #FBF1D6; }
+:root[data-theme="contraste"] .sc-meta { color: #000; }
+:root[data-theme="contraste"] .sc-tag { background: #FFF; color: #000; border: 1.5px solid #000; }
+:root[data-theme="contraste"] .sc-tag.cat { background: #000; color: #FFF; }
+.mode-sel { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 14px; background: rgba(0,0,0,0.25); border: 1px dashed var(--felt-gold); }
+.mode-sel > span { font-size: 13px; font-weight: 700; color: var(--felt-ink); text-align: center; }
+.mode-sel > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.mode-sel button { min-height: 44px; border-radius: 22px; border: 1.5px solid var(--felt-gold); background: transparent; color: var(--felt-ink); font: 700 13px 'Nunito', sans-serif; cursor: pointer; }
+.mode-sel button[aria-pressed="true"] { background: var(--felt-gold); color: #1E1A12; }
+:root[data-theme="contraste"] .mode-sel { background: #FFF; border: 2px solid #000; }
+:root[data-theme="contraste"] .mode-sel button[aria-pressed="true"] { background: #000; color: #FFF; }
+
 @media (max-width: 360px) { .sc-name { font-size: 12px; } .hand { gap: 6px; } .felt-tile { padding: 8px; gap: 6px; } .felt-tile svg { width: 30px; } .felt-tile strong { font-size: 16px; white-space: nowrap; } }
 
 
@@ -1682,8 +1707,9 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <div class="felt-rules hidden" id="feltRules">
           Você recebe <strong>três satélites</strong>. Escolha uma carta da sua mão e um atributo; a banca então revela a carta dela.
-          Vence o melhor valor: em <strong>resolução</strong> e <strong>revisita</strong>, o menor; em <strong>bandas</strong> e <strong>lançamento</strong>, o maior.
-          Cada vitória vale uma ficha. Antes de apostar, compare as três cartas: a melhor jogada depende do atributo.
+          Vence o melhor valor: em <strong>resolução</strong> e <strong>revisita</strong>, o menor; em <strong>bandas</strong> e <strong>faixa imageada</strong>, o maior. Cada vitória vale uma ficha.<br><br>
+          Em algumas rodadas aparece uma <strong>carta de evento</strong> que muda a regra: ela pode decidir a rodada (por exemplo, só o radar enxerga com nuvens) ou fazer um atributo valer duas fichas.<br><br>
+          Cartas especiais: <strong>lendárias</strong> são satélites históricos já encerrados; o <strong>coringa</strong> é um drone; a <strong>tripla</strong> (Resourcesat-2A) tem três câmeras, e você escolhe qual usar.
         </div>
 
         <div class="felt-score">
@@ -1691,6 +1717,8 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <div class="felt-tile"><svg width="38" height="32" viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="22" rx="16" ry="5" fill="#8E2B2B"/><ellipse cx="20" cy="20" rx="16" ry="5" fill="#C94545" stroke="#5A1414"/><ellipse cx="20" cy="20" rx="9" ry="2.6" fill="none" stroke="#F6EFD8" stroke-dasharray="3 2"/></svg><div><span>Banca</span><strong id="scoreComp">0 fichas</strong></div></div>
         </div>
         <div class="felt-meta"><span id="scoreTies">0 empates</span><button type="button" class="felt-link" onclick="resetScore()">Zerar placar</button></div>
+
+        <div id="gameEvent" class="hidden"></div>
 
         <div class="felt-bank">
           <svg class="felt-arc" viewBox="0 0 330 56" aria-hidden="true">
@@ -1704,6 +1732,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
         <span class="felt-label" id="handLabel">Sua mão · escolha uma carta</span>
         <div class="hand" id="hand"></div>
+        <div id="modeSel" class="mode-sel hidden" role="group" aria-label="Câmera da carta tripla"></div>
 
         <span class="felt-label" id="betLabel">Aposte num atributo contra a banca</span>
         <div class="bets" id="bets"></div>
@@ -2292,7 +2321,7 @@ const MODULES = [
     obj:'Comparar sensores pelas resoluções espacial, espectral e temporal e escolher o mais adequado para cada aplicação.',
     poe:{ prever:'Para a agricultura, um satélite com pixel menor é sempre a melhor escolha?',
       ops:['Sim, mais detalhe é sempre melhor','Não: há trocas entre detalhe, área coberta, revisita e custo','Só para culturas perenes','Depende apenas do preço da imagem'], esperado:1,
-      observar:'Jogue pelo menos 5 rodadas. Compare WorldView-3 ou PlanetScope com MODIS e Landsat: o que cada um ganha e o que perde?',
+      observar:'Jogue pelo menos 5 rodadas. Compare WorldView-3 ou PlanetScope com MODIS, VIIRS e Landsat: o que cada um ganha e o que perde? Repare como as cartas de evento mudam qual satélite é o melhor.',
       resultado:'Sensores de pixel pequeno costumam cobrir faixas estreitas do terreno e ser comerciais. Sensores de pixel grande, como o MODIS (250 m), revisitam diariamente áreas enormes. A escolha depende da pergunta: detectar falhas de plantio pede pixel de poucos metros; acompanhar a safra de um estado pede revisita frequente e área ampla.' },
     passos:['Jogue pelo menos 5 rodadas.','Antes de apostar, compare as três cartas da sua mão no atributo que pretende escolher.','Depois de cada rodada, leia a explicação e a dica de estratégia.','Anote um satélite bom para detalhe e outro bom para frequência.'],
     q:{ texto:'Para acompanhar semanalmente uma lavoura de feijão de ciclo de 90 dias, qual característica do sensor é a mais crítica?',
@@ -2716,18 +2745,34 @@ function snack(msg) {
 // ================================================================
 //  DADOS
 // ================================================================
-const cards = [
-    { id:  1, nome: 'Landsat 9 (OLI)',       resolucao: 30,    bandas: 11,  revisit: 16,  ano: 2021 },
-    { id:  2, nome: 'Sentinel-2 (MSI)',       resolucao: 10,    bandas: 13,  revisit: 5,   ano: 2017 },
-    { id:  3, nome: 'MODIS (Terra/Aqua)',     resolucao: 250,   bandas: 36,  revisit: 1,   ano: 2002 },
-    { id:  4, nome: 'PlanetScope',            resolucao: 3,     bandas: 8,   revisit: 1,   ano: 2013 },
-    { id:  5, nome: 'RapidEye',               resolucao: 5,     bandas: 5,   revisit: 1,   ano: 2008 },
-    { id:  6, nome: 'SPOT-7',                 resolucao: 6,     bandas: 4,   revisit: 2,   ano: 2014 },
-    { id:  7, nome: 'CBERS-4A (WPM)',         resolucao: 8,     bandas: 5,   revisit: 31,  ano: 2019 },
-    { id:  8, nome: 'Resourcesat-2',          resolucao: 5.8,   bandas: 4,   revisit: 24,  ano: 2011 },
-    { id:  9, nome: 'WorldView-3',            resolucao: 1.24,  bandas: 16,  revisit: 1,   ano: 2014 },
-    { id: 10, nome: 'PRISMA',                 resolucao: 30,    bandas: 66,  revisit: 7,   ano: 2019 },
-];
+// Baralho do Trunfo: gerado da planilha Trunfo_satelites_baralho.xlsx (revisão nov/2026)
+const cards = [{"id": 1,"nome": "Landsat 9","sensor": "OLI-2 / TIRS-2","sigla": "L9","tipo": "Óptico + termal","cat": "Normal","status": "Em operação","ano": 2021,"resolucao": 30,"bandas": 11,"revisit": 16,"faixa": 185,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito","nota": "Mesmo projeto do Landsat 8; juntos revisitam a cada 8 dias."},
+  {"id": 2,"nome": "Landsat 8","sensor": "OLI / TIRS","sigla": "L8","tipo": "Óptico + termal","cat": "Normal","status": "Em operação","ano": 2013,"resolucao": 30,"bandas": 11,"revisit": 16,"faixa": 185,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito","nota": "Faz par com o Landsat 9: exemplo de constelação de dois satélites."},
+  {"id": 3,"nome": "Landsat 5","sensor": "TM","sigla": "L5","tipo": "Óptico + termal","cat": "Lendária","status": "Encerrado (1984–2013)","ano": 1984,"resolucao": 30,"bandas": 7,"revisit": 16,"faixa": 185,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito (arquivo)","nota": "Quase 29 anos de imagens: base das séries históricas de expansão agrícola no Cerrado."},
+  {"id": 4,"nome": "Sentinel-2","sensor": "MSI (2A, 2B, 2C)","sigla": "S2","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2015,"resolucao": 10,"bandas": 13,"revisit": 5,"faixa": 290,"redEdge": true,"swir": true,"termal": false,"radar": false,"acesso": "Gratuito","nota": "Três bandas red edge; padrão para monitoramento agrícola gratuito."},
+  {"id": 5,"nome": "Sentinel-1","sensor": "SAR banda C (1C, 1D)","sigla": "S1","tipo": "Radar","cat": "Normal","status": "Em operação","ano": 2014,"resolucao": 10,"bandas": 1,"revisit": 6,"faixa": 250,"redEdge": false,"swir": false,"termal": false,"radar": true,"acesso": "Gratuito","nota": "Fonte própria de energia: imageia com nuvens e à noite. 1D operacional desde maio/2026."},
+  {"id": 6,"nome": "NISAR","sensor": "SAR bandas L e S","sigla": "NIS","tipo": "Radar","cat": "Normal","status": "Em operação","ano": 2025,"resolucao": 10,"bandas": 2,"revisit": 12,"faixa": 242,"redEdge": false,"swir": false,"termal": false,"radar": true,"acesso": "Gratuito","nota": "A banda L penetra no dossel: estima biomassa e umidade do solo."},
+  {"id": 7,"nome": "MODIS","sensor": "Terra / Aqua","sigla": "MOD","tipo": "Óptico + termal","cat": "Normal","status": "Em encerramento (fim previsto 2026–2027)","ano": 1999,"resolucao": 250,"bandas": 36,"revisit": 1,"faixa": 2330,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito","nota": "Mais de 25 anos de NDVI diário; os produtos migram para o VIIRS."},
+  {"id": 8,"nome": "VIIRS","sensor": "Suomi NPP / NOAA-20 / NOAA-21","sigla": "VII","tipo": "Óptico + termal","cat": "Normal","status": "Em operação","ano": 2011,"resolucao": 375,"bandas": 22,"revisit": 0.5,"faixa": 3040,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito","nota": "Sucessor do MODIS e base dos focos de queimadas."},
+  {"id": 9,"nome": "GOES-Leste","sensor": "ABI (série GOES-R)","sigla": "GOE","tipo": "Geoestacionário","cat": "Normal","status": "Em operação","ano": 2016,"resolucao": 500,"bandas": 16,"revisit": 0.007,"faixa": 12000,"redEdge": false,"swir": true,"termal": true,"radar": false,"acesso": "Gratuito","nota": "Fica parado sobre o Equador: revisita imbatível, detalhe mínimo.","faixaCurta": "disco"},
+  {"id": 10,"nome": "Sentinel-3","sensor": "OLCI","sigla": "S3","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2016,"resolucao": 300,"bandas": 21,"revisit": 2,"faixa": 1270,"redEdge": true,"swir": false,"termal": false,"radar": false,"acesso": "Gratuito","nota": "Muitas bandas estreitas com pixel grande: troca espectral × espacial."},
+  {"id": 11,"nome": "PlanetScope","sensor": "SuperDove (PSB.SD)","sigla": "PS","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2019,"resolucao": 3,"bandas": 8,"revisit": 1,"faixa": 32.5,"redEdge": true,"swir": false,"termal": false,"radar": false,"acesso": "Comercial","nota": "Centenas de CubeSats do tamanho de um pão de forma: revisita pela quantidade."},
+  {"id": 12,"nome": "Dove Classic","sensor": "PS2","sigla": "DC","tipo": "Óptico","cat": "Lendária","status": "Aposentada","ano": 2013,"resolucao": 3,"bandas": 4,"revisit": 1,"faixa": 24,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Comercial (arquivo)","nota": "Primeira geração Dove: compare com a SuperDove para ver a evolução espectral."},
+  {"id": 13,"nome": "RapidEye","sensor": "REIS (5 satélites)","sigla": "RE","tipo": "Óptico","cat": "Lendária","status": "Encerrado (2008–2020)","ano": 2008,"resolucao": 5,"bandas": 5,"revisit": 1,"faixa": 77,"redEdge": true,"swir": false,"termal": false,"radar": false,"acesso": "Comercial (arquivo)","nota": "Primeira constelação comercial com banda red edge."},
+  {"id": 14,"nome": "SPOT-6","sensor": "NAOMI","sigla": "SP6","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2012,"resolucao": 6,"bandas": 5,"revisit": 3,"faixa": 60,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Comercial","nota": "O gêmeo SPOT-7 parou em 2023; antes, o par revisitava diariamente."},
+  {"id": 15,"nome": "Pléiades Neo","sensor": "Pléiades Neo 3 e 4","sigla": "PNE","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2021,"resolucao": 1.2,"bandas": 7,"revisit": 1,"faixa": 14,"redEdge": true,"swir": false,"termal": false,"radar": false,"acesso": "Comercial","nota": "Altíssimo detalhe em faixa estreita: ideal para talhões, não para estados."},
+  {"id": 16,"nome": "WorldView-3","sensor": "WV110 + SWIR","sigla": "WV3","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2014,"resolucao": 1.24,"bandas": 17,"revisit": 1,"faixa": 13.1,"redEdge": true,"swir": true,"termal": false,"radar": false,"acesso": "Comercial","nota": "Único de alta resolução com 8 bandas SWIR."},
+  {"id": 17,"nome": "CBERS-4A","sensor": "WPM","sigla": "C4A","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2019,"resolucao": 8,"bandas": 5,"revisit": 31,"faixa": 92,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Gratuito","nota": "Imagens gratuitas no catálogo do INPE."},
+  {"id": 18,"nome": "CBERS-4","sensor": "MUX","sigla": "C4","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2014,"resolucao": 20,"bandas": 4,"revisit": 26,"faixa": 120,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Gratuito","nota": "Em operação desde 2014; o CBERS-6 está previsto para 2028."},
+  {"id": 19,"nome": "Amazonia-1","sensor": "WFI","sigla": "AM1","tipo": "Óptico","cat": "Normal","status": "Em operação","ano": 2021,"resolucao": 64,"bandas": 4,"revisit": 5,"faixa": 850,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Gratuito","nota": "Primeiro satélite totalmente brasileiro. O Amazonia-1B tem lançamento previsto para 2027."},
+  {"id": 20,"nome": "Resourcesat-2A","sensor": "LISS-4 / LISS-3 / AWiFS","sigla": "R2A","tipo": "Óptico","cat": "Tripla","status": "Em operação","ano": 2016,"resolucao": 23.5,"bandas": 4,"revisit": 24,"faixa": 141,"redEdge": false,"swir": true,"termal": false,"radar": false,"acesso": "Gratuito (LISS-3/AWiFS) · comercial (LISS-4)","nota": "Três câmeras no mesmo satélite: o jogador escolhe qual usar.","modos": [{"cam": "LISS-4","resolucao": 5.8,"bandas": 3,"revisit": 5,"faixa": 70,"swir": false,"acesso": "Comercial"},
+  {"cam": "LISS-3","resolucao": 23.5,"bandas": 4,"revisit": 24,"faixa": 141,"swir": true,"acesso": "Gratuito"},
+  {"cam": "AWiFS","resolucao": 56,"bandas": 4,"revisit": 5,"faixa": 740,"swir": true,"acesso": "Gratuito"}]},
+  {"id": 21,"nome": "IRS-1A","sensor": "LISS-I","sigla": "IRS","tipo": "Óptico","cat": "Lendária","status": "Encerrado (1988–1996)","ano": 1988,"resolucao": 72.5,"bandas": 4,"revisit": 22,"faixa": 148,"redEdge": false,"swir": false,"termal": false,"radar": false,"acesso": "Arquivo histórico","nota": "Primeiro satélite da série indiana IRS."},
+  {"id": 22,"nome": "PRISMA","sensor": "Hiperespectral + pan","sigla": "PRI","tipo": "Hiperespectral","cat": "Normal","status": "Em operação","ano": 2019,"resolucao": 30,"bandas": 240,"revisit": 29,"faixa": 30,"redEdge": false,"swir": true,"termal": false,"radar": false,"acesso": "Gratuito (pesquisa, com cadastro)","nota": "Espectro quase contínuo: identifica minerais do solo e pigmentos."},
+  {"id": 23,"nome": "EnMAP","sensor": "HSI","sigla": "ENM","tipo": "Hiperespectral","cat": "Normal","status": "Em operação","ano": 2022,"resolucao": 30,"bandas": 224,"revisit": 27,"faixa": 30,"redEdge": false,"swir": true,"termal": false,"radar": false,"acesso": "Gratuito (pesquisa, com cadastro)","nota": "Concorre com o PRISMA; ambos têm faixa de só 30 km."},
+  {"id": 24,"nome": "Drone multiespectral","sensor": "Câmera 5 bandas (RPA)","sigla": "RPA","tipo": "Drone","cat": "Coringa","status": "Sob demanda","ano": null,"resolucao": 0.05,"bandas": 5,"revisit": 1,"faixa": 1,"redEdge": true,"swir": false,"termal": false,"radar": false,"acesso": "Próprio / serviço","nota": "Não é satélite: detalhe máximo, área mínima. É a escala da agricultura de precisão.","revCurta": "sob dem.","faixaCurta": "~1 km"}];
+const GAME_EVENTS = [{"id": "chuva", "titulo": "Safra chuvosa", "tipo": "forca", "flag": "radar", "texto": "Nuvens cobrem a lavoura quase todo dia. Se só uma carta for radar, ela vence em qualquer atributo.", "porque": "Micro-ondas atravessam nuvens; sensores ópticos dependem de céu limpo."}, {"id": "nutri", "titulo": "Diagnóstico nutricional", "tipo": "forca", "flag": "redEdge", "texto": "A cooperativa quer detectar falta de nitrogênio. Se só uma carta tiver red edge, ela vence.", "porque": "A transição red edge se desloca sob estresse nutricional, antes de o sintoma aparecer."}, {"id": "hidrico", "titulo": "Estresse hídrico na soja", "tipo": "forca", "flag": "swir_termal", "texto": "Veranico em janeiro. Se só uma carta tiver SWIR ou termal, ela vence.", "porque": "O SWIR responde à água na folha; o termal, à temperatura do dossel."}, {"id": "orcamento", "titulo": "Orçamento zero", "tipo": "forca", "flag": "gratuito", "texto": "O projeto não tem verba para imagens. Se só uma carta for gratuita, ela vence.", "porque": "Dados abertos (Landsat, Sentinel, CBERS, Amazonia) viabilizam pesquisa e extensão rural."}, {"id": "queimadas", "titulo": "Temporada de queimadas", "tipo": "dobro", "attr": "revisit", "texto": "Agosto e setembro no Tocantins. Vitória em revisita vale 2 fichas.", "porque": "Focos de fogo duram horas: só a revisita frequente os detecta a tempo."}, {"id": "falha", "titulo": "Falha de plantio no talhão", "tipo": "dobro", "attr": "resolucao", "texto": "Linhas falhadas de 1 a 2 m. Vitória em resolução vale 2 fichas.", "porque": "Só pixels menores que a falha a revelam; num pixel grande ela se mistura."}, {"id": "estado", "titulo": "Estimativa da safra estadual", "tipo": "dobro", "attr": "faixa", "texto": "Mapear a soja de todo o Tocantins. Vitória em faixa imageada vale 2 fichas.", "porque": "Faixas largas cobrem o estado em poucas passagens."}, {"id": "solo", "titulo": "Mapeamento de solos", "tipo": "dobro", "attr": "bandas", "texto": "Identificar minerais e matéria orgânica. Vitória em bandas vale 2 fichas.", "porque": "Bandas estreitas e contínuas revelam feições de absorção de minerais."}];
 
 const quantities = [
     { nome: 'Número Digital (DN)', definicao: 'Valor bruto registrado pelo sensor, sem correção.', unidade: 'adimensional (0-255, 0-1023...)', obtencao: 'Leitura direta do pixel.', aplicacao: 'Base para conversões, visualização.' },
@@ -2920,44 +2965,78 @@ clearPointsBtn.addEventListener('click', () => {
 //  JOGO
 // ================================================================
 // ================================================================
-//  JOGO — Trunfo dos Satélites · mesa de feltro, mão de três cartas
+//  JOGO — Trunfo dos Satélites · mesa de feltro, mão de três cartas,
+//  cartas de evento, lendárias, coringa e carta tripla
 // ================================================================
 const GAME_ATTRS = [
-    { key:'resolucao', label:'Resolução',  nome:'resolução espacial', curto:'Resol.',   unit:' m', better:'lower',  regra:'menor vence' },
-    { key:'bandas',    label:'Bandas',     nome:'número de bandas',   curto:'Bandas',   unit:'',   better:'higher', regra:'maior vence' },
-    { key:'revisit',   label:'Revisita',   nome:'revisita',           curto:'Revisita', unit:' d', better:'lower',  regra:'menor vence' },
-    { key:'ano',       label:'Lançamento', nome:'lançamento',         curto:'Lanç.',    unit:'',   better:'higher', regra:'mais recente vence' }
+    { key:'resolucao', label:'Resolução', nome:'resolução espacial', curto:'Resol.',   better:'lower',  regra:'menor vence' },
+    { key:'bandas',    label:'Bandas',    nome:'número de bandas',   curto:'Bandas',   better:'higher', regra:'maior vence' },
+    { key:'revisit',   label:'Revisita',  nome:'revisita',           curto:'Revisita', better:'lower',  regra:'menor vence' },
+    { key:'faixa',     label:'Faixa',     nome:'faixa imageada',     curto:'Faixa',    better:'higher', regra:'maior vence' }
 ];
-const SAT_SIGLA = {1:'L9', 2:'S2', 3:'MOD', 4:'PS', 5:'RE', 6:'SP7', 7:'C4A', 8:'RS2', 9:'WV3', 10:'PRI'};
 const SAT_ICON = (cor, tam) => `<svg width="${tam}" height="${tam}" viewBox="0 0 48 48" fill="none" stroke="${cor}" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="19" y="19" width="10" height="10" rx="1.5"/><rect x="4" y="20" width="12" height="8"/><rect x="32" y="20" width="12" height="8"/><path d="M16 24h3M29 24h3M24 29v6M19 39a7 7 0 0 0 10 0"/></svg>`;
 const GAME_EXPLAIN = {
     resolucao: '<strong>Resolução espacial</strong> (vence o menor valor): é o tamanho do pixel no terreno. Pixels menores revelam talhões pequenos, falhas de plantio e bordaduras, mas cada imagem cobre uma área menor.',
-    bandas:    '<strong>Resolução espectral</strong> (vence o maior número): mais bandas permitem separar alvos parecidos. Bandas red edge e SWIR ajudam a avaliar nutrição e umidade das culturas.',
+    bandas:    '<strong>Resolução espectral</strong> (vence o maior número): mais bandas permitem separar alvos parecidos. Bandas red edge e SWIR ajudam a avaliar nutrição e umidade das culturas; sensores hiperespectrais têm centenas de bandas estreitas.',
     revisit:   '<strong>Resolução temporal</strong> (vence a menor revisita): é o intervalo entre passagens. Em culturas de ciclo curto e regiões com muitas nuvens, revisitas frequentes aumentam as chances de imagens úteis.',
-    ano:       '<strong>Ano de lançamento</strong> (vence o mais recente): sensores recentes tendem a ter melhor calibração e resolução radiométrica, mas séries antigas, como Landsat desde 1972, são valiosas para estudos de longo prazo.'
+    faixa:     '<strong>Faixa imageada</strong> (vence a maior): é a largura do terreno coberta numa passagem. Faixas largas cobrem regiões inteiras em poucos dias; faixas estreitas costumam acompanhar pixels pequenos.'
 };
+const fmtBR = (v, d) => v.toLocaleString('pt-BR', { maximumFractionDigits: d == null ? 2 : d });
 const GAME_AGRO = {
-    resolucao: v => `Na lavoura: um pixel de ${String(v).replace('.', ',')} m cobre ${(v*v/10000).toLocaleString('pt-BR', {maximumFractionDigits: 4})} ha; tudo o que estiver dentro dele vira um único valor.`,
-    bandas:    () => 'Na lavoura: com mais bandas, fica mais fácil separar soja de pastagem ou detectar deficiência nutricional antes dos sintomas visíveis.',
-    revisit:   v => `Na lavoura: com revisita de ${v} dias, um ciclo de 90 dias rende no máximo ${Math.floor(90 / v)} passagens, antes de descontar as nuvens.`,
-    ano:       () => 'Na lavoura: um sensor recente nem sempre é o melhor; para comparar safras de décadas, a série histórica pesa mais.'
+    resolucao: v => v < 10
+        ? `Na lavoura: um pixel de ${fmtRes(v)} cobre ${fmtBR(v * v, 4)} m²; dá para ver linhas de plantio e falhas.`
+        : `Na lavoura: um pixel de ${fmtRes(v)} cobre ${fmtBR(v * v / 10000, 4)} ha; tudo o que estiver dentro dele vira um único valor.`,
+    bandas:    v => v >= 100 ? 'Na lavoura: com centenas de bandas, dá para identificar minerais do solo e pigmentos das folhas.'
+                            : 'Na lavoura: com mais bandas, fica mais fácil separar soja de pastagem ou detectar deficiência nutricional antes dos sintomas visíveis.',
+    revisit:   v => `Na lavoura: com revisita de ${fmtRev(v)}, um ciclo de 90 dias rende no máximo ${fmtBR(Math.floor(90 / v), 0)} passagens, antes de descontar as nuvens.`,
+    faixa:     v => `Na lavoura: o Tocantins tem cerca de 550 km de leste a oeste; com faixa de ${fmtBR(v, 1)} km, são precisas pelo menos ${fmtBR(Math.ceil(550 / v), 0)} passagem(ns) lado a lado.`
 };
+const CAT_LABEL = { 'Lendária':'Lendária', 'Coringa':'Coringa', 'Tripla':'Tripla' };
 
 const newGameBtn = document.getElementById('newGameBtn');
-let hand = [], bankCard = null, pickedIdx = null, lastPlay = null;
+let hand = [], bankCard = null, pickedIdx = null, lastPlay = null, gameEvent = null, lastEventId = null;
 let scoreP = 0, scoreC = 0, scoreTies = 0, round = 1;
 
-const satNome  = c => c.nome.replace(/\s*\(.*\)\s*/, '');
-const fmtAttr  = (a, v) => (a.key === 'ano' ? String(v) : String(v).replace('.', ',')) + a.unit;
-const beats    = (a, x, y) => a.better === 'lower' ? x < y : x > y;
-const fichas   = n => n + (n === 1 ? ' ficha' : ' fichas');
-const juntar   = xs => xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' e ' + xs[xs.length - 1];
-
+function fmtRes(v){ return v < 1 ? fmtBR(v * 100, 0) + ' cm' : v >= 1000 ? fmtBR(v / 1000, 1) + ' km' : fmtBR(v, 2) + ' m'; }
+function fmtRev(v){ return v < 1 / 24 ? fmtBR(v * 1440, 0) + ' min' : v < 1 ? fmtBR(v * 24, 0) + ' h' : fmtBR(v, 1) + ' d'; }
+function eff(c){ return c.modos ? Object.assign({}, c, c.modos[c.modo], { camera: c.modos[c.modo].cam }) : c; }
+function attrTxt(c, a){
+    if (a.key === 'resolucao') return fmtRes(c.resolucao);
+    if (a.key === 'revisit')   return c.revCurta || fmtRev(c.revisit);
+    if (a.key === 'faixa')     return c.faixaCurta || fmtBR(c.faixa, 1) + ' km';
+    return String(c.bandas);
+}
+const beats   = (a, x, y) => a.better === 'lower' ? x < y : x > y;
+const fichas  = n => n + (n === 1 ? ' ficha' : ' fichas');
+const juntar  = xs => xs.length < 2 ? xs.join('') : xs.slice(0, -1).join(', ') + ' e ' + xs[xs.length - 1];
+const nomeC   = c => c.camera ? `${c.nome} · ${c.camera}` : c.nome;
+function hasFlag(c, f){
+    if (f === 'swir_termal') return !!(c.swir || c.termal);
+    if (f === 'gratuito') return /^Gratuito/.test(c.acesso);
+    return !!c[f];
+}
+function tagsHTML(c){
+    const t = [];
+    if (CAT_LABEL[c.cat]) t.push(`<span class="sc-tag cat">${CAT_LABEL[c.cat]}</span>`);
+    if (c.radar) t.push('<span class="sc-tag">radar</span>');
+    if (c.redEdge) t.push('<span class="sc-tag">red edge</span>');
+    if (c.swir) t.push('<span class="sc-tag">SWIR</span>');
+    if (c.termal) t.push('<span class="sc-tag">termal</span>');
+    if (/^Gratuito/.test(c.acesso)) t.push('<span class="sc-tag">grátis</span>');
+    return t.join('');
+}
 function satCardRows(c, marks){
-    return GAME_ATTRS.map(a => `<span class="sc-row ${marks[a.key] || ''}"><span>${a.curto}</span><b>${fmtAttr(a, c[a.key])}</b></span>`).join('');
+    return GAME_ATTRS.map(a => `<span class="sc-row ${marks[a.key] || ''}"><span>${a.curto}</span><b>${attrTxt(c, a)}</b></span>`).join('');
 }
 function satAria(c){
-    return `${c.nome}: resolução ${fmtAttr(GAME_ATTRS[0], c.resolucao)}, ${c.bandas} bandas, revisita de ${c.revisit} dias, lançada em ${c.ano}`;
+    return `${nomeC(c)}, ${c.tipo}: resolução ${fmtRes(c.resolucao)}, ${c.bandas} bandas, revisita ${fmtRev(c.revisit)}, faixa ${fmtBR(c.faixa, 1)} km, ${c.acesso}`;
+}
+function cardInner(c, marks, iconColor, iconSize){
+    return `<span class="sc-top"><span class="sc-sigla">${c.sigla}</span>${SAT_ICON(iconColor, iconSize)}</span>
+        <span class="sc-name">${c.camera ? c.nome + ' <small>' + c.camera + '</small>' : c.nome}</span>
+        <span class="sc-meta">${c.tipo}${c.ano ? ' · ' + c.ano : ''}</span>
+        <span class="sc-tags">${tagsHTML(c)}</span>
+        <span class="sc-rows">${satCardRows(c, marks)}</span>`;
 }
 
 function updateScoreboard(){
@@ -2967,38 +3046,57 @@ function updateScoreboard(){
     document.getElementById('feltRound').textContent   = 'Mesa de sensores · rodada ' + round;
 }
 
+function renderEvent(){
+    const box = document.getElementById('gameEvent');
+    box.classList.toggle('hidden', !gameEvent);
+    if (!gameEvent) { box.innerHTML = ''; return; }
+    box.innerHTML = `<div class="ev-card" role="note">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6B4A12" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg>
+        <div class="ev-kicker">Evento da rodada <span class="ev-pill">${gameEvent.tipo === 'forca' ? 'decide a rodada' : 'vale 2 fichas'}</span></div>
+        <div class="ev-title">${gameEvent.titulo}</div>
+        <div class="ev-text">${gameEvent.texto}</div></div>`;
+}
+
 function renderGame(){
     updateScoreboard();
+    renderEvent();
     const over = !!lastPlay;
-    // Banca: virada até a aposta
     const bank = document.getElementById('bankSlot');
     if (!over) {
         bank.innerHTML = `<div class="card-back" role="img" aria-label="Carta da banca virada para baixo"><div><svg width="52" height="52" viewBox="0 0 48 48" fill="none" stroke="#E2B84B" stroke-width="1.8" aria-hidden="true"><ellipse cx="24" cy="24" rx="20" ry="8" transform="rotate(-25 24 24)"/><circle cx="24" cy="24" r="6"/><circle cx="40" cy="15" r="2.5" fill="#E2B84B"/></svg></div></div>`;
     } else {
-        const m = { [lastPlay.attr.key]: lastPlay.res === 'lose' ? 'win' : lastPlay.res === 'win' ? 'lose' : 'focus' };
-        bank.innerHTML = `<div class="sat-card bank-face" role="img" aria-label="Carta da banca: ${satAria(bankCard)}">
-            <span class="sc-top"><span class="sc-sigla">${SAT_SIGLA[bankCard.id] || ''}</span>${SAT_ICON('#8E2B2B', 30)}</span>
-            <span class="sc-name">${bankCard.nome}</span><span class="sc-rows">${satCardRows(bankCard, m)}</span></div>`;
+        const k = lastPlay.attr.key, m = { [k]: lastPlay.res === 'lose' ? 'win' : lastPlay.res === 'win' ? 'lose' : 'focus' };
+        const b = eff(bankCard);
+        bank.innerHTML = `<div class="sat-card bank-face" role="img" aria-label="Carta da banca: ${satAria(b)}">${cardInner(b, m, '#8E2B2B', 30)}</div>`;
     }
-    // Mão do estudante
     const handBox = document.getElementById('hand');
-    handBox.innerHTML = hand.map((c, i) => {
-        const sel = i === pickedIdx;
+    handBox.innerHTML = hand.map((raw, i) => {
+        const c = eff(raw), sel = i === pickedIdx;
         const m = (over && sel) ? { [lastPlay.attr.key]: lastPlay.res === 'win' ? 'win' : lastPlay.res === 'lose' ? 'lose' : 'focus' } : {};
-        return `<button type="button" class="sat-card hand-card${sel ? ' sel' : ''}" data-i="${i}" aria-pressed="${sel}" aria-label="${satAria(c)}" ${over ? 'disabled' : ''}>
-            <span class="sc-top"><span class="sc-sigla">${SAT_SIGLA[c.id] || ''}</span>${SAT_ICON('var(--card-accent)', 24)}</span>
-            <span class="sc-name">${satNome(c)}</span><span class="sc-rows">${satCardRows(c, m)}</span></button>`;
+        return `<button type="button" class="sat-card hand-card${sel ? ' sel' : ''}" data-i="${i}" aria-pressed="${sel}" aria-label="${satAria(c)}" ${over ? 'disabled' : ''}>${cardInner(c, m, 'var(--card-accent)', 22)}</button>`;
     }).join('');
     handBox.querySelectorAll('.hand-card').forEach(b => b.addEventListener('click', () => { if (lastPlay) return; pickedIdx = +b.dataset.i; renderGame(); }));
-    // Apostas
+
+    // Carta tripla: escolha da câmera
+    const ms = document.getElementById('modeSel');
+    const ti = hand.findIndex(c => c.modos);
+    ms.classList.toggle('hidden', ti < 0 || over);
+    if (ti >= 0 && !over) {
+        const t = hand[ti];
+        ms.innerHTML = `<span>Câmera do ${t.nome} (carta tripla)</span><div>${t.modos.map((md, j) => `<button type="button" data-m="${j}" aria-pressed="${j === t.modo}">${md.cam}</button>`).join('')}</div>`;
+        ms.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { hand[ti].modo = +b.dataset.m; renderGame(); }));
+    }
+
     document.getElementById('handLabel').textContent = over ? 'Sua mão' : (pickedIdx == null ? 'Sua mão · escolha uma carta' : 'Sua mão · toque em outra carta para trocar');
     document.getElementById('betLabel').textContent = over ? 'Aposta feita'
         : pickedIdx == null ? 'Escolha uma carta para liberar as apostas'
-        : `Aposte com ${satNome(hand[pickedIdx])}: escolha o atributo`;
+        : `Aposte com ${nomeC(eff(hand[pickedIdx]))}: escolha o atributo`;
     const bets = document.getElementById('bets');
-    bets.innerHTML = GAME_ATTRS.map(a => `<button type="button" class="bet${over && lastPlay.attr.key === a.key ? ' chosen' : ''}" data-k="${a.key}" ${(pickedIdx == null || over) ? 'disabled' : ''}><strong>${a.label}</strong><span>${a.regra}</span></button>`).join('');
+    bets.innerHTML = GAME_ATTRS.map(a => {
+        const dobra = gameEvent && gameEvent.tipo === 'dobro' && gameEvent.attr === a.key;
+        return `<button type="button" class="bet${over && lastPlay.attr.key === a.key ? ' chosen' : ''}" data-k="${a.key}" ${(pickedIdx == null || over) ? 'disabled' : ''}><strong>${a.label}${dobra ? ' ×2' : ''}</strong><span>${a.regra}</span></button>`;
+    }).join('');
     bets.querySelectorAll('.bet').forEach(b => b.addEventListener('click', () => playAttr(b.dataset.k)));
-    // Resultado
     const res = document.getElementById('gameResult');
     res.classList.toggle('hidden', !over);
     newGameBtn.classList.toggle('hidden', !over);
@@ -3006,43 +3104,51 @@ function renderGame(){
 }
 
 function resultHTML(){
-    const { attr: a, res } = lastPlay, me = hand[pickedIdx];
-    const pv = fmtAttr(a, me[a.key]), cv = fmtAttr(a, bankCard[a.key]);
+    const { attr: a, res, pts, porEvento } = lastPlay, me = eff(hand[pickedIdx]), bk = eff(bankCard);
+    const pv = attrTxt(me, a), cv = attrTxt(bk, a);
     const titulo = res === 'win' ? 'Você venceu a rodada' : res === 'lose' ? 'A banca venceu a rodada' : 'Empate na rodada';
+    const chipTxt = pts === 2 ? '+2' : '+1';
     const chip = res === 'win'
-        ? '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#B8862B"/><circle cx="20" cy="20" r="15" fill="#F3D27A" stroke="#7A5512"/><circle cx="20" cy="20" r="9" fill="none" stroke="#7A5512" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#5A3A08">+1</text></svg>'
+        ? `<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#B8862B"/><circle cx="20" cy="20" r="15" fill="#F3D27A" stroke="#7A5512"/><circle cx="20" cy="20" r="9" fill="none" stroke="#7A5512" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#5A3A08">${chipTxt}</text></svg>`
         : res === 'lose'
-        ? '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#8E2B2B"/><circle cx="20" cy="20" r="15" fill="#C94545" stroke="#5A1414"/><circle cx="20" cy="20" r="9" fill="none" stroke="#F6EFD8" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#FFFFFF">+1</text></svg>'
+        ? `<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#8E2B2B"/><circle cx="20" cy="20" r="15" fill="#C94545" stroke="#5A1414"/><circle cx="20" cy="20" r="9" fill="none" stroke="#F6EFD8" stroke-width="1.2" stroke-dasharray="3 2.5"/><text x="20" y="24.5" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="#FFFFFF">${chipTxt}</text></svg>`
         : '<svg width="44" height="44" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#A89A78"/><circle cx="20" cy="20" r="15" fill="#E9DCC0" stroke="#6B5E3E"/><path d="M13 17h14M13 23h14" stroke="#3A2E12" stroke-width="2.5" stroke-linecap="round"/></svg>';
-    const placar = res === 'win' ? 'A ficha vai para você.' : res === 'lose' ? 'A ficha vai para a banca.' : 'Ninguém leva ficha.';
+    const quem = res === 'win' ? 'você' : 'a banca';
+    const placar = res === 'tie' ? 'Ninguém leva ficha.' : `${pts === 2 ? 'Duas fichas vão' : 'A ficha vai'} para ${quem}.`;
+    const linha = porEvento
+        ? `O evento decidiu: ${nomeC(res === 'win' ? me : bk)} ${gameEvent.flag === 'radar' ? 'é radar' : gameEvent.flag === 'redEdge' ? 'tem red edge' : gameEvent.flag === 'gratuito' ? 'é gratuito' : 'tem SWIR ou termal'} e a outra carta não. ${placar}`
+        : `${a.label}: ${pv} contra ${cv}. ${a.regra[0].toUpperCase() + a.regra.slice(1)}. ${placar}`;
 
-    // Estratégia: a melhor carta da mão para o atributo escolhido
     let melhor = 0;
-    hand.forEach((c, i) => { if (beats(a, c[a.key], hand[melhor][a.key])) melhor = i; });
+    hand.forEach((c, i) => { if (beats(a, eff(c)[a.key], eff(hand[melhor])[a.key])) melhor = i; });
     let tip;
-    if (hand[melhor][a.key] === me[a.key]) tip = `Você jogou a melhor carta da sua mão para ${a.nome}.`;
-    else {
-        const alt = hand[melhor], venceria = beats(a, alt[a.key], bankCard[a.key]);
-        tip = `Na sua mão, a melhor carta para ${a.nome} era <strong>${satNome(alt)}</strong> (${fmtAttr(a, alt[a.key])}). ${venceria ? 'Ela teria vencido a banca.' : 'Nem ela venceria a banca nesta rodada.'}`;
-    }
-    // Trocas: em que outros atributos a banca venceria esta mesma carta
-    const perde = GAME_ATTRS.filter(x => x.key !== a.key && beats(x, bankCard[x.key], me[x.key])).map(x => x.label.toLowerCase());
+    const best = eff(hand[melhor]);
+    if (best[a.key] === me[a.key]) tip = `Você jogou a melhor carta da sua mão para ${a.nome}.`;
+    else tip = `Na sua mão, a melhor carta para ${a.nome} era <strong>${nomeC(best)}</strong> (${attrTxt(best, a)}). ${beats(a, best[a.key], bk[a.key]) ? 'Ela teria vencido a banca.' : 'Nem ela venceria a banca nesta rodada.'}`;
+    const perde = GAME_ATTRS.filter(x => x.key !== a.key && beats(x, bk[x.key], me[x.key])).map(x => x.label.toLowerCase());
     const troca = perde.length
-        ? `Com ${satNome(me)}, a banca venceria em ${juntar(perde)}. Toda escolha de sensor envolve trocas.`
-        : `Com ${satNome(me)}, você venceria a banca em todos os outros atributos também.`;
+        ? `Com ${nomeC(me)}, a banca venceria em ${juntar(perde)}. Toda escolha de sensor envolve trocas.`
+        : `Com ${nomeC(me)}, você venceria a banca em todos os outros atributos também.`;
+    const evTxt = gameEvent ? `<div class="felt-box"><div><strong>Por que o evento “${gameEvent.titulo}”:</strong> ${gameEvent.porque}</div></div>` : '';
 
-    return `<div class="felt-banner ${res}" role="status">${chip}<div><strong>${titulo}</strong><span>${a.label}: ${pv} contra ${cv}. ${a.regra[0].toUpperCase() + a.regra.slice(1)}. ${placar}</span></div></div>
+    return `<div class="felt-banner ${res}" role="status">${chip}<div><strong>${titulo}</strong><span>${linha}</span></div></div>
+      ${evTxt}
       <div class="felt-box"><div>${GAME_EXPLAIN[a.key]}</div><div style="color:var(--felt-muted);">${GAME_AGRO[a.key](me[a.key])}</div></div>
-      <div class="felt-box tip"><div>${tip}</div><div>${troca}</div></div>`;
+      <div class="felt-box tip"><div>${tip}</div><div>${troca}</div><div style="color:var(--felt-muted);"><strong>Carta da banca:</strong> ${bk.nome} (${bk.status.toLowerCase()}). ${bk.nota}</div></div>`;
 }
 
 function playAttr(key){
     if (pickedIdx == null || lastPlay) return;
-    const a = GAME_ATTRS.find(x => x.key === key), me = hand[pickedIdx];
-    const pv = me[key], cv = bankCard[key];
-    const res = pv === cv ? 'tie' : beats(a, pv, cv) ? 'win' : 'lose';
-    if (res === 'win') scoreP++; else if (res === 'lose') scoreC++; else scoreTies++;
-    lastPlay = { attr: a, res };
+    const a = GAME_ATTRS.find(x => x.key === key), me = eff(hand[pickedIdx]), bk = eff(bankCard);
+    let res = null, porEvento = false;
+    if (gameEvent && gameEvent.tipo === 'forca') {
+        const fm = hasFlag(me, gameEvent.flag), fb = hasFlag(bk, gameEvent.flag);
+        if (fm !== fb) { res = fm ? 'win' : 'lose'; porEvento = true; }
+    }
+    if (!res) res = me[key] === bk[key] ? 'tie' : beats(a, me[key], bk[key]) ? 'win' : 'lose';
+    const pts = (gameEvent && gameEvent.tipo === 'dobro' && gameEvent.attr === key && !porEvento) ? 2 : 1;
+    if (res === 'win') scoreP += pts; else if (res === 'lose') scoreC += pts; else scoreTies++;
+    lastPlay = { attr: a, res, pts, porEvento };
     PROG.game.rounds++; slSave();
     renderGame();
     setTimeout(() => newGameBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
@@ -3050,8 +3156,16 @@ function playAttr(key){
 
 function newGame(){
     if (lastPlay) round++;
-    const deck = shuffled(cards);
+    const deck = shuffled(cards).map(c => c.modos ? Object.assign({}, c, { modo: 1 }) : Object.assign({}, c));
     hand = deck.slice(0, 3); bankCard = deck[3];
+    if (bankCard.modos) bankCard.modo = Math.floor(Math.random() * bankCard.modos.length);
+    // Evento em cerca de 1 a cada 3 rodadas, sem repetir o anterior
+    gameEvent = null;
+    if (Math.random() < 0.35) {
+        const pool = GAME_EVENTS.filter(e => e.id !== lastEventId);
+        gameEvent = pool[Math.floor(Math.random() * pool.length)];
+        lastEventId = gameEvent.id;
+    }
     pickedIdx = null; lastPlay = null;
     renderGame();
     if (document.getElementById('game')?.classList.contains('active')) document.getElementById('felt').scrollIntoView({ behavior: 'smooth', block: 'start' });
