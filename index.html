@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SensorLab – UFT</title>
+  <script>(function(){var t="escuro";try{var p=localStorage.getItem("sensorlab_tema")||"auto";t=p==="auto"?(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro"):p;}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- Fallback font stack if Google Sans unavailable -->
@@ -80,10 +81,10 @@
   --md-type-title-small:     0.875rem;
   --md-type-body-large:      1rem;
   --md-type-body-medium:     0.875rem;
-  --md-type-body-small:      0.75rem;
+  --md-type-body-small:      0.8125rem;
   --md-type-label-large:     0.875rem;
   --md-type-label-medium:    0.75rem;
-  --md-type-label-small:     0.6875rem;
+  --md-type-label-small:     0.75rem;
 
   /* Motion */
   --md-motion-standard:   cubic-bezier(0.2, 0, 0, 1);
@@ -140,7 +141,7 @@ body {
   /* Expressive: asymmetric bottom border-radius */
   border-radius: 0 0 var(--md-shape-xl) var(--md-shape-xl);
   padding: 16px 20px 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  box-shadow: var(--sl-shadow);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
@@ -221,7 +222,7 @@ body {
 }
 .chip-tab.active .chip-icon { transform: scale(1.1); }
 .chip-tab .chip-label {
-  font-size: 0.6rem;
+  font-size:0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -300,7 +301,7 @@ body {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: var(--md-shape-xl) var(--md-shape-xl) 0 0;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  box-shadow: var(--sl-shadow);
 }
 .bottom-nav::before {
   content: '';
@@ -355,7 +356,7 @@ body {
 }
 .nav-item.active .nav-icon { transform: scale(1.1); }
 .nav-label {
-  font-size: 0.6rem;
+  font-size:0.75rem;
   font-weight: 700;
   text-align: center;
   line-height: 1;
@@ -451,7 +452,7 @@ body {
   cursor: pointer;
   transition: all var(--md-duration-short2) var(--md-motion-standard);
 }
-.btn-outlined:active { background: rgba(120,215,245,0.08); }
+.btn-outlined:active { background: var(--sl-ripple); }
 .btn-text {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 8px 12px;
@@ -465,7 +466,7 @@ body {
   cursor: pointer;
   transition: background var(--md-duration-short2);
 }
-.btn-text:active { background: rgba(120,215,245,0.08); }
+.btn-text:active { background: var(--sl-ripple); }
 .btn-full { width: 100%; }
 .btn-danger { background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); }
 .btn-success { background: #1A7A4A; color: #fff; }
@@ -505,7 +506,7 @@ body {
 .m3-input:focus {
   border-color: var(--md-sys-color-primary);
   background: var(--md-sys-color-surface-container-highest);
-  box-shadow: 0 0 0 2px rgba(120,215,245,0.18);
+  box-shadow: 0 0 0 2px var(--sl-focus-ring);
 }
 .m3-input::placeholder { color: var(--md-sys-color-on-surface-variant); opacity: 0.7; }
 .m3-input-mono { font-family: 'Roboto Mono', 'Space Mono', monospace; }
@@ -593,9 +594,9 @@ body {
   background: var(--md-sys-color-outline);
   transition: background 0.3s, box-shadow 0.3s;
 }
-.status-dot.active { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+.status-dot.active { background: var(--sl-success); box-shadow: 0 0 8px var(--sl-success); }
 .status-dot.error  { background: var(--md-sys-color-error); }
-.status-dot.warn   { background: #facc15; box-shadow: 0 0 8px #facc15; animation: pulse-dot 1.4s ease infinite; }
+.status-dot.warn   { background: var(--sl-warn); box-shadow: 0 0 8px var(--sl-warn); animation: pulse-dot 1.4s ease infinite; }
 @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* ================================================================
@@ -613,7 +614,7 @@ body {
 .spec-band {
   flex: 1;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.55rem;
+  font-size:0.75rem;
   font-weight: 700;
   text-align: center;
   transition: filter var(--md-duration-medium1);
@@ -623,6 +624,16 @@ body {
   line-height: 1.2;
 }
 .spec-band:active { filter: brightness(1.3); }
+.spec-band { cursor: pointer; }
+.spec-band:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.spec-band.selected { filter: brightness(1.35) saturate(1.2); box-shadow: inset 0 0 0 2px #fff; }
+.spec-scale {
+  display: flex; justify-content: space-between;
+  font-size: var(--md-type-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: -6px 2px 12px;
+  font-family: 'Roboto Mono','Space Mono',monospace;
+}
 
 /* ================================================================
    QUIZ
@@ -646,7 +657,7 @@ body {
   line-height: 1.4;
 }
 .quiz-opt:active { transform: scale(0.98); }
-.quiz-opt.correct { background: #14532d; border-color: #4ade80; color: #bbf7d0; }
+.quiz-opt.correct { background: var(--sl-success-container); border-color: var(--sl-success); color: var(--sl-on-success-container); }
 .quiz-opt.incorrect { background: var(--md-sys-color-error-container); border-color: var(--md-sys-color-error); color: var(--md-sys-color-on-error-container); }
 
 /* Progress bar */
@@ -761,7 +772,7 @@ body {
   justify-content: space-between;
   align-items: baseline;
   padding: 5px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--sl-divider);
   gap: 8px;
 }
 .conv-result-row:last-child { border-bottom: none; }
@@ -921,12 +932,12 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
 /* Info panel */
 .info-panel {
-  background: rgba(120,215,245,0.07);
-  border: 1px solid rgba(120,215,245,0.2);
+  background: var(--sl-info-bg);
+  border: 1px solid var(--sl-info-border);
   border-radius: var(--md-shape-md);
   padding: 10px 12px;
   font-size: var(--md-type-body-small);
-  color: var(--md-sys-color-on-primary-container);
+  color: var(--sl-info-text);
   margin-bottom: 12px;
 }
 
@@ -935,15 +946,15 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
    ================================================================ */
 .chip-tab { flex-shrink: 0; }
 .act-card { border-left: 4px solid var(--md-sys-color-primary); }
-.act-card.done { border-left-color: #4ade80; }
+.act-card.done { border-left-color: var(--sl-success); }
 .act-card summary { cursor:pointer; font-weight:700; color:var(--md-sys-color-primary); font-size:var(--md-type-body-medium); list-style:none; display:flex; justify-content:space-between; gap:8px; align-items:center; }
 .act-card summary::-webkit-details-marker { display:none; }
 .act-obj { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface); margin:10px 0 6px; line-height:1.6; }
 .act-steps { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface-variant); padding-left:20px; line-height:1.7; margin-bottom:10px; }
 .act-q { font-size:var(--md-type-body-medium); font-weight:600; margin:10px 0 8px; line-height:1.5; }
 .act-fb { font-size:var(--md-type-body-small); line-height:1.6; margin-top:4px; }
-.status-pill { font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:var(--md-shape-full); white-space:nowrap; }
-.status-pill.ok { background:#14532d; color:#bbf7d0; }
+.status-pill { font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:var(--md-shape-full); white-space:nowrap; }
+.status-pill.ok { background:var(--sl-success-container); color:var(--sl-on-success-container); }
 .status-pill.todo { background:var(--md-sys-color-surface-container-high); color:var(--md-sys-color-on-surface-variant); }
 .level-title { font-size:var(--md-type-title-small); font-weight:700; color:var(--md-sys-color-secondary); margin:18px 4px 8px; }
 .trail-row { display:flex; gap:12px; align-items:flex-start; }
@@ -951,15 +962,327 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 .trail-row .trail-body { flex:1; min-width:0; }
 .trail-row h3 { font-size:var(--md-type-body-large); font-weight:700; margin-bottom:4px; }
 .trail-row p { font-size:var(--md-type-body-small); color:var(--md-sys-color-on-surface-variant); line-height:1.5; }
-.mini-table { width:100%; border-collapse:collapse; font-size:0.72rem; margin-top:8px; }
+.mini-table { width:100%; border-collapse:collapse; font-size:0.8125rem; margin-top:8px; }
 .mini-table th, .mini-table td { border:1px solid var(--md-sys-color-outline-variant); padding:4px 5px; text-align:center; }
 .mini-table th { background:var(--md-sys-color-surface-container-high); font-weight:700; }
-.mini-table td.diag { background:rgba(74,222,128,0.15); font-weight:700; }
+.mini-table td.diag { background:var(--sl-success-container); color:var(--sl-on-success-container); font-weight:700; }
 .table-wrap { overflow-x:auto; }
 .seg2 { display:flex; gap:6px; margin-bottom:10px; }
 .seg2 button { flex:1; }
 .quiz-exp { font-size:var(--md-type-body-small); line-height:1.6; color:var(--md-sys-color-on-surface-variant); background:var(--md-sys-color-surface-container-high); border-radius:var(--md-shape-md); padding:10px 12px; margin-bottom:12px; }
 :focus-visible { outline: 2px solid var(--md-sys-color-primary); outline-offset: 2px; }
+
+/* ================================================================
+   TEMAS — escuro (padrão acima), claro e alto contraste
+   ================================================================ */
+:root {
+  color-scheme: dark;
+  --sl-success: #4ade80;
+  --sl-success-container: #14532d;
+  --sl-on-success-container: #bbf7d0;
+  --sl-warn: #facc15;
+  --sl-info-bg: rgba(120,215,245,0.07);
+  --sl-info-border: rgba(120,215,245,0.2);
+  --sl-info-text: #C3EEFF;
+  --sl-ripple: rgba(120,215,245,0.08);
+  --sl-focus-ring: rgba(120,215,245,0.18);
+  --sl-divider: rgba(255,255,255,0.08);
+  --sl-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  --sl-plot-bg: #0a0d14;
+  --sl-plot-grid: #1e2a3a;
+  --sl-plot-axis: #334155;
+  --sl-plot-text: #94a3b8;
+  --sl-plot-strong: #e2e8f0;
+}
+:root[data-theme="claro"] {
+  color-scheme: light;
+  --md-sys-color-primary:            #006782;
+  --md-sys-color-on-primary:         #FFFFFF;
+  --md-sys-color-primary-container:  #BAEAFF;
+  --md-sys-color-on-primary-container: #001F29;
+  --md-sys-color-secondary:          #4C616B;
+  --md-sys-color-on-secondary:       #FFFFFF;
+  --md-sys-color-secondary-container:#CFE6F1;
+  --md-sys-color-on-secondary-container: #071E26;
+  --md-sys-color-tertiary:           #5B5B7E;
+  --md-sys-color-on-tertiary:        #FFFFFF;
+  --md-sys-color-tertiary-container: #E1DFFF;
+  --md-sys-color-on-tertiary-container: #171837;
+  --md-sys-color-error:              #BA1A1A;
+  --md-sys-color-on-error:           #FFFFFF;
+  --md-sys-color-error-container:    #FFDAD6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background:         #F6FAFD;
+  --md-sys-color-on-background:      #171C1F;
+  --md-sys-color-surface:            #F6FAFD;
+  --md-sys-color-on-surface:         #171C1F;
+  --md-sys-color-surface-variant:    #DCE4E9;
+  --md-sys-color-on-surface-variant: #40484C;
+  --md-sys-color-outline:            #70787D;
+  --md-sys-color-outline-variant:    #C0C8CD;
+  --md-sys-color-surface-container-lowest:  #FFFFFF;
+  --md-sys-color-surface-container-low:     #F0F4F7;
+  --md-sys-color-surface-container:         #EAEEF2;
+  --md-sys-color-surface-container-high:    #E4E9EC;
+  --md-sys-color-surface-container-highest: #DEE3E6;
+  --md-sys-color-inverse-surface:    #2C3134;
+  --md-sys-color-inverse-on-surface: #EDF1F5;
+  --md-sys-color-inverse-primary:    #5DD5FC;
+  --md-elev-1: rgba(0,103,130,0.02);
+  --md-elev-2: rgba(0,103,130,0.04);
+  --md-elev-3: rgba(0,103,130,0.06);
+  --sl-success: #146C2E;
+  --sl-success-container: #C9EFD0;
+  --sl-on-success-container: #00210A;
+  --sl-warn: #B07800;
+  --sl-info-bg: #E3F4FB;
+  --sl-info-border: #9CCFE2;
+  --sl-info-text: #003544;
+  --sl-ripple: rgba(0,103,130,0.10);
+  --sl-focus-ring: rgba(0,103,130,0.22);
+  --sl-divider: rgba(0,31,41,0.12);
+  --sl-shadow: 0 2px 10px rgba(0,40,60,0.10);
+  --sl-plot-bg: #FBFDFE;
+  --sl-plot-grid: #D5DDE2;
+  --sl-plot-axis: #70787D;
+  --sl-plot-text: #40484C;
+  --sl-plot-strong: #171C1F;
+}
+/* Alto contraste: preto sobre branco, bordas grossas — pensado para sol forte no campo */
+:root[data-theme="contraste"] {
+  color-scheme: light;
+  --md-sys-color-primary:            #003D52;
+  --md-sys-color-on-primary:         #FFFFFF;
+  --md-sys-color-primary-container:  #003D52;
+  --md-sys-color-on-primary-container: #FFFFFF;
+  --md-sys-color-secondary:          #1E2B31;
+  --md-sys-color-on-secondary:       #FFFFFF;
+  --md-sys-color-secondary-container:#1E2B31;
+  --md-sys-color-on-secondary-container: #FFFFFF;
+  --md-sys-color-tertiary:           #2B2B52;
+  --md-sys-color-on-tertiary:        #FFFFFF;
+  --md-sys-color-tertiary-container: #2B2B52;
+  --md-sys-color-on-tertiary-container: #FFFFFF;
+  --md-sys-color-error:              #8C0009;
+  --md-sys-color-on-error:           #FFFFFF;
+  --md-sys-color-error-container:    #8C0009;
+  --md-sys-color-on-error-container: #FFFFFF;
+  --md-sys-color-background:         #FFFFFF;
+  --md-sys-color-on-background:      #000000;
+  --md-sys-color-surface:            #FFFFFF;
+  --md-sys-color-on-surface:         #000000;
+  --md-sys-color-surface-variant:    #F0F0F0;
+  --md-sys-color-on-surface-variant: #1A1A1A;
+  --md-sys-color-outline:            #000000;
+  --md-sys-color-outline-variant:    #3D3D3D;
+  --md-sys-color-surface-container-lowest:  #FFFFFF;
+  --md-sys-color-surface-container-low:     #FFFFFF;
+  --md-sys-color-surface-container:         #FFFFFF;
+  --md-sys-color-surface-container-high:    #EFEFEF;
+  --md-sys-color-surface-container-highest: #E2E2E2;
+  --md-sys-color-inverse-surface:    #000000;
+  --md-sys-color-inverse-on-surface: #FFFFFF;
+  --md-sys-color-inverse-primary:    #9EDFFF;
+  --md-elev-1: transparent;
+  --md-elev-2: transparent;
+  --md-elev-3: transparent;
+  --sl-success: #005A1E;
+  --sl-success-container: #005A1E;
+  --sl-on-success-container: #FFFFFF;
+  --sl-warn: #7A4A00;
+  --sl-info-bg: #FFFFFF;
+  --sl-info-border: #000000;
+  --sl-info-text: #000000;
+  --sl-ripple: rgba(0,0,0,0.12);
+  --sl-focus-ring: rgba(0,0,0,0.35);
+  --sl-divider: #000000;
+  --sl-shadow: none;
+  --sl-plot-bg: #FFFFFF;
+  --sl-plot-grid: #A0A0A0;
+  --sl-plot-axis: #000000;
+  --sl-plot-text: #000000;
+  --sl-plot-strong: #000000;
+}
+:root[data-theme="contraste"] .m3-card,
+:root[data-theme="contraste"] .stat-tile,
+:root[data-theme="contraste"] .gloss-item,
+:root[data-theme="contraste"] .qty-card,
+:root[data-theme="contraste"] .quiz-opt,
+:root[data-theme="contraste"] .attr-btn,
+:root[data-theme="contraste"] .m3-input,
+:root[data-theme="contraste"] .m3-select,
+:root[data-theme="contraste"] .status-bar,
+:root[data-theme="contraste"] .info-panel { border-width: 2px; border-color: #000; }
+:root[data-theme="contraste"] .top-app-bar,
+:root[data-theme="contraste"] .bottom-nav { border-color: #000; border-width: 2px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:root[data-theme="contraste"] .act-card { border-left-width: 6px; }
+:root[data-theme="contraste"] .m3-card-subtitle,
+:root[data-theme="contraste"] .act-steps,
+:root[data-theme="contraste"] .trail-row p { color: #000; }
+:root[data-theme="contraste"] :focus-visible { outline: 3px solid #000; outline-offset: 2px; box-shadow: 0 0 0 5px #FFD400; }
+:root[data-theme="contraste"] .btn-text { text-decoration: underline; text-underline-offset: 3px; }
+:root[data-theme="contraste"] .status-pill.todo { border: 1.5px solid #000; }
+
+/* ================================================================
+   CABEÇALHO · TRILHA · SUBABAS
+   ================================================================ */
+.tab-bar-headline { margin-bottom: 0; }
+.tab-bar-home {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+  background: none; border: none; color: inherit; font: inherit; text-align: left; cursor: pointer; padding: 0;
+  border-radius: var(--md-shape-md);
+}
+.tab-bar-text { display: flex; flex-direction: column; min-width: 0; }
+.tab-bar-title, .tab-bar-sub { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-actions { margin-left: auto; display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.trail-btn {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px;
+  padding: 8px 14px; border-radius: var(--md-shape-full);
+  border: 1.5px solid var(--md-sys-color-outline-variant); background: transparent;
+  color: var(--md-sys-color-on-surface-variant); font: inherit; font-size: var(--md-type-label-large); font-weight: 700; cursor: pointer;
+}
+.trail-btn.active { background: var(--md-sys-color-secondary-container); border-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid var(--md-sys-color-outline-variant); background: transparent;
+  color: var(--md-sys-color-on-surface); font-size: 1.15rem; cursor: pointer; display: grid; place-items: center;
+}
+.sub-tabs {
+  display: flex; gap: 4px; margin-top: 12px; padding: 4px;
+  background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-full);
+}
+.sub-tab {
+  flex: 1; min-width: 0; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 6px; border-radius: var(--md-shape-full); border: none; background: transparent;
+  color: var(--md-sys-color-on-surface-variant); font: inherit; font-size: var(--md-type-label-large); font-weight: 700; cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: background var(--md-duration-medium1) var(--md-motion-standard), color var(--md-duration-medium1) var(--md-motion-standard);
+}
+.sub-tab.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+@media (max-width: 430px) { .sub-tab .sub-ico { display: none; } .top-app-bar .tab-bar-icon { display: none; } }
+@media (max-width: 370px) { .trail-btn .trail-btn-label { display: none; } .trail-btn { padding: 8px 11px; } }
+.icon-btn svg { width: 20px; height: 20px; }
+:root[data-theme="contraste"] .nav-item.active { color: #000; }
+:root[data-theme="contraste"] .nav-item.active .nav-label { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+.nav-label { max-width: 100%; font-size: var(--md-type-label-medium); }
+
+/* ================================================================
+   FOLHA DE APARÊNCIA
+   ================================================================ */
+.sheet { position: fixed; inset: 0; z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
+.sheet-scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+.sheet-panel {
+  position: relative; width: 100%; max-width: 600px;
+  background: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-shape-xl) var(--md-shape-xl) 0 0; padding: 20px 20px calc(20px + var(--safe-bottom));
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  animation: sheetUp var(--md-duration-medium2) var(--md-motion-decel) both;
+}
+@keyframes sheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet-panel h2 { font-size: var(--md-type-title-large); margin-bottom: 4px; }
+.sheet-panel > p { font-size: var(--md-type-body-medium); color: var(--md-sys-color-on-surface-variant); margin-bottom: 14px; }
+.theme-opt {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
+  border: 1.5px solid var(--md-sys-color-outline-variant); border-radius: var(--md-shape-lg);
+}
+.theme-opt:has(input:checked) { border-color: var(--md-sys-color-primary); background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.theme-opt input { width: 20px; height: 20px; accent-color: var(--md-sys-color-primary); flex-shrink: 0; }
+.theme-opt small { display: block; font-size: var(--md-type-body-small); opacity: 0.85; }
+.theme-swatch { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid var(--md-sys-color-outline); margin-left: auto; }
+
+/* ================================================================
+   CICLO PREVER → EXPLORAR → EXPLICAR → APLICAR
+   ================================================================ */
+.poe-steps { display: grid; grid-template-columns: repeat(4, 1fr); margin: 12px 0 14px; }
+.poe-step {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; padding: 2px 0; font: inherit; cursor: pointer;
+  font-size: var(--md-type-label-medium); font-weight: 700; color: var(--md-sys-color-on-surface-variant);
+}
+.poe-step:not(:first-child)::before {
+  content: ''; position: absolute; top: 15px; right: 50%; width: 100%; height: 2px;
+  background: var(--md-sys-color-outline-variant); z-index: 0;
+}
+.poe-step.done::before, .poe-step.current::before { background: var(--md-sys-color-primary); }
+.poe-num {
+  position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  border: 2px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface); font-size: 0.8125rem;
+}
+.poe-step.done .poe-num { background: var(--sl-success-container); border-color: var(--sl-success); color: var(--sl-on-success-container); }
+.poe-step.current .poe-num { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.poe-step.current { color: var(--md-sys-color-on-surface); }
+.poe-step:disabled { cursor: default; opacity: 0.6; }
+.poe-panel { font-size: var(--md-type-body-medium); line-height: 1.6; }
+.poe-lead { margin-bottom: 10px; color: var(--md-sys-color-on-surface); }
+.poe-q { font-weight: 700; margin-bottom: 10px; line-height: 1.5; }
+.poe-label { display: block; font-size: var(--md-type-label-large); font-weight: 700; color: var(--md-sys-color-on-surface-variant); margin: 14px 0 6px; }
+.poe-hint, .poe-count { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); margin: 6px 0 10px; }
+.poe-note { background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-md); padding: 10px 12px; margin-bottom: 8px; }
+.poe-note .muted, .muted { color: var(--md-sys-color-on-surface-variant); }
+.poe-text { min-height: 88px; resize: vertical; font-size: var(--md-type-body-medium); line-height: 1.5; }
+.poe-ok { color: var(--sl-success); font-weight: 700; }
+.poe-no { color: var(--md-sys-color-on-surface); font-weight: 700; }
+.poe-alert { border-left: 4px solid var(--sl-warn); padding: 4px 0 4px 10px; margin: 8px 0; }
+.poe-dyn { background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-md); padding: 10px 12px; margin: 8px 0; }
+.poe-exp { background: var(--sl-info-bg); border: 1px solid var(--sl-info-border); color: var(--md-sys-color-on-surface); border-radius: var(--md-shape-md); padding: 10px 12px; margin: 10px 0 14px; }
+.poe-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.poe-actions > * { flex: 1; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-choice {
+  min-height: 40px; padding: 8px 14px; border-radius: var(--md-shape-full);
+  border: 1.5px solid var(--md-sys-color-outline-variant); background: transparent;
+  color: var(--md-sys-color-on-surface); font: inherit; font-size: var(--md-type-label-large); font-weight: 600; cursor: pointer;
+}
+.chip-choice[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); border-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.chip-choice[aria-pressed="true"]::before { content: '✓ '; }
+.chip-choice:disabled { cursor: default; opacity: 0.75; }
+.quiz-opt.selected { border-color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-weight: 700; }
+.quiz-opt:disabled { cursor: default; }
+.btn-filled:disabled, .btn-outlined:disabled { opacity: 0.45; cursor: not-allowed; }
+.poe-lock { display: none; }
+.poe-body.locked .poe-lock {
+  display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 5;
+  background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface);
+  border: 1.5px solid var(--md-sys-color-primary); border-radius: var(--md-shape-lg);
+  padding: 12px 14px; margin-bottom: 12px; font-size: var(--md-type-body-small); line-height: 1.5;
+}
+.poe-lock-ico { font-size: 1.4rem; }
+.poe-lock button { flex-shrink: 0; padding: 8px 16px; }
+.poe-body.locked .poe-inner {
+  filter: blur(3px) saturate(0.5); opacity: 0.5; pointer-events: none; user-select: none;
+  max-height: 360px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent);
+}
+.status-pill.prog { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.level-count { font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
+.trail-dots { display: flex; gap: 5px; margin-top: 8px; }
+.trail-dot { width: 22px; height: 6px; border-radius: 3px; background: var(--md-sys-color-outline-variant); }
+.trail-dot.on { background: var(--sl-success); }
+.cycle-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+/* ================================================================
+   ÍNDICES — paleta e barra de cores com valores
+   ================================================================ */
+.palette-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 10px 0 6px; flex-wrap: wrap; }
+.palette-row .poe-label { margin: 0; }
+.seg-mini { display: flex; gap: 4px; padding: 3px; background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-full); }
+.seg-mini button {
+  min-height: 36px; padding: 6px 14px; border: none; border-radius: var(--md-shape-full); background: transparent;
+  color: var(--md-sys-color-on-surface-variant); font: inherit; font-size: var(--md-type-label-large); font-weight: 700; cursor: pointer;
+}
+.seg-mini button[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.colorbar { height: 18px; border: 1px solid var(--md-sys-color-outline); margin: 6px 0 2px; }
+.colorbar-ticks { display: flex; justify-content: space-between; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); font-variant-numeric: tabular-nums; }
+.colorbar-caption { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); text-align: center; margin-top: 4px; }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--md-sys-color-outline); }
+.cdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: 0; border: 1px solid var(--md-sys-color-outline); }
+
+/* Classes: o texto usa a cor de leitura; a cor da classe fica no marcador (legível em qualquer tema) */
+.class-btn { color: var(--md-sys-color-on-surface) !important; }
+.class-btn > span { border: 1px solid var(--md-sys-color-outline); }
+#sample-counts .stat-value, #active-class-label { color: var(--md-sys-color-on-surface) !important; }
+
 @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
@@ -972,22 +1295,19 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   ============================================================= -->
   <header class="top-app-bar">
     <div class="tab-bar-headline">
-      <div class="tab-bar-icon">🛰️</div>
-      <div>
-        <div class="tab-bar-title">SensorLab – UFT</div>
-        <div class="tab-bar-sub">Sensoriamento Remoto • Agronomia</div>
+      <button type="button" class="tab-bar-home" onclick="showPage('trail')" aria-label="SensorLab – UFT: ir para a Trilha de aprendizagem">
+        <span class="tab-bar-icon" aria-hidden="true">🛰️</span>
+        <span class="tab-bar-text">
+          <span class="tab-bar-title">SensorLab – UFT</span>
+          <span class="tab-bar-sub" id="bar-sub">Sensoriamento Remoto • Agronomia</span>
+        </span>
+      </button>
+      <div class="bar-actions">
+        <button type="button" class="trail-btn" id="trail-btn" onclick="showPage('trail')" aria-label="Trilha de aprendizagem"><span aria-hidden="true">🎯</span><span class="trail-btn-label">Trilha</span></button>
+        <button type="button" class="icon-btn" id="theme-btn" onclick="openThemeSheet()" aria-haspopup="dialog" aria-label="Aparência: tema claro, escuro ou alto contraste"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
       </div>
     </div>
-    <!-- Scrollable chip tabs -->
-    <div class="chip-tabs" id="chip-tabs">
-      <button class="chip-tab" data-tab="trail"><span class="chip-icon">🎯</span><span class="chip-label">Trilha</span></button>
-      <button class="chip-tab" data-tab="quiz"><span class="chip-icon">❓</span><span class="chip-label">Quiz</span></button>
-      <button class="chip-tab" data-tab="game"><span class="chip-icon">🃏</span><span class="chip-label">Jogo</span></button>
-      <button class="chip-tab" data-tab="lab"><span class="chip-icon">🔬</span><span class="chip-label">Espalhamento</span></button>
-      <button class="chip-tab" data-tab="classify"><span class="chip-icon">🗺️</span><span class="chip-label">Classificação</span></button>
-      <button class="chip-tab" data-tab="glossary"><span class="chip-icon">📖</span><span class="chip-label">Glossário</span></button>
-      <button class="chip-tab" data-tab="quantities"><span class="chip-icon">📊</span><span class="chip-label">Grandezas</span></button>
-    </div>
+    <div class="sub-tabs hidden" id="sub-tabs" role="tablist" aria-label="Seções do grupo"></div>
   </header>
 
   <!-- ============================================================
@@ -999,7 +1319,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
     <div id="trail" class="tab-content active">
       <h2 class="section-title">🎯 Trilha de Aprendizagem</h2>
       <div class="m3-card">
-        <p style="font-size:var(--md-type-body-medium);line-height:1.6;">Siga os módulos na ordem sugerida: dos princípios físicos às aplicações na lavoura. Cada módulo tem um objetivo, um roteiro prático e um desafio. Responda ao desafio dentro do próprio módulo para concluí-lo.</p>
+        <p style="font-size:var(--md-type-body-medium);line-height:1.6;">Siga os módulos na ordem sugerida, dos princípios físicos às aplicações na lavoura. Cada módulo tem quatro etapas: <strong>Prever</strong> o que vai acontecer, <strong>Explorar</strong> o simulador ou os dados, <strong>Explicar</strong> com suas palavras comparando com a previsão e <strong>Aplicar</strong> num problema agronômico.</p>
         <label style="display:block;margin-top:12px;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);" for="trailName">Seu nome (aparece apenas no relatório)</label>
         <input id="trailName" class="m3-input" style="margin-top:4px;" placeholder="Ex.: Maria Souza" autocomplete="name">
         <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:var(--md-type-label-medium);">
@@ -1007,6 +1327,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <div class="progress-bar" style="margin-top:6px;margin-bottom:4px;"><div class="progress-fill" id="trailFill" style="width:0%"></div></div>
         <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);">O progresso fica salvo neste aparelho.</p>
+        <p id="trailDoneMsg" class="hidden" style="margin-top:10px;padding:10px 12px;border-radius:var(--md-shape-md);background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);font-size:var(--md-type-body-small);line-height:1.6;">🎓 <strong>Trilha completa!</strong> Você concluiu todos os módulos. Gere o relatório abaixo e envie ao professor — e revisite os módulos sempre que precisar.</p>
       </div>
       <div id="trailLevels"></div>
       <div class="m3-card">
@@ -1025,15 +1346,16 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <h2 class="section-title">🌈 Espectro Eletromagnético</h2>
       <div class="m3-card">
         <p class="m3-card-subtitle">Toque em uma faixa para ver informações detalhadas</p>
-        <div class="spectrum-bar">
-          <div class="spec-band" style="background:#6d28d9;color:#fff;" data-band="gama">Gama</div>
-          <div class="spec-band" style="background:#4338ca;color:#fff;" data-band="x">Raio-X</div>
-          <div class="spec-band" style="background:#2563eb;color:#fff;" data-band="uv">UV</div>
-          <div class="spec-band" style="background:linear-gradient(90deg,#7c3aed,#dc2626);color:#fff;" data-band="visivel">Visível</div>
-          <div class="spec-band" style="background:#ea580c;color:#fff;" data-band="iv">IV</div>
-          <div class="spec-band" style="background:#ca8a04;color:#fff;" data-band="micro">Micro</div>
-          <div class="spec-band" style="background:#b45309;color:#fff;" data-band="radio">Rádio</div>
+        <div class="spectrum-bar" role="group" aria-label="Faixas do espectro eletromagnético">
+          <div class="spec-band" style="background:#6d28d9;color:#fff;" data-band="gama" role="button" tabindex="0" aria-pressed="false" aria-label="Raios gama">Gama</div>
+          <div class="spec-band" style="background:#4338ca;color:#fff;" data-band="x" role="button" tabindex="0" aria-pressed="false" aria-label="Raios X">Raio-X</div>
+          <div class="spec-band" style="background:#2563eb;color:#fff;" data-band="uv" role="button" tabindex="0" aria-pressed="false" aria-label="Ultravioleta">UV</div>
+          <div class="spec-band" style="background:linear-gradient(90deg,#7c3aed,#dc2626);color:#fff;" data-band="visivel" role="button" tabindex="0" aria-pressed="false" aria-label="Luz visível">Visível</div>
+          <div class="spec-band" style="background:#ea580c;color:#fff;" data-band="iv" role="button" tabindex="0" aria-pressed="false" aria-label="Infravermelho">IV</div>
+          <div class="spec-band" style="background:#ca8a04;color:#fff;" data-band="micro" role="button" tabindex="0" aria-pressed="false" aria-label="Micro-ondas">Micro</div>
+          <div class="spec-band" style="background:#b45309;color:#fff;" data-band="radio" role="button" tabindex="0" aria-pressed="false" aria-label="Ondas de rádio">Rádio</div>
         </div>
+        <div class="spec-scale" aria-hidden="true"><span>&lt; 0,01 nm</span><span>400–700 nm</span><span>&gt; 1 mm</span></div>
         <div id="bandInfo" class="hidden"></div>
       </div>
     </div>
@@ -1121,7 +1443,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <!-- Jogador -->
           <div style="text-align:center;">
             <div style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Você</div>
-            <div id="scorePlayer" style="font-size:2.4rem;font-weight:800;color:#4ade80;font-family:'Roboto Mono','Space Mono',monospace;line-height:1;">0</div>
+            <div id="scorePlayer" style="font-size:2.4rem;font-weight:800;color:var(--sl-success);font-family:'Roboto Mono','Space Mono',monospace;line-height:1;">0</div>
           </div>
           <!-- Separador + rodada -->
           <div style="text-align:center;">
@@ -1138,15 +1460,15 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <!-- Barra de progresso de vitórias -->
         <div style="margin-top:10px;">
           <div style="height:8px;border-radius:var(--md-shape-full);background:var(--md-sys-color-outline-variant);overflow:hidden;position:relative;">
-            <div id="scoreBarPlayer" style="position:absolute;left:0;top:0;height:100%;background:#4ade80;border-radius:var(--md-shape-full);transition:width 0.4s cubic-bezier(0.34,1.56,0.64,1);width:50%;"></div>
+            <div id="scoreBarPlayer" style="position:absolute;left:0;top:0;height:100%;background:var(--sl-success);border-radius:var(--md-shape-full);transition:width 0.4s cubic-bezier(0.34,1.56,0.64,1);width:50%;"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;font-size:0.6rem;color:var(--md-sys-color-on-surface-variant);margin-top:3px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);margin-top:3px;">
             <span>Você</span><span id="scoreTies" style="color:var(--md-sys-color-tertiary);">0 empates</span><span>PC</span>
           </div>
         </div>
       </div>
 
-      <div class="m3-card" style="background:var(--md-sys-color-primary-container);border-color:transparent;">
+      <div class="m3-card" style="background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-color:transparent;">
         <div class="m3-card-title" style="color:var(--md-sys-color-on-primary-container);">Sua Carta</div>
         <div id="playerCard"></div>
         <div style="margin-top:12px;">
@@ -1154,7 +1476,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <div id="attributeButtons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
         </div>
       </div>
-      <div class="m3-card" style="background:var(--md-sys-color-error-container);border-color:transparent;">
+      <div class="m3-card" style="background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);border-color:transparent;">
         <div class="m3-card-title" style="color:var(--md-sys-color-on-error-container);">Carta do Computador</div>
         <div id="computerCard"></div>
       </div>
@@ -1165,9 +1487,9 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <!-- ===== ABA ESPALHAMENTO ===== -->
     <div id="lab" class="tab-content">
-      <h2 class="section-title">🔬 Simulação de Espalhamento</h2>
+      <h2 class="section-title">🌫️ Simulação de Espalhamento</h2>
       <div class="m3-card" style="padding:12px;">
-        <canvas id="scatteringCanvas" width="600" height="360" style="width:100%;border-radius:var(--md-shape-lg);"></canvas>
+        <canvas id="scatteringCanvas" width="600" height="380" style="width:100%;border-radius:var(--md-shape-lg);"></canvas>
         <div style="margin-top:14px;">
           <label style="display:flex;justify-content:space-between;font-size:var(--md-type-label-medium);color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">
             <span>Diâmetro da partícula (escala logarítmica)</span>
@@ -1192,21 +1514,21 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <div class="m3-card" style="padding:12px 14px;">
         <div class="m3-card-title" style="margin-bottom:10px;">🎨 Classes de Cobertura</div>
         <div id="class-buttons" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="class-btn active" data-class="0" style="background:#2f9e4422;border:2px solid #2f9e44;color:#2f9e44;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
-            <span style="width:12px;height:12px;border-radius:50%;background:#2f9e44;display:inline-block;flex-shrink:0;"></span> 🌿 Vegetação
+          <button class="class-btn active" data-class="0" style="background:#009E7322;border:2px solid #009E73;color:#009E73;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#009E73;display:inline-block;flex-shrink:0;"></span> 🌿 Vegetação
           </button>
-          <button class="class-btn" data-class="1" style="background:#f9731622;border:2px solid #f97316;color:#f97316;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
-            <span style="width:12px;height:12px;border-radius:50%;background:#f97316;display:inline-block;flex-shrink:0;"></span> 🟫 Solo Exposto
+          <button class="class-btn" data-class="1" style="background:#D55E0022;border:2px solid #D55E00;color:#D55E00;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#D55E00;display:inline-block;flex-shrink:0;"></span> 🟫 Solo Exposto
           </button>
-          <button class="class-btn" data-class="2" style="background:#3b82f622;border:2px solid #3b82f6;color:#3b82f6;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
-            <span style="width:12px;height:12px;border-radius:50%;background:#3b82f6;display:inline-block;flex-shrink:0;"></span> 💧 Água
+          <button class="class-btn" data-class="2" style="background:#0072B222;border:2px solid #0072B2;color:#0072B2;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#0072B2;display:inline-block;flex-shrink:0;"></span> 💧 Água
           </button>
-          <button class="class-btn" data-class="3" style="background:#86efac22;border:2px solid #86efac;color:#86efac;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
-            <span style="width:12px;height:12px;border-radius:50%;background:#86efac;display:inline-block;flex-shrink:0;"></span> 🐄 Pastagem
+          <button class="class-btn" data-class="3" style="background:#F0E44222;border:2px solid #F0E442;color:#F0E442;padding:9px 8px;border-radius:var(--md-shape-lg);font-family:inherit;font-size:var(--md-type-label-large);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+            <span style="width:12px;height:12px;border-radius:50%;background:#F0E442;display:inline-block;flex-shrink:0;"></span> 🐄 Pastagem
           </button>
         </div>
         <div style="margin-top:10px;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);">
-          Classe ativa: <strong id="active-class-label" style="color:#2f9e44;">🌿 Vegetação</strong>
+          Classe ativa: <strong id="active-class-label" style="color:#009E73;">🌿 Vegetação</strong>
         </div>
       </div>
 
@@ -1215,8 +1537,8 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
           <div class="m3-card-title" style="margin-bottom:0;">🛰️ Cena Sentinel-2 — MSI/10m</div>
           <div style="display:flex;gap:6px;">
-            <button id="btn-fc" onclick="setComposite('fc')" class="btn-filled" style="font-size:0.6rem;padding:5px 10px;border-radius:var(--md-shape-full);">Falsa Cor</button>
-            <button id="btn-tc" onclick="setComposite('tc')" class="btn-outlined" style="font-size:0.6rem;padding:4px 10px;border-radius:var(--md-shape-full);">Cor Real</button>
+            <button id="btn-fc" onclick="setComposite('fc')" class="btn-filled" style="font-size:0.75rem;padding:5px 10px;border-radius:var(--md-shape-full);">Falsa Cor</button>
+            <button id="btn-tc" onclick="setComposite('tc')" class="btn-outlined" style="font-size:0.75rem;padding:4px 10px;border-radius:var(--md-shape-full);">Cor Real</button>
           </div>
         </div>
         <p id="composite-legend" style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">🔴 B8 (NIR) · 🟢 B4 (Red) · 🔵 B3 (Green) — vegetação = vermelho vivo</p>
@@ -1227,7 +1549,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <canvas id="classifyOverlay" width="320" height="195"
             style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:var(--md-shape-md);pointer-events:none;"></canvas>
         </div>
-        <div style="margin-top:5px;font-size:0.6rem;color:var(--md-sys-color-on-surface-variant);text-align:right;">Sentinel-2 MSI · EPSG:32722 · Recorte 10 m/pixel</div>
+        <div style="margin-top:5px;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);text-align:right;">Sentinel-2 MSI · EPSG:32722 · Recorte 10 m/pixel</div>
       </div>
 
       <!-- Amostras coletadas -->
@@ -1239,10 +1561,10 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <p id="mode-hint" style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:10px;">Amostras de treinamento (círculos) ensinam o algoritmo. Use pelo menos 5 pixels por classe, espalhados pela cena.</p>
         <div id="sample-counts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div class="stat-tile"><div class="stat-label">🌿 Vegetação</div><div class="stat-value" id="cnt-0" style="color:#2f9e44;">0</div></div>
-          <div class="stat-tile"><div class="stat-label">🟫 Solo</div><div class="stat-value" id="cnt-1" style="color:#f97316;">0</div></div>
-          <div class="stat-tile"><div class="stat-label">💧 Água</div><div class="stat-value" id="cnt-2" style="color:#3b82f6;">0</div></div>
-          <div class="stat-tile"><div class="stat-label">🐄 Pastagem</div><div class="stat-value" id="cnt-3" style="color:#86efac;">0</div></div>
+          <div class="stat-tile"><div class="stat-label">🌿 Vegetação</div><div class="stat-value" id="cnt-0" style="color:#009E73;">0</div></div>
+          <div class="stat-tile"><div class="stat-label">🟫 Solo</div><div class="stat-value" id="cnt-1" style="color:#D55E00;">0</div></div>
+          <div class="stat-tile"><div class="stat-label">💧 Água</div><div class="stat-value" id="cnt-2" style="color:#0072B2;">0</div></div>
+          <div class="stat-tile"><div class="stat-label">🐄 Pastagem</div><div class="stat-value" id="cnt-3" style="color:#F0E442;">0</div></div>
         </div>
         <div style="display:flex;gap:8px;">
           <button id="classifyBtn" class="btn-filled" style="flex:1;" onclick="runClassification()">🗺️ Classificar</button>
@@ -1256,14 +1578,14 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div class="m3-card-title">✅ Mapa de Classificação</div>
         <canvas id="classifyResult" width="320" height="195" style="width:100%;border-radius:var(--md-shape-md);display:block;border:2px solid var(--md-sys-color-outline-variant);"></canvas>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:var(--md-type-label-small);">
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#2f9e44;border-radius:3px;display:inline-block;"></span>Vegetação</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#f97316;border-radius:3px;display:inline-block;"></span>Solo Exposto</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#3b82f6;border-radius:3px;display:inline-block;"></span>Água</span>
-          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#86efac;border-radius:3px;display:inline-block;"></span>Pastagem</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#009E73;border-radius:3px;display:inline-block;outline:1px solid var(--md-sys-color-outline);"></span>Vegetação</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#D55E00;border-radius:3px;display:inline-block;outline:1px solid var(--md-sys-color-outline);"></span>Solo Exposto</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#0072B2;border-radius:3px;display:inline-block;outline:1px solid var(--md-sys-color-outline);"></span>Água</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:14px;background:#F0E442;border-radius:3px;display:inline-block;outline:1px solid var(--md-sys-color-outline);"></span>Pastagem</span>
         </div>
         <div id="classify-stats" style="margin-top:10px;font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);line-height:1.7;"></div>
         <div class="m3-card-title" style="margin-top:14px;">📈 Assinatura espectral média das classes</div>
-        <canvas id="sigCanvas" width="340" height="200" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
+        <canvas id="sigCanvas" width="340" height="240" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
         <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:4px;">Quanto mais parecidas as curvas de duas classes, maior a chance de o classificador confundi-las.</p>
         <div class="m3-card-title" style="margin-top:14px;">📏 Avaliação da acurácia</div>
         <div id="accuracyBox" style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);line-height:1.6;">Passe ao modo <strong>Validação</strong> e marque pixels de referência (quadrados) para calcular a matriz de confusão.</div>
@@ -1279,7 +1601,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
             <p style="margin-top:6px;"><strong>3. Classificador (mínima distância):</strong> O algoritmo calcula a média espectral de cada classe e atribui cada pixel à classe cuja média é mais próxima no espaço 4D.</p>
             <p style="margin-top:6px;"><strong>4. Mapa temático:</strong> O resultado é uma imagem onde cada pixel recebe a cor da classe classificada.</p>
             <p style="margin-top:6px;"><strong>5. Validação:</strong> Pixels de referência, diferentes dos de treinamento, são comparados ao mapa. A matriz de confusão mostra os acertos (diagonal) e as confusões entre classes. A exatidão global é a proporção de acertos; o índice Kappa desconta a concordância esperada ao acaso.</p>
-            <p style="margin-top:8px;font-size:0.65rem;">Na composição falsa cor, vegetação saudável aparece em vermelho vivo (alto NIR), água em azul escuro (baixo NIR e Red), solo exposto em tons alaranjados.</p>
+            <p style="margin-top:8px;font-size:0.75rem;">Na composição falsa cor, vegetação saudável aparece em vermelho vivo (alto NIR), água em azul escuro (baixo NIR e Red), solo exposto em tons alaranjados.</p>
           </div>
         </details>
       </div>
@@ -1373,8 +1695,16 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <div id="viewIndex" class="view-content hidden">
           <canvas id="indexCanvas" width="400" height="300" style="width:100%;"></canvas>
-          <div class="colorbar"></div>
-          <p style="font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);text-align:center;">Solo exposto ← → Vegetação densa</p>
+          <div class="palette-row">
+            <span class="poe-label">Paleta de cores</span>
+            <div class="seg-mini" role="group" aria-label="Paleta de cores do índice">
+              <button type="button" data-pal="viridis" onclick="setPalette('viridis')">Viridis</button>
+              <button type="button" data-pal="divergente" onclick="setPalette('divergente')">Divergente</button>
+            </div>
+          </div>
+          <div class="colorbar" id="colorbar" role="img" aria-label="Escala de cores do índice, de −1 a +1"></div>
+          <div class="colorbar-ticks" aria-hidden="true"><span>−1</span><span>−0,5</span><span>0</span><span>+0,5</span><span>+1</span></div>
+          <p class="colorbar-caption" id="colorbarCaption">← água, nuvem, sombra · solo exposto · vegetação densa →</p>
           <div style="display:flex;gap:8px;margin-top:8px;font-size:var(--md-type-label-small);">
             <span>Índice: <strong id="indexName">NDVI</strong></span>
             <span>Min: <strong id="indexMin">—</strong></span>
@@ -1386,13 +1716,13 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div id="viewHistogram" class="view-content hidden">
           <canvas id="histogramCanvas" width="400" height="220" style="width:100%;border-radius:var(--md-shape-md);"></canvas>
           <div style="display:flex;justify-content:space-between;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-top:6px;padding:0 2px;">
-            <span>-1.0</span><span>-0.5</span><span>0.0</span><span>+0.5</span><span>+1.0</span>
+            
           </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:var(--md-type-label-small);">
             <span id="hist-index-label" style="color:var(--md-sys-color-primary);font-weight:700;">NDVI</span>
             <span>Pixels: <strong id="hist-pixels">--</strong></span>
             <span>Moda: <strong id="hist-mode">--</strong></span>
-            <span>Media: <strong id="hist-mean">--</strong></span>
+            <span>Média: <strong id="hist-mean">--</strong></span>
           </div>
         </div>
       </div>
@@ -1499,11 +1829,11 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div class="stat-grid">
           <div class="stat-tile">
             <div class="stat-label">Lat GMS</div>
-            <div class="stat-value" style="font-size:0.72rem;" id="loc-lat-dms">—</div>
+            <div class="stat-value" style="font-size:0.75rem;" id="loc-lat-dms">—</div>
           </div>
           <div class="stat-tile">
             <div class="stat-label">Lon GMS</div>
-            <div class="stat-value" style="font-size:0.72rem;" id="loc-lon-dms">—</div>
+            <div class="stat-value" style="font-size:0.75rem;" id="loc-lon-dms">—</div>
           </div>
         </div>
       </div>
@@ -1577,8 +1907,8 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
           <div class="conv-result-row"><span class="conv-result-label">Fuso</span><span class="conv-result-value" id="cv-utm-zone">—</span></div>
           <div class="conv-result-row"><span class="conv-result-label">Easting (m)</span><span class="conv-result-value" id="cv-utm-e">—</span></div>
           <div class="conv-result-row"><span class="conv-result-label">Northing (m)</span><span class="conv-result-value" id="cv-utm-n">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-res-lat-dms" style="font-size:0.7rem;">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-res-lon-dms" style="font-size:0.7rem;">—</span></div>
+          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-res-lat-dms" style="font-size:0.75rem;">—</span></div>
+          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-res-lon-dms" style="font-size:0.75rem;">—</span></div>
           <button onclick="cvCopyUTM()" class="btn-text btn-full" style="margin-top:6px;">📋 Copiar</button>
         </div>
         <div id="cv-err-utm" class="hidden" style="margin-top:8px;padding:10px;border-radius:var(--md-shape-sm);background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);font-size:var(--md-type-body-small);"></div>
@@ -1610,8 +1940,8 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <div id="cv-res-ll" class="conv-result hidden">
           <div class="conv-result-row"><span class="conv-result-label">Latitude (DD)</span><span class="conv-result-value" id="cv-out-lat">—</span></div>
           <div class="conv-result-row"><span class="conv-result-label">Longitude (DD)</span><span class="conv-result-value" id="cv-out-lon">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-out-lat-dms" style="font-size:0.7rem;">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-out-lon-dms" style="font-size:0.7rem;">—</span></div>
+          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-out-lat-dms" style="font-size:0.75rem;">—</span></div>
+          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-out-lon-dms" style="font-size:0.75rem;">—</span></div>
           <button onclick="cvCopyLL()" class="btn-text btn-full" style="margin-top:6px;">📋 Copiar</button>
         </div>
         <div id="cv-err-ll" class="hidden" style="margin-top:8px;padding:10px;border-radius:var(--md-shape-sm);background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);font-size:var(--md-type-body-small);"></div>
@@ -1626,7 +1956,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
             <p style="margin-top:6px;"><strong>Easting</strong>: distância ao leste do meridiano central + 500 000 m (falso easting).</p>
             <p style="margin-top:6px;"><strong>Northing</strong>: distância ao norte do Equador. No hemisfério Sul soma-se 10 000 000 m.</p>
             <p style="margin-top:6px;">O Brasil abrange fusos 18 S a 25 S. Gurupi (TO): fuso <strong>22 S</strong>.</p>
-            <p style="margin-top:6px;font-size:0.65rem;color:var(--md-sys-color-on-surface-variant);">Elipsoide WGS 84 — a = 6 378 137 m · f = 1/298,257 223 563</p>
+            <p style="margin-top:6px;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);">Elipsoide WGS 84 — a = 6 378 137 m · f = 1/298,257 223 563</p>
           </div>
         </details>
       </div>
@@ -1637,50 +1967,64 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
   <!-- ============================================================
        BOTTOM NAVIGATION BAR
   ============================================================= -->
-  <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-item active" data-nav="spectrum" onclick="navTo('spectrum',this)">
+  <nav class="bottom-nav" id="bottom-nav" aria-label="Navegação principal">
+    <button class="nav-item" data-group="aprender" onclick="navTo('aprender')">
       <div class="nav-indicator"></div>
-      <div class="nav-icon">🌈</div>
-      <div class="nav-label">Espectro</div>
+      <div class="nav-icon" aria-hidden="true">📘</div>
+      <div class="nav-label">Aprender</div>
     </button>
-    <button class="nav-item" data-nav="camera" onclick="navTo('camera',this)">
+    <button class="nav-item" data-group="labs" onclick="navTo('labs')">
       <div class="nav-indicator"></div>
-      <div class="nav-icon">📷</div>
-      <div class="nav-label">Câmera</div>
+      <div class="nav-icon" aria-hidden="true">🔬</div>
+      <div class="nav-label">Laboratórios</div>
     </button>
-    <button class="nav-item" data-nav="indices" onclick="navTo('indices',this)">
+    <button class="nav-item" data-group="campo" onclick="navTo('campo')">
       <div class="nav-indicator"></div>
-      <div class="nav-icon">🌱</div>
-      <div class="nav-label">Índices</div>
+      <div class="nav-icon" aria-hidden="true">🧭</div>
+      <div class="nav-label">Campo</div>
     </button>
-    <button class="nav-item" data-nav="location" onclick="navTo('location',this)">
+    <button class="nav-item" data-group="praticar" onclick="navTo('praticar')">
       <div class="nav-indicator"></div>
-      <div class="nav-icon">🧭</div>
-      <div class="nav-label">GPS</div>
-    </button>
-    <button class="nav-item" data-nav="converter" onclick="navTo('converter',this)">
-      <div class="nav-indicator"></div>
-      <div class="nav-icon">🔄</div>
-      <div class="nav-label">UTM</div>
+      <div class="nav-icon" aria-hidden="true">🧩</div>
+      <div class="nav-label">Praticar</div>
     </button>
   </nav>
 
 </div><!-- /app-shell -->
 
 <!-- Footer hidden on mobile, shown only for desktop -->
-<footer style="background:var(--md-sys-color-surface-container-low);padding:12px 16px;text-align:center;font-size:0.65rem;color:var(--md-sys-color-on-surface-variant);display:none;" id="footer-desktop">
+<footer style="background:var(--md-sys-color-surface-container-low);padding:12px 16px;text-align:center;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);display:none;" id="footer-desktop">
   © Sensoriamento Remoto e SIG • Agronomia UFT Gurupi • Prof. Dr. Jacinto Pereira Santos • Ferramenta didática • PWA
 </footer>
 
-<div id="snackbar"></div>
+<div id="snackbar" role="status" aria-live="polite"></div>
+
+<div id="theme-sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-labelledby="theme-sheet-title">
+  <div class="sheet-scrim" data-close></div>
+  <div class="sheet-panel">
+    <h2 id="theme-sheet-title">Aparência</h2>
+    <p>No campo, sob sol forte, o alto contraste é o mais legível.</p>
+    <div role="radiogroup" aria-labelledby="theme-sheet-title">
+      <label class="theme-opt"><input type="radio" name="tema" value="auto"><span><strong>Automático</strong><small>Segue o tema do aparelho</small></span><span class="theme-swatch" style="background:linear-gradient(135deg,#F6FAFD 50%,#141820 50%);"></span></label>
+      <label class="theme-opt"><input type="radio" name="tema" value="claro"><span><strong>Claro</strong><small>Para salas iluminadas e leitura longa</small></span><span class="theme-swatch" style="background:#F6FAFD;"></span></label>
+      <label class="theme-opt"><input type="radio" name="tema" value="escuro"><span><strong>Escuro</strong><small>Para ambientes com pouca luz</small></span><span class="theme-swatch" style="background:#141820;"></span></label>
+      <label class="theme-opt"><input type="radio" name="tema" value="contraste"><span><strong>Alto contraste</strong><small>Preto sobre branco, bordas reforçadas</small></span><span class="theme-swatch" style="background:linear-gradient(135deg,#FFFFFF 50%,#000000 50%);"></span></label>
+    </div>
+    <button type="button" class="btn-filled btn-full" style="margin-top:6px;" data-close>Fechar</button>
+  </div>
+</div>
 
 <script>
 // ================================================================
-//  TRILHA DE APRENDIZAGEM · PROGRESSO · ATIVIDADES GUIADAS
+//  TRILHA DE APRENDIZAGEM · PROGRESSO
+//  Ciclo de cada módulo: Prever → Explorar → Explicar → Aplicar
+//  (Predict-Observe-Explain + transferência para um problema agronômico)
 // ================================================================
 const SL_KEY = 'sensorlab_progresso_v1';
 function slLoad(){ try { return JSON.parse(localStorage.getItem(SL_KEY)) || {}; } catch(e){ return {}; } }
-let PROG = Object.assign({ name:'', visited:{}, done:{}, tries:{}, quiz:{best:0, last:0, attempts:0}, classify:{oa:null, kappa:null}, game:{rounds:0} }, slLoad());
+function progDefault(){ return { name:'', visited:{}, done:{}, tries:{}, poe:{}, quiz:{best:0, last:0, attempts:0}, classify:{oa:null, kappa:null, worst:null}, game:{rounds:0} }; }
+let PROG = Object.assign(progDefault(), slLoad());
+if (!PROG.poe) PROG.poe = {};
 function slSave(){ try { localStorage.setItem(SL_KEY, JSON.stringify(PROG)); } catch(e){} }
 
 const LEVELS = [
@@ -1688,63 +2032,119 @@ const LEVELS = [
   { n:2, titulo:'Nível 2 · Sensores e coleta de dados' },
   { n:3, titulo:'Nível 3 · Processamento e aplicações agronômicas' }
 ];
+const STAGES = ['Prever','Explorar','Explicar','Aplicar'];
+const CONF   = ['Chute','Alguma certeza','Muita certeza'];
+const SELF   = ['Sim','Em parte','Não'];
+const CLASS_NAMES = ['Vegetação','Solo exposto','Água','Pastagem'];
 
 const MODULES = [
   { id:'spectrum', tab:'spectrum', nivel:1, icon:'🌈', titulo:'Espectro eletromagnético',
     obj:'Relacionar cada faixa do espectro com sua interação na atmosfera e com aplicações na agricultura.',
-    passos:['Toque nas faixas Visível, IV e Micro-ondas e leia como cada uma interage com a atmosfera.','Anote qual faixa revela o vigor da vegetação e qual atravessa nuvens.','Responda ao desafio abaixo.'],
+    poe:{ prever:'Em qual faixa uma folha verde e sadia reflete MAIS energia?',
+      ops:['Verde, por isso a vemos verde','Azul','Vermelho','Infravermelho próximo (NIR)'], esperado:3,
+      observar:'Toque nas faixas Visível e IV e procure o que cada uma diz sobre a vegetação. Depois toque em Micro-ondas.',
+      resultado:'A folha sadia reflete de 40% a 60% no NIR e apenas cerca de 10% a 15% no verde. O verde é só o pico dentro do visível, a faixa que nossos olhos percebem. No NIR, o mesofilo esponjoso espalha a radiação e quase nada é absorvido. Prever “verde” é a concepção prévia mais comum: confunde o que enxergamos com o que a folha reflete. É por isso que o NIR é a base do NDVI.' },
+    passos:['Toque em Visível e em IV e leia o campo “Na agronomia”.','Anote qual faixa revela o vigor da vegetação.','Toque em Micro-ondas e anote qual faixa atravessa nuvens.'],
     q:{ texto:'No período chuvoso, com nuvens quase todos os dias, um produtor precisa acompanhar a lavoura de soja. Qual faixa garante imagens mesmo com nuvens?',
         ops:['Visível','Infravermelho próximo','Micro-ondas (radar)','Ultravioleta'], certa:2,
         dica:'Pense em qual faixa tem comprimento de onda muito maior que as gotículas das nuvens.',
         exp:'As micro-ondas (comprimentos de onda de centímetros) atravessam nuvens e funcionam dia e noite. Por isso sensores radar, como o Sentinel-1, são usados no monitoramento agrícola em regiões tropicais chuvosas.' } },
-  { id:'lab', tab:'lab', nivel:1, icon:'🔬', titulo:'Espalhamento atmosférico',
+  { id:'lab', tab:'lab', nivel:1, icon:'🌫️', titulo:'Espalhamento atmosférico',
     obj:'Distinguir os espalhamentos Rayleigh, Mie e não-seletivo pela relação entre tamanho da partícula e comprimento de onda.',
-    passos:['Mova o controle da menor para a maior partícula.','Observe como muda a intensidade relativa do espalhamento no azul, verde, vermelho e NIR.','Identifique em que faixa de tamanho estaria a fumaça das queimadas.'],
+    poe:{ prever:'Quando a partícula cresce, de uma molécula de gás até uma gotícula de nuvem, o que acontece com o espalhamento do azul em relação ao vermelho?',
+      ops:['O azul fica cada vez mais dominante','A diferença diminui até todas as cores espalharem igual','O vermelho passa a ser mais espalhado que o azul','Nada muda: só depende do comprimento de onda'], esperado:1,
+      observar:'Mova o controle devagar, da menor para a maior partícula. Observe a altura das barras e a cor do céu.',
+      resultado:'Com partículas muito menores que o comprimento de onda (Rayleigh), o espalhamento é proporcional a λ⁻⁴: o azul é espalhado de 3 a 5 vezes mais que o vermelho, e o céu fica azul. À medida que a partícula cresce (Mie), essa dependência enfraquece. Com partículas muito maiores que λ (não-seletivo), todas as faixas são espalhadas por igual: por isso nuvens e neblina são brancas.' },
+    passos:['Comece com o controle todo à esquerda (moléculas de gás).','Avance até a faixa da fumaça de queimadas (0,1 a 1 µm).','Termine na faixa das gotículas de nuvem e compare as barras.'],
     q:{ texto:'Nas imagens de agosto e setembro no Tocantins, a fumaça das queimadas (partículas de 0,1 a 1 µm) reduz o contraste da cena. Qual espalhamento predomina?',
         ops:['Rayleigh','Mie','Não-seletivo','Absorção pelo ozônio'], certa:1,
         dica:'Compare o tamanho das partículas da fumaça com o comprimento de onda da luz visível (0,4 a 0,7 µm).',
         exp:'Partículas com tamanho da mesma ordem do comprimento de onda produzem espalhamento Mie. A fumaça aumenta a radiância no visível, reduz o contraste e altera índices como o NDVI; por isso a correção atmosférica é importante.' } },
   { id:'quantities', tab:'quantities', nivel:1, icon:'📊', titulo:'Grandezas radiométricas',
     obj:'Diferenciar número digital, radiância e reflectância e saber qual usar em análises multitemporais.',
-    passos:['Leia os cartões de DN, radiância e reflectância.','Note quais dependem da calibração do sensor e da iluminação solar.','Responda ao desafio.'],
+    poe:{ prever:'O mesmo talhão foi imageado às 10 h e ao meio-dia do mesmo dia, sem nuvens. O número digital (DN) do pixel será:',
+      ops:['Igual, porque o alvo é o mesmo','Maior ao meio-dia','Menor ao meio-dia','Impossível de prever'], esperado:1,
+      observar:'Leia os cartões de DN, radiância, irradiância e reflectância. Para cada um, pergunte: esse valor depende da iluminação do Sol?',
+      resultado:'Ao meio-dia o Sol está mais alto, a irradiância na superfície é maior e o alvo envia mais energia ao sensor: o DN e a radiância aumentam. A reflectância é uma razão (energia refletida dividida pela incidente) e por isso praticamente não muda. É ela a grandeza comparável entre horários, datas e sensores.' },
+    passos:['Leia os cartões de DN, radiância e reflectância.','Marque quais dependem da calibração do sensor.','Marque quais dependem da iluminação solar.'],
     q:{ texto:'Para comparar o NDVI de um mesmo talhão em duas datas da safra, qual grandeza deve ser usada?',
         ops:['Número digital (DN)','Radiância sem correção','Reflectância de superfície','Temperatura de brilho'], certa:2,
         dica:'Qual grandeza elimina o efeito de diferentes condições de iluminação e de atmosfera entre as datas?',
         exp:'A reflectância de superfície é uma razão (refletida/incidente), corrigida dos efeitos atmosféricos. Ela é comparável entre datas e sensores; o DN e a radiância mudam com a iluminação e a calibração.' } },
-  { id:'quiz', tab:'quiz', nivel:1, icon:'❓', titulo:'Quiz: princípios físicos',
+  { id:'quiz', tab:'quiz', nivel:1, icon:'❓', titulo:'Quiz: princípios físicos', auto:true,
     obj:'Verificar a compreensão dos princípios físicos do sensoriamento remoto.',
-    passos:['Responda às 30 questões e leia a explicação de cada uma.','Ao final, refaça apenas as que errou.','Meta: acertar pelo menos 70%.'],
-    auto:true },
+    poe:{ prever:'Antes de começar: quantas das 30 questões você espera acertar?',
+      ops:['Menos da metade','Entre 50% e 69%','Entre 70% e 89%','90% ou mais'], esperado:null,
+      observar:'Responda todas as questões e leia a explicação de cada uma, inclusive das que acertou.',
+      resultado:'Comparar a expectativa com o resultado treina a metacognição: saber o que se sabe. Quem superestima o próprio desempenho tende a estudar menos do que precisa. Use as questões erradas como roteiro de revisão.',
+      dinamico: s => {
+        if (!PROG.quiz.attempts) return 'Faça o quiz completo para comparar sua expectativa com o resultado.';
+        const p = PROG.quiz.last, cat = p < 50 ? 0 : p < 70 ? 1 : p < 90 ? 2 : 3;
+        const rel = cat === s.pred ? 'Sua expectativa foi precisa.' : cat < s.pred ? 'Você superestimou seu desempenho.' : 'Você subestimou seu desempenho.';
+        return `No último quiz completo você acertou ${p}%. ${rel}`;
+      } },
+    passos:['Responda às 30 questões e leia a explicação de cada uma.','Ao final, refaça apenas as que errou.'] },
   { id:'game', tab:'game', nivel:2, icon:'🃏', titulo:'Trunfo dos satélites',
     obj:'Comparar sensores pelas resoluções espacial, espectral e temporal e escolher o mais adequado para cada aplicação.',
-    passos:['Jogue pelo menos 5 rodadas.','Depois de cada rodada, leia o que significa o atributo escolhido.','Pense em qual satélite usaria para monitorar uma cultura de ciclo curto.'],
+    poe:{ prever:'Para a agricultura, um satélite com pixel menor é sempre a melhor escolha?',
+      ops:['Sim, mais detalhe é sempre melhor','Não: há trocas entre detalhe, área coberta, revisita e custo','Só para culturas perenes','Depende apenas do preço da imagem'], esperado:1,
+      observar:'Jogue pelo menos 5 rodadas. Compare WorldView-3 ou PlanetScope com MODIS e Landsat: o que cada um ganha e o que perde?',
+      resultado:'Sensores de pixel pequeno costumam cobrir faixas estreitas do terreno e ser comerciais. Sensores de pixel grande, como o MODIS (250 m), revisitam diariamente áreas enormes. A escolha depende da pergunta: detectar falhas de plantio pede pixel de poucos metros; acompanhar a safra de um estado pede revisita frequente e área ampla.' },
+    passos:['Jogue pelo menos 5 rodadas.','Depois de cada rodada, leia o que significa o atributo escolhido.','Anote um satélite bom para detalhe e outro bom para frequência.'],
     q:{ texto:'Para acompanhar semanalmente uma lavoura de feijão de ciclo de 90 dias, qual característica do sensor é a mais crítica?',
         ops:['Ano de lançamento','Resolução temporal (revisita)','Número de bandas termais','Tamanho do satélite'], certa:1,
         dica:'O que importa é ter imagens com frequência durante um ciclo curto.',
         exp:'Em culturas de ciclo curto, a resolução temporal é decisiva: com revisita de 16 dias e nuvens, podem restar poucas imagens úteis. Sentinel-2 (5 dias) ou PlanetScope (diário) atendem melhor.' } },
   { id:'camera', tab:'camera', nivel:2, icon:'📷', titulo:'Radiometria com a câmera',
     obj:'Medir e comparar a resposta espectral de alvos no visível usando uma referência branca.',
-    passos:['Capture uma cena com uma folha verde, uma folha seca (ou solo) e uma folha de papel branco.','Toque no papel e marque-o como referência branca.','Toque nos outros alvos e compare a reflectância relativa nos canais R, G e B.'],
+    poe:{ prever:'Você vai fotografar uma folha verde e uma folha seca. Em qual canal da câmera a diferença entre as duas será MAIOR?',
+      ops:['Vermelho (R)','Verde (G)','Azul (B)','Nos três canais será igual'], esperado:0,
+      observar:'Use o papel branco como referência e compare a reflectância relativa das duas folhas, canal por canal.',
+      resultado:'A folha verde absorve fortemente o vermelho, por causa da clorofila. Na folha seca, a clorofila se degrada e o vermelho passa a ser refletido: é o canal que mais muda. O verde também varia, mas menos. É a mesma lógica da banda vermelha no NDVI. Se o seu resultado divergir, lembre que a câmera ajusta sozinha o balanço de branco e a exposição.' },
+    passos:['Capture uma cena com uma folha verde, uma folha seca (ou solo) e uma folha de papel branco.','Toque no papel e marque-o como referência branca.','Toque nas folhas e compare a reflectância relativa nos canais R, G e B.'],
     q:{ texto:'Por que a folha verde sadia apresenta maior valor no canal verde do que no vermelho?',
         ops:['Porque a clorofila absorve fortemente o azul e o vermelho','Porque a folha emite luz verde','Porque a água da folha reflete o verde','Porque a câmera tem mais pixels verdes'], certa:0,
         dica:'Lembre o papel dos pigmentos fotossintéticos na absorção da luz.',
         exp:'A clorofila absorve a radiação nas faixas do azul (~450 nm) e do vermelho (~670 nm) para a fotossíntese e reflete parte do verde. Folhas senescentes perdem clorofila e passam a refletir mais o vermelho.' } },
   { id:'location', tab:'location', nivel:2, icon:'🧭', titulo:'GPS e coordenadas UTM',
     obj:'Registrar pontos de campo e converter coordenadas geográficas para UTM.',
-    passos:['Obtenha sua posição na aba GPS e observe a acurácia horizontal.','Copie as coordenadas e converta-as na aba UTM.','Verifique o fuso UTM de Gurupi (22 S).'],
+    poe:{ prever:'Parado em céu aberto, qual acurácia horizontal você espera do GPS do seu celular?',
+      ops:['Menos de 1 m','Entre 3 e 10 m','Entre 30 e 50 m','Mais de 100 m'], esperado:1,
+      observar:'Obtenha a posição em céu aberto e anote a acurácia. Depois repita sob uma árvore ou perto de um prédio.',
+      resultado:'Celulares comuns têm acurácia típica de 3 a 10 m em céu aberto, que piora sob o dossel e perto de edificações (bloqueio e multicaminho do sinal). Receptores geodésicos com correção RTK chegam a centímetros. Em pixels de 10 m do Sentinel-2, um erro de 5 m pode colocar o ponto no pixel vizinho.',
+      dinamico: () => (typeof lastLocCoords !== 'undefined' && lastLocCoords && lastLocCoords.accuracy != null)
+        ? `Sua medição mais recente: ± ${lastLocCoords.accuracy.toFixed(1).replace('.', ',')} m.`
+        : 'Obtenha sua posição nesta tela para comparar a previsão com um valor medido.' },
+    passos:['Toque em “Obter” e observe a acurácia horizontal.','Copie as coordenadas e converta-as na aba UTM.','Confira o fuso UTM de Gurupi (22 S).'],
     q:{ texto:'Você coletará amostras de solo em grade de 50 × 50 m e depois as localizará numa imagem Sentinel-2. Qual sistema de coordenadas facilita medir as distâncias?',
         ops:['Graus decimais','Graus, minutos e segundos','UTM (em metros)','Coordenadas polares'], certa:2,
         dica:'Qual sistema expressa posições diretamente em metros?',
         exp:'O UTM usa coordenadas planas em metros (Easting e Northing), o que facilita traçar grades de amostragem e relacionar pontos aos pixels de 10 m do Sentinel-2.' } },
   { id:'indices', tab:'indices', nivel:3, icon:'🌱', titulo:'Índices de vegetação',
     obj:'Calcular e interpretar índices de vegetação e estimar a área vegetada de uma cena.',
-    passos:['Carregue a cena Sentinel-2 e calcule o NDVI.','Toque em pixels de água, mata e solo exposto e compare os valores.','Use o limiar para estimar a porcentagem e a área (ha) com vegetação.','Compare NDVI e SAVI em áreas de solo exposto.'],
+    poe:{ prever:'Qual valor de NDVI você espera para a água do reservatório?',
+      ops:['Negativo','Próximo de zero','Entre 0,3 e 0,5','Acima de 0,7'], esperado:0,
+      observar:'Calcule o NDVI e toque em pixels de água, de mata ciliar e de solo exposto. Anote os valores.',
+      resultado:'A água absorve quase todo o NIR e reflete um pouco mais no vermelho: como o NIR fica menor que o vermelho, o NDVI é negativo. Na mata, o NIR é muito maior que o vermelho e o NDVI se aproxima de 1. Nesta cena os valores são relativos (bandas em 8 bits): compare áreas da mesma imagem.' },
+    passos:['Calcule o NDVI.','Toque em pixels de água, mata e solo exposto e compare os valores.','Use o limiar para estimar a porcentagem e a área (ha) com vegetação.','Compare NDVI e SAVI em áreas de solo exposto.'],
     q:{ texto:'Em uma pastagem degradada, com muito solo exposto entre as touceiras, qual índice reduz a influência do brilho do solo?',
         ops:['NDVI','NDWI','SAVI','Composição cor natural'], certa:2,
         dica:'Procure o índice que tem um fator de ajuste do solo na fórmula.',
         exp:'O SAVI inclui o fator L (geralmente 0,5) que reduz o efeito do solo em áreas de cobertura vegetal incompleta, comum em pastagens degradadas e no início do ciclo das culturas.' } },
   { id:'classify', tab:'classify', nivel:3, icon:'🗺️', titulo:'Classificação supervisionada',
     obj:'Produzir um mapa de uso e cobertura e avaliar sua qualidade com matriz de confusão e índice Kappa.',
+    poe:{ prever:'Quais duas classes você acha que o classificador vai confundir MAIS?',
+      ops:['Vegetação × Pastagem','Pastagem × Solo exposto','Água × Vegetação','Água × Solo exposto'], esperado:null,
+      pares:[[0,3],[3,1],[2,0],[2,1]],
+      observar:'Treine, classifique e valide o mapa. Depois observe a matriz de confusão e o gráfico das assinaturas médias.',
+      resultado:'Classes com assinaturas espectrais parecidas se confundem mais. Nesta cena do período seco, a pastagem seca se aproxima do solo exposto, e pastagens ainda verdes se aproximam da vegetação. A água costuma ser a classe mais fácil, porque é escura no NIR. Não há resposta única: ela depende das suas amostras, e a matriz de confusão é a evidência.',
+      dinamico: s => {
+        const w = PROG.classify.worst;
+        if (!w) return PROG.classify.oa == null ? 'Classifique e valide o mapa para comparar a previsão com a sua matriz de confusão.' : 'Na sua validação não houve confusão entre classes.';
+        const par = MODULES.find(x => x.id === 'classify').poe.pares[s.pred] || [];
+        const bate = (par[0] === w[0] && par[1] === w[1]) || (par[0] === w[1] && par[1] === w[0]);
+        return `Na sua matriz, a maior confusão foi entre ${CLASS_NAMES[w[0]]} e ${CLASS_NAMES[w[1]]}. ${bate ? 'Sua previsão se confirmou nos dados.' : 'Os dados mostraram outro par.'}`;
+      } },
     passos:['Colete pelo menos 5 amostras de treinamento por classe.','Classifique e observe as assinaturas espectrais médias.','No modo Validação, marque outros pixels de referência de cada classe.','Leia a matriz de confusão: quais classes foram mais confundidas?'],
     q:{ texto:'Seu mapa confundiu Pastagem com Vegetação. Qual a causa espectral mais provável?',
         ops:['As duas classes têm assinaturas espectrais parecidas, com NIR alto','A água reflete muito no NIR','O classificador ignora a banda vermelha','O mapa está em projeção UTM'], certa:0,
@@ -1753,12 +2153,20 @@ const MODULES = [
 ];
 
 function moduleDone(m){ return m.auto ? (PROG.quiz.best >= 70) : !!PROG.done[m.id]; }
+function trailPercent(){ return Math.round(MODULES.filter(moduleDone).length / MODULES.length * 100); }
+function escHtml(t){ return String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-function trailPercent(){
-  const n = MODULES.filter(moduleDone).length;
-  return Math.round(n / MODULES.length * 100);
+function poeState(m){
+  if (!PROG.poe[m.id]) PROG.poe[m.id] = { stage: moduleDone(m) ? 3 : 0, pred:null, conf:null, obs:'', self:null, revealed:false, wrong:[] };
+  return PROG.poe[m.id];
 }
+function poeUnlocked(id){
+  const m = MODULES.find(x => x.id === id); if (!m) return true;
+  return poeState(m).stage > 0 || moduleDone(m);
+}
+const poeView = {}, poeDraft = {};
 
+// ---------- Trilha (tela inicial) ----------
 function renderTrail(){
   const box = document.getElementById('trailLevels'); if(!box) return;
   const nameIn = document.getElementById('trailName');
@@ -1766,65 +2174,173 @@ function renderTrail(){
   const pct = trailPercent();
   document.getElementById('trailPct').textContent = pct + '%';
   document.getElementById('trailFill').style.width = pct + '%';
+  const doneMsg = document.getElementById('trailDoneMsg');
+  if (doneMsg) doneMsg.classList.toggle('hidden', pct < 100);
+  if (pct === 100 && !window._trailCelebrated) { window._trailCelebrated = true; snack('🎓 Parabéns! Trilha concluída.'); }
   box.innerHTML = LEVELS.map(L => {
     const mods = MODULES.filter(m => m.nivel === L.n);
     const nd = mods.filter(moduleDone).length;
-    return `<div class="level-title">${L.titulo} <span style="font-weight:500;color:var(--md-sys-color-on-surface-variant);">(${nd}/${mods.length})</span></div>` +
+    return `<div class="level-title">${L.titulo} <span class="level-count">(${nd}/${mods.length})</span></div>` +
       mods.map(m => {
-        const d = moduleDone(m);
-        const extra = m.id==='quiz' && PROG.quiz.attempts ? ` · melhor resultado: ${PROG.quiz.best}%` :
-                      m.id==='classify' && PROG.classify.oa!=null ? ` · exatidão global: ${PROG.classify.oa}%` : '';
+        const d = moduleDone(m), s = poeState(m);
+        const extra = m.id==='quiz' && PROG.quiz.attempts ? ` Melhor resultado: ${PROG.quiz.best}%.` :
+                      m.id==='classify' && PROG.classify.oa!=null ? ` Exatidão global: ${String(PROG.classify.oa).replace('.', ',')}%.` : '';
+        const pill = d ? '<span class="status-pill ok">Concluído</span>'
+                   : (s.stage > 0 ? `<span class="status-pill prog">Etapa: ${STAGES[s.stage]}</span>` : '<span class="status-pill todo">Não iniciado</span>');
+        const dots = STAGES.map((st,i) => `<span class="trail-dot${(i < s.stage || (i===3 && d)) ? ' on' : ''}" title="${st}"></span>`).join('');
         return `<div class="m3-card act-card ${d?'done':''}" style="padding:12px 14px;">
           <div class="trail-row">
             <div class="trail-ico" aria-hidden="true">${m.icon}</div>
             <div class="trail-body">
               <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;">
-                <h3>${m.titulo}</h3>
-                <span class="status-pill ${d?'ok':'todo'}">${d?'Concluído':(PROG.visited[m.tab]?'Em andamento':'Não iniciado')}</span>
+                <h3>${m.titulo}</h3>${pill}
               </div>
               <p>${m.obj}${extra}</p>
-              <button class="btn-text" style="padding:6px 0;margin-top:4px;" onclick="showPage('${m.tab}')">${d?'Revisar módulo':'Abrir módulo'}</button>
+              <div class="trail-dots" aria-label="Etapas concluídas: ${d ? 4 : s.stage} de 4">${dots}</div>
+              <button class="btn-text" style="padding:6px 0;margin-top:2px;" onclick="showPage('${m.tab}')">${d ? 'Revisar módulo' : (s.stage > 0 ? 'Continuar módulo' : 'Abrir módulo')}</button>
             </div>
           </div></div>`;
       }).join('');
   }).join('');
 }
 
+// ---------- Etapas do ciclo ----------
+function viewPrever(m, s){
+  const P = m.poe;
+  if (s.pred != null) {
+    return `<p class="poe-q">${P.prever}</p>
+      <div class="poe-note"><strong>Sua previsão:</strong> ${P.ops[s.pred]}<br><span class="muted">Confiança: ${CONF[s.conf]}</span></div>
+      <p class="poe-hint">A previsão fica registrada como foi feita. Errar faz parte: o que importa é comparar depois.</p>
+      <button type="button" class="btn-filled btn-full" data-act="goto" data-v="${Math.min(s.stage,3)}">Continuar</button>`;
+  }
+  const dr = poeDraft[m.id] || (poeDraft[m.id] = { pred:null, conf:null });
+  return `<p class="poe-lead">Antes de explorar, registre o que você espera que aconteça. O conteúdo abaixo será liberado em seguida.</p>
+    <p class="poe-q">${P.prever}</p>` +
+    P.ops.map((o,i) => `<button type="button" class="quiz-opt${dr.pred===i?' selected':''}" data-act="pick" data-v="${i}" aria-pressed="${dr.pred===i}">${String.fromCharCode(65+i)}) ${o}</button>`).join('') +
+    `<p class="poe-label">Quão confiante você está?</p>
+     <div class="chip-row">${CONF.map((c,i) => `<button type="button" class="chip-choice" data-act="conf" data-v="${i}" aria-pressed="${dr.conf===i}">${c}</button>`).join('')}</div>
+     <button type="button" class="btn-filled btn-full" style="margin-top:14px;" data-act="register" ${dr.pred==null || dr.conf==null ? 'disabled' : ''}>Registrar previsão</button>`;
+}
+function viewExplorar(m, s){
+  return `<p class="poe-lead">${m.poe.observar}</p>
+    <ol class="act-steps">${m.passos.map(p => `<li>${p}</li>`).join('')}</ol>
+    <div class="poe-actions">
+      <button type="button" class="btn-outlined" data-act="scroll">Ir para o conteúdo</button>
+      <button type="button" class="btn-filled" data-act="explored">${s.stage > 1 ? 'Ir para Explicar' : 'Terminei de explorar'}</button>
+    </div>`;
+}
+function poeCompare(m, s){
+  const P = m.poe;
+  let h = '';
+  if (P.esperado != null) {
+    const ok = s.pred === P.esperado;
+    h += `<p class="${ok ? 'poe-ok' : 'poe-no'}">${ok ? '✅ Sua previsão se confirmou.' : '↺ Sua previsão não se confirmou.'} Resultado esperado: <strong>${P.ops[P.esperado]}</strong>.</p>`;
+    if (!ok && s.conf === 2) h += `<p class="poe-alert">Você errou com muita certeza. Isso indica uma concepção prévia forte sobre o tema: releia a explicação e refaça a exploração com esse ponto em mente.</p>`;
+    if (!ok && s.self === 0) h += `<p class="poe-alert">Você marcou que a previsão se confirmou, mas o resultado esperado era outro. Volte ao conteúdo e confira o que mudou.</p>`;
+    if (ok && s.self === 2) h += `<p class="poe-alert">Você marcou que a previsão não se confirmou, mas ela estava correta. Vale rever o que você observou.</p>`;
+  }
+  if (P.dinamico) h += `<p class="poe-dyn">📊 ${P.dinamico(s)}</p>`;
+  h += `<div class="poe-exp">${P.resultado}</div>`;
+  return h;
+}
+function viewExplicar(m, s){
+  const P = m.poe;
+  if (s.pred == null) return `<p class="poe-lead">Você concluiu este módulo antes do ciclo de previsão. Registre uma previsão na etapa 1 para usar esta etapa.</p><button type="button" class="btn-filled btn-full" data-act="goto" data-v="0">Ir para Prever</button>`;
+  const len = (s.obs || '').trim().length;
+  let h = `<div class="poe-note"><strong>Sua previsão:</strong> ${P.ops[s.pred]} <span class="muted">(${CONF[s.conf]})</span></div>
+    <label class="poe-label" for="obs-${m.id}">O que você observou? Explique com suas palavras.</label>
+    <textarea id="obs-${m.id}" class="m3-input poe-text" rows="3" placeholder="Descreva o que aconteceu e por que você acha que aconteceu." ${s.revealed ? 'readonly' : ''}>${escHtml(s.obs || '')}</textarea>`;
+  if (!s.revealed) h += `<p class="poe-count" id="cnt-obs-${m.id}">${len < 20 ? `Escreva pelo menos 20 caracteres (${len}/20).` : 'Pronto.'}</p>`;
+  h += `<p class="poe-label">Sua previsão se confirmou?</p>
+    <div class="chip-row">${SELF.map((c,i) => `<button type="button" class="chip-choice" data-act="self" data-v="${i}" aria-pressed="${s.self===i}" ${s.revealed ? 'disabled' : ''}>${c}</button>`).join('')}</div>`;
+  if (!s.revealed) h += `<button type="button" class="btn-filled btn-full" style="margin-top:14px;" data-act="compare" ${len >= 20 && s.self != null ? '' : 'disabled'}>Comparar com a explicação</button>`;
+  else h += `<div style="margin-top:12px;">${poeCompare(m, s)}</div><button type="button" class="btn-filled btn-full" data-act="goto" data-v="3">Ir para Aplicar</button>`;
+  return h;
+}
+function viewAplicar(m, s, d){
+  if (m.auto) {
+    const msg = d ? `✅ Meta atingida! Melhor resultado: ${PROG.quiz.best}%.`
+              : (PROG.quiz.attempts ? `Melhor resultado até agora: ${PROG.quiz.best}%. A meta é 70%.` : 'Complete o quiz com pelo menos 70% de acertos para concluir o módulo.');
+    return `<p class="poe-lead">${msg}</p><button type="button" class="btn-outlined btn-full" data-act="scroll">Ir para o quiz</button>`;
+  }
+  const q = m.q, wrong = s.wrong || [];
+  let h = `<p class="poe-lead">Use o que você aprendeu num problema agronômico.</p><div class="act-q">🧩 ${q.texto}</div>` +
+    q.ops.map((o,i) => {
+      const cls = d && i === q.certa ? ' correct' : (wrong.includes(i) ? ' incorrect' : '');
+      return `<button type="button" class="quiz-opt${cls}" data-act="answer" data-v="${i}" ${d || wrong.includes(i) ? 'disabled' : ''}>${String.fromCharCode(65+i)}) ${o}</button>`;
+    }).join('');
+  if (d) h += `<div class="act-fb"><span class="poe-ok">✅ Correto!</span> ${q.exp}</div>`;
+  else if (wrong.length) h += `<div class="act-fb"><span class="poe-no">Ainda não.</span> 💡 ${q.dica}</div>`;
+  return h;
+}
+
 function renderActivity(m){
   const host = document.getElementById('act-'+m.id); if(!host) return;
-  const d = moduleDone(m);
-  let qHtml = '';
-  if (m.auto) {
-    qHtml = `<p class="act-fb" style="color:${d?'#4ade80':'var(--md-sys-color-on-surface-variant)'};">${d ? '✅ Meta atingida! Melhor resultado: '+PROG.quiz.best+'%' : (PROG.quiz.attempts ? 'Melhor resultado até agora: '+PROG.quiz.best+'%. Meta: 70%.' : 'Meta: acertar pelo menos 70% das questões.')}</p>`;
-  } else {
-    const ans = PROG.done[m.id] ? m.q.certa : null;
-    qHtml = `<div class="act-q">🧩 Desafio: ${m.q.texto}</div>` +
-      m.q.ops.map((o,i) => `<button class="quiz-opt ${ans===i?'correct':''}" data-i="${i}" ${d?'disabled':''}>${String.fromCharCode(65+i)}) ${o}</button>`).join('') +
-      `<div class="act-fb" id="actfb-${m.id}">${d ? '<span style="color:#4ade80;font-weight:700;">✅ Correto!</span> '+m.q.exp : ''}</div>`;
-  }
-  host.innerHTML = `<details ${d?'':'open'}>
-      <summary><span>🎯 Atividade guiada</span><span class="status-pill ${d?'ok':'todo'}">${d?'Concluída':'Nível '+m.nivel}</span></summary>
+  const s = poeState(m), d = moduleDone(m);
+  let view = poeView[m.id]; if (view == null || view > s.stage) view = s.stage;
+  const steps = STAGES.map((st,i) => {
+    const dn = i < s.stage || (i === 3 && d);
+    return `<button type="button" class="poe-step${dn ? ' done' : ''}${i === view ? ' current' : ''}" data-act="view" data-v="${i}" ${i > s.stage ? 'disabled' : ''} ${i === view ? 'aria-current="step"' : ''}><span class="poe-num" aria-hidden="true">${dn ? '✓' : i+1}</span><span class="poe-step-label">${st}</span></button>`;
+  }).join('');
+  const body = view === 0 ? viewPrever(m,s) : view === 1 ? viewExplorar(m,s) : view === 2 ? viewExplicar(m,s) : viewAplicar(m,s,d);
+  const pill = d ? '<span class="status-pill ok">Concluída</span>' : `<span class="status-pill prog">${STAGES[s.stage]}</span>`;
+  const prev = host.querySelector('details');
+  const open = prev ? prev.open : !d;
+  host.innerHTML = `<details ${open ? 'open' : ''}>
+      <summary><span>🎯 Atividade do módulo</span>${pill}</summary>
       <p class="act-obj"><strong>Objetivo:</strong> ${m.obj}</p>
-      <ol class="act-steps">${m.passos.map(p=>`<li>${p}</li>`).join('')}</ol>
-      ${qHtml}
+      <nav class="poe-steps" aria-label="Etapas: Prever, Explorar, Explicar, Aplicar">${steps}</nav>
+      <div class="poe-panel">${body}</div>
     </details>`;
   host.classList.toggle('done', d);
-  if (!m.auto && !d) {
-    host.querySelectorAll('.quiz-opt').forEach(b => b.addEventListener('click', () => {
-      const i = +b.dataset.i;
-      PROG.tries[m.id] = (PROG.tries[m.id]||0) + 1;
-      const fb = document.getElementById('actfb-'+m.id);
-      if (i === m.q.certa) {
-        PROG.done[m.id] = true; slSave();
-        renderActivity(m); renderTrail();
-        snack('🎉 Módulo concluído: ' + m.titulo);
-      } else {
-        slSave();
-        b.classList.add('incorrect'); b.disabled = true;
-        fb.innerHTML = `<span style="color:var(--md-sys-color-error);font-weight:700;">Ainda não.</span> 💡 ${m.q.dica}`;
-      }
-    }));
+  host.onclick = e => poeClick(m, e);
+  host.oninput = e => {
+    if (!e.target.matches('.poe-text')) return;
+    s.obs = e.target.value; slSave();
+    const len = s.obs.trim().length;
+    const c = document.getElementById('cnt-obs-'+m.id); if (c) c.textContent = len < 20 ? `Escreva pelo menos 20 caracteres (${len}/20).` : 'Pronto.';
+    const b = host.querySelector('[data-act="compare"]'); if (b) b.disabled = !(len >= 20 && s.self != null);
+  };
+  updateGate(m);
+}
+
+function poeClick(m, e){
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  const s = poeState(m), v = +b.dataset.v;
+  const dr = poeDraft[m.id] || (poeDraft[m.id] = { pred:null, conf:null });
+  switch (b.dataset.act) {
+    case 'view': case 'goto': poeView[m.id] = v; break;
+    case 'pick': dr.pred = v; break;
+    case 'conf': dr.conf = v; break;
+    case 'register':
+      s.pred = dr.pred; s.conf = dr.conf; s.stage = Math.max(s.stage, 1); s.quando = new Date().toISOString();
+      poeView[m.id] = 1; slSave();
+      snack('Previsão registrada. O conteúdo foi liberado.');
+      onUnlock(m); break;
+    case 'explored': s.stage = Math.max(s.stage, 2); poeView[m.id] = 2; slSave(); break;
+    case 'self': s.self = v; slSave(); break;
+    case 'compare': s.revealed = true; s.stage = Math.max(s.stage, 3); poeView[m.id] = 2; slSave(); break;
+    case 'scroll': document.getElementById('poe-body-'+m.id)?.scrollIntoView({ behavior:'smooth', block:'start' }); return;
+    case 'answer':
+      if (moduleDone(m)) return;
+      PROG.tries[m.id] = (PROG.tries[m.id] || 0) + 1;
+      if (v === m.q.certa) { PROG.done[m.id] = true; slSave(); renderActivity(m); renderTrail(); snack('🎉 Módulo concluído: ' + m.titulo); return; }
+      s.wrong = s.wrong || []; if (!s.wrong.includes(v)) s.wrong.push(v); slSave(); break;
+    default: return;
   }
+  renderActivity(m); renderTrail();
+}
+
+// ---------- Bloqueio do conteúdo até a previsão ----------
+function updateGate(m){
+  const body = document.getElementById('poe-body-'+m.id); if (!body) return;
+  const locked = !poeUnlocked(m.id);
+  body.classList.toggle('locked', locked);
+  const inner = body.querySelector('.poe-inner'); if (inner) inner.inert = locked;
+}
+function onUnlock(m){
+  updateGate(m);
+  if (m.tab === 'camera' && document.getElementById('camera')?.classList.contains('active') && typeof startCamera === 'function' && !stream) startCamera();
 }
 
 function mountActivities(){
@@ -1835,6 +2351,20 @@ function mountActivities(){
     card.className = 'm3-card act-card'; card.id = 'act-'+m.id;
     const title = tab.querySelector('.section-title');
     title ? title.insertAdjacentElement('afterend', card) : tab.prepend(card);
+    // Envolve o restante do conteúdo da aba para poder bloqueá-lo até a previsão
+    const gate = document.createElement('div'); gate.className = 'poe-body'; gate.id = 'poe-body-'+m.id;
+    const inner = document.createElement('div'); inner.className = 'poe-inner';
+    const rest = []; let n = card.nextSibling; while (n) { rest.push(n); n = n.nextSibling; }
+    rest.forEach(x => inner.appendChild(x));
+    gate.innerHTML = `<div class="poe-lock" role="note"><span class="poe-lock-ico" aria-hidden="true">🔒</span>
+        <div><strong>Registre sua previsão para liberar este conteúdo.</strong><br>Errar a previsão faz parte: você vai compará-la com o resultado.</div>
+        <button type="button" class="btn-filled">Prever</button></div>`;
+    gate.querySelector('.poe-lock button').addEventListener('click', () => {
+      const d = card.querySelector('details'); if (d) d.open = true;
+      document.getElementById('content-area').scrollTo({ top:0, behavior:'smooth' });
+    });
+    gate.appendChild(inner);
+    card.after(gate);
     renderActivity(m);
   });
 }
@@ -1845,10 +2375,12 @@ function slRecordQuiz(correct, total){
   PROG.quiz.attempts++; PROG.quiz.last = pct; PROG.quiz.best = Math.max(PROG.quiz.best, pct);
   slSave(); refreshActivity('quiz');
 }
-function slRecordClassify(oa, kappa){
-  PROG.classify = { oa, kappa }; slSave(); renderTrail();
+function slRecordClassify(oa, kappa, worst){
+  PROG.classify = { oa, kappa, worst: worst || null }; slSave(); renderTrail();
+  const m = MODULES.find(x => x.id === 'classify'); if (m && poeView[m.id] === 2) renderActivity(m);
 }
 
+// ---------- Relatório ----------
 function buildReport(){
   const now = new Date();
   const lines = [
@@ -1860,9 +2392,16 @@ function buildReport(){
   LEVELS.forEach(L => {
     lines.push(L.titulo);
     MODULES.filter(m=>m.nivel===L.n).forEach(m => {
-      let st = moduleDone(m) ? 'concluído' : (PROG.visited[m.tab] ? 'em andamento' : 'não iniciado');
+      const s = poeState(m), d = moduleDone(m);
+      let st = d ? 'concluído' : (s.stage > 0 ? 'etapa ' + STAGES[s.stage] : 'não iniciado');
       if (!m.auto && PROG.tries[m.id]) st += ` (tentativas no desafio: ${PROG.tries[m.id]})`;
-      lines.push(`  [${moduleDone(m)?'x':' '}] ${m.titulo}: ${st}`);
+      lines.push(`  [${d?'x':' '}] ${m.titulo}: ${st}`);
+      if (s.pred != null) {
+        const conf = m.poe.esperado != null ? (s.pred === m.poe.esperado ? ' · confirmada' : ' · não confirmada') : '';
+        lines.push(`      Previsão: ${m.poe.ops[s.pred]} (${CONF[s.conf]})${conf}`);
+      }
+      if (s.obs && s.obs.trim()) lines.push(`      Observação: ${s.obs.trim().replace(/\s+/g,' ')}`);
+      if (s.self != null) lines.push(`      Autoavaliação (previsão confirmada?): ${SELF[s.self]}`);
     });
   });
   lines.push('', `Quiz: melhor ${PROG.quiz.best}% · último ${PROG.quiz.last}% · tentativas ${PROG.quiz.attempts}`);
@@ -1885,7 +2424,8 @@ function downloadReport(){
 }
 function resetProgress(){
   if (!confirm('Apagar todo o progresso salvo neste aparelho?')) return;
-  PROG = { name:'', visited:{}, done:{}, tries:{}, quiz:{best:0,last:0,attempts:0}, classify:{oa:null,kappa:null}, game:{rounds:0} };
+  PROG = progDefault();
+  Object.keys(poeView).forEach(k => delete poeView[k]); Object.keys(poeDraft).forEach(k => delete poeDraft[k]);
   slSave(); MODULES.forEach(renderActivity); renderTrail(); snack('Progresso apagado.');
 }
 
@@ -1894,38 +2434,65 @@ function resetProgress(){
 // ================================================================
 //  NAVIGATION
 // ================================================================
-const chipTabs = document.getElementById('chip-tabs');
+// Grupos estáveis da barra inferior; a Trilha é a tela inicial
+const GROUPS = [
+  { id:'aprender', titulo:'Aprender',             tabs:['spectrum','lab','quantities'] },
+  { id:'labs',     titulo:'Laboratórios',         tabs:['indices','classify','camera'] },
+  { id:'campo',    titulo:'Campo',                tabs:['location','converter'] },
+  { id:'praticar', titulo:'Consultar e praticar', tabs:['glossary','quiz','game'] }
+];
+const TAB_META = {
+  spectrum:{icon:'🌈',label:'Espectro'}, lab:{icon:'🌫️',label:'Espalhamento'}, quantities:{icon:'📊',label:'Grandezas'},
+  indices:{icon:'🌱',label:'Índices'}, classify:{icon:'🗺️',label:'Classificação'}, camera:{icon:'📷',label:'Câmera'},
+  location:{icon:'📡',label:'GPS'}, converter:{icon:'🔄',label:'UTM'},
+  glossary:{icon:'📖',label:'Glossário'}, quiz:{icon:'❓',label:'Quiz'}, game:{icon:'🃏',label:'Trunfo'}
+};
+const TAB_GROUP = {}; GROUPS.forEach(g => g.tabs.forEach(t => TAB_GROUP[t] = g.id));
+const NAV_KEY = 'sensorlab_nav';
+let lastTabOfGroup = (() => { try { return JSON.parse(localStorage.getItem(NAV_KEY)) || {}; } catch(e) { return {}; } })();
+
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function renderSubTabs(groupId, tabId){
+  const box = document.getElementById('sub-tabs'); if (!box) return;
+  if (!groupId) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+  const g = GROUPS.find(x => x.id === groupId);
+  box.classList.remove('hidden');
+  box.setAttribute('aria-label', 'Seções de ' + g.titulo);
+  box.innerHTML = g.tabs.map(t => `<button type="button" class="sub-tab${t === tabId ? ' active' : ''}" role="tab" aria-selected="${t === tabId}" data-sub="${t}"><span class="sub-ico" aria-hidden="true">${TAB_META[t].icon}</span><span>${TAB_META[t].label}</span></button>`).join('');
+  box.querySelectorAll('.sub-tab').forEach(b => b.addEventListener('click', () => showPage(b.dataset.sub)));
+}
 
 function showPage(tabId) {
   document.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
   const page = document.getElementById(tabId);
   if (page) page.classList.add('active');
 
-  // Sync chip tabs
-  document.querySelectorAll('.chip-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  const gid = TAB_GROUP[tabId] || null;
+  if (gid) { lastTabOfGroup[gid] = tabId; try { localStorage.setItem(NAV_KEY, JSON.stringify(lastTabOfGroup)); } catch(e){} }
+  document.querySelectorAll('.nav-item').forEach(b => {
+    const on = b.dataset.group === gid;
+    b.classList.toggle('active', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  const tb = document.getElementById('trail-btn');
+  if (tb) { tb.classList.toggle('active', tabId === 'trail'); if (tabId === 'trail') tb.setAttribute('aria-current','page'); else tb.removeAttribute('aria-current'); }
+  const sub = document.getElementById('bar-sub');
+  if (sub) sub.textContent = gid ? GROUPS.find(g => g.id === gid).titulo : 'Trilha de aprendizagem';
+  renderSubTabs(gid, tabId);
 
-  // Sync bottom nav
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.nav === tabId));
-
-  // Scroll active chip into view
-  const activeChip = document.querySelector(`.chip-tab[data-tab="${tabId}"]`);
-  if (activeChip) activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-  // Scroll top
   document.getElementById('content-area').scrollTop = 0;
 
-  // Trigger lazy loads
+  // Carregamentos sob demanda
   if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadSentinelBands();
   if (tabId === 'location') { compassStart(); drawCompass(compassCurrentAngle); }
 }
 
-// Chip tab clicks
-document.querySelectorAll('.chip-tab').forEach(btn => {
-  btn.addEventListener('click', () => showPage(btn.dataset.tab));
-});
-
-function navTo(tabId, el) {
-  showPage(tabId);
+// Barra inferior: abre a última subaba visitada do grupo
+function navTo(groupId) {
+  const g = GROUPS.find(x => x.id === groupId); if (!g) return;
+  const t = lastTabOfGroup[groupId];
+  showPage(g.tabs.includes(t) ? t : g.tabs[0]);
 }
 
 // ================================================================
@@ -1993,6 +2560,10 @@ const glossaryTerms = [
     { termo: 'Resolução radiométrica', definicao: 'Número de níveis de cinza que o sensor registra (8 bits = 256; 12 bits = 4096). Maior resolução capta diferenças sutis de reflectância.' },
     { termo: 'Resolução temporal', definicao: 'Intervalo entre duas passagens do sensor sobre o mesmo local (revisita). Crucial para acompanhar o ciclo das culturas.' },
     { termo: 'Composição colorida falsa cor', definicao: 'Atribuição de bandas fora do visível aos canais RGB. Na composição NIR-R-G, a vegetação sadia aparece em vermelho intenso.' },
+    { termo: 'Red edge', definicao: 'Transição abrupta entre a forte absorção do vermelho e a alta reflexão do NIR (~680–750 nm). Sua posição desloca-se para o azul sob estresse nutricional ou hídrico, sendo útil no monitoramento da nutrição das culturas.' },
+    { termo: 'Correção atmosférica', definicao: 'Remoção dos efeitos de espalhamento e absorção atmosféricos sobre os valores dos pixels, convertendo radiância em reflectância de superfície comparável entre datas e sensores.' },
+    { termo: 'Retroespalhamento', definicao: 'Parcela da energia emitida por um radar (SAR) que retorna ao sensor após interagir com o alvo. Depende da rugosidade, umidade e geometria da superfície — por isso radar responde à biomassa e à umidade do solo.' },
+    { termo: 'Sunglint (brilho especular)', definicao: 'Reflexão especular da luz solar em corpos d\'água que satura os pixels e mascara a resposta do fundo. Em imagens com sunglint, prefira pixels fora da zona de brilho.' },
     { termo: 'Classificação supervisionada', definicao: 'Atribuição de classes aos pixels a partir de amostras de treinamento fornecidas pelo analista (ex.: mínima distância, máxima verossimilhança, Random Forest).' },
     { termo: 'Matriz de confusão', definicao: 'Tabela que cruza a classe de referência (verdade de campo) com a classe do mapa. A diagonal contém os acertos; fora dela, as confusões entre classes.' },
     { termo: 'Índice Kappa', definicao: 'Medida de concordância entre mapa e referência que desconta os acertos esperados ao acaso. Varia de −1 a 1; acima de 0,8 indica concordância quase perfeita (Landis & Koch, 1977).' },
@@ -2055,7 +2626,7 @@ const whiteRefInfo = document.getElementById('whiteRefInfo');
 const setWhiteRefBtn = document.getElementById('setWhiteRefBtn');
 const clearPointsBtn = document.getElementById('clearPointsBtn');
 
-let stream = null, imageCaptured = false, points = [], whiteRef = null, lastSelectedPoint = null;
+let stream = null, imageCaptured = false, points = [], whiteRef = null, lastSelectedPoint = null, capturedFrame = null;
 
 async function startCamera() {
     try {
@@ -2074,6 +2645,10 @@ function stopCamera() {
 captureBtn.addEventListener('click', () => {
     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Guarda uma cópia limpa do quadro para poder redesenhar/remover marcadores
+    capturedFrame = document.createElement('canvas');
+    capturedFrame.width = canvas.width; capturedFrame.height = canvas.height;
+    capturedFrame.getContext('2d').drawImage(canvas, 0, 0);
     video.style.display = 'none'; canvas.style.display = 'block';
     backBtn.classList.remove('hidden'); captureBtn.classList.add('hidden');
     imageCaptured = true;
@@ -2081,7 +2656,7 @@ captureBtn.addEventListener('click', () => {
 backBtn.addEventListener('click', () => {
     video.style.display = 'block'; canvas.style.display = 'none';
     backBtn.classList.add('hidden'); captureBtn.classList.remove('hidden');
-    imageCaptured = false;
+    imageCaptured = false; capturedFrame = null;
 });
 canvas.addEventListener('click', (e) => {
     if (!imageCaptured) return;
@@ -2096,6 +2671,7 @@ canvas.addEventListener('click', (e) => {
     setWhiteRefBtn.classList.remove('hidden');
 });
 function drawMarkers(ctx) {
+    if (capturedFrame) ctx.drawImage(capturedFrame, 0, 0, canvas.width, canvas.height);
     points.forEach(p => {
         ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 2*Math.PI);
         ctx.strokeStyle = 'yellow'; ctx.lineWidth = 2.5; ctx.stroke();
@@ -2107,7 +2683,7 @@ function updatePointsList() {
     pointsListDiv.innerHTML = points.map((p,i) => {
         const rR=(p.r/255).toFixed(3), rG=(p.g/255).toFixed(3), rB=(p.b/255).toFixed(3);
         let ref = '';
-        if (whiteRef) ref = `<br>Reflectância relativa: R=${(p.r/whiteRef.r).toFixed(3)} G=${(p.g/whiteRef.g).toFixed(3)} B=${(p.b/whiteRef.b).toFixed(3)}`;
+        if (whiteRef) ref = `<br>Reflectância relativa: R=${(p.r/Math.max(whiteRef.r,1)).toFixed(3)} G=${(p.g/Math.max(whiteRef.g,1)).toFixed(3)} B=${(p.b/Math.max(whiteRef.b,1)).toFixed(3)}`;
         return `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:8px 10px;margin-bottom:6px;font-size:var(--md-type-body-small);">
             <strong>Ponto ${i+1}</strong> (${p.x},${p.y}) &nbsp;
             <span style="font-family:monospace;">DN R=${p.r} G=${p.g} B=${p.b}</span><br>
@@ -2128,7 +2704,10 @@ clearPointsBtn.addEventListener('click', () => {
     points = []; whiteRef = null; lastSelectedPoint = null;
     whiteRefInfo.classList.add('hidden'); setWhiteRefBtn.classList.add('hidden');
     updatePointsList();
-    if (imageCaptured) snack('Recapture para remover marcadores.');
+    if (imageCaptured && capturedFrame) {
+        canvas.getContext('2d').drawImage(capturedFrame, 0, 0, canvas.width, canvas.height);
+        snack('Pontos removidos da imagem.');
+    }
 });
 
 // ================================================================
@@ -2172,7 +2751,7 @@ function renderCard(card, el, showAttr) {
         { key:'ano',       label:'Ano de lançamento',  unit:'',  better:'higher' },
     ];
     el.innerHTML = `<div style="font-size:var(--md-type-title-medium);font-weight:700;margin-bottom:8px;">${card.nome}</div>` +
-        attrs.map(a => `<div style="display:flex;justify-content:space-between;font-size:var(--md-type-body-small);padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.1);">
+        attrs.map(a => `<div style="display:flex;justify-content:space-between;font-size:var(--md-type-body-small);padding:4px 0;border-bottom:1px solid var(--sl-divider);">
             <span>${a.label}</span><strong>${card[a.key]}${a.unit}</strong>
         </div>`).join('');
 }
@@ -2209,7 +2788,7 @@ function newGame() {
             } else if (pw) {
                 scoreP++;
                 gameMessage.textContent = `✅ Você venceu! ${pv} vs ${cv}`;
-                gameMessage.style.color = '#4ade80';
+                gameMessage.style.color = 'var(--sl-success)';
             } else {
                 scoreC++;
                 gameMessage.textContent = `❌ Computador venceu! ${pv} vs ${cv}`;
@@ -2271,7 +2850,7 @@ const QUIZ_EXP = [
   'O espectro organiza a radiação pelo comprimento de onda ou, equivalentemente, pela frequência, das ondas de rádio aos raios gama.',
   'O que o sensor registra resulta da interação da radiação com o alvo (reflexão, absorção, emissão) e com a atmosfera. É isso que permite identificar os alvos.'
 ];
-let quizOrder = quizQuestions.map((_, i) => i);
+let quizOrder = shuffled(quizQuestions.map((_, i) => i));
 let qPos = 0;
 let quizFullRun = true;
 const userAnswers = new Array(quizQuestions.length).fill(null);
@@ -2313,7 +2892,7 @@ function renderQuiz() {
     if (ans) {
         const ok = ans === q.correct;
         quizFeedback.textContent = ok ? '✅ Correto!' : `❌ Resposta correta: ${q.correct}`;
-        quizFeedback.style.color = ok ? '#4ade80' : 'var(--md-sys-color-error)';
+        quizFeedback.style.color = ok ? 'var(--sl-success)' : 'var(--md-sys-color-error)';
         quizExplain.innerHTML = '💡 ' + QUIZ_EXP[qi];
         quizExplain.classList.remove('hidden');
     } else {
@@ -2380,48 +2959,48 @@ function drawScattering() {
     const ctx = scatteringCanvas.getContext('2d');
     const w = scatteringCanvas.width, h = scatteringCanvas.height;
     ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = '#0f1420'; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = cssVar('--sl-plot-bg') || '#0f1420'; ctx.fillRect(0,0,w,h);
 
     // Intensidades relativas (azul = 1)
     const I = SCAT_BANDS.map(b => Math.pow(b.lambda, -k));
-    const ref = I[0];
-    const rel = I.map(v => v / ref);
+    const rel = I.map(v => v / I[0]);
 
     // Céu simulado: cor resultante do espalhamento no visível
     const rgb = [rel[2], rel[1], rel[0]];
     const mx = Math.max(...rgb);
     const sky = rgb.map(v => Math.round(70 + 185 * v / mx));
-    const gH = 120;
+    const gH = 110;
     const grd = ctx.createLinearGradient(0,0,0,gH);
     grd.addColorStop(0, `rgb(${sky[0]},${sky[1]},${sky[2]})`);
     grd.addColorStop(1, `rgb(${Math.min(255,sky[0]+40)},${Math.min(255,sky[1]+40)},${Math.min(255,sky[2]+40)})`);
     ctx.fillStyle = grd; ctx.fillRect(0,0,w,gH);
-    // partículas (posições fixas, raio em escala log)
     const r = Math.max(1.5, 3 + (Math.log10(d) + 3.6) * 3.2);
     ctx.fillStyle = k > 3 ? 'rgba(255,255,255,0.35)' : k > 0.5 ? 'rgba(200,190,170,0.55)' : 'rgba(255,255,255,0.8)';
     for (let i = 0; i < 40; i++) {
         const x = (i * 97) % w, y = 10 + (i * 53) % (gH - 20);
         ctx.beginPath(); ctx.arc(x, y, r, 0, 2*Math.PI); ctx.fill();
     }
-    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText('Cor aparente do céu', 12, 22);
+    ctx.font = 'bold 22px sans-serif'; ctx.textAlign = 'left';
+    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.strokeText('Cor aparente do céu', 14, 30);
+    ctx.fillStyle = '#0f172a'; ctx.fillText('Cor aparente do céu', 14, 30);
 
     // Barras de intensidade relativa por banda
-    const top = gH + 30, base = h - 34, bw = 90, gap = (w - 4*bw) / 5;
-    ctx.fillStyle = '#cbd5e1'; ctx.font = '14px sans-serif';
-    ctx.fillText('Espalhamento relativo por banda (azul = 1)', 12, gH + 20);
+    const top = gH + 46, base = h - 52, bw = 96, gap = (w - 4*bw) / 5;
+    ctx.fillStyle = cssVar('--sl-plot-strong') || '#e2e8f0'; ctx.font = 'bold 20px sans-serif';
+    ctx.fillText('Espalhamento relativo por banda (azul = 1)', 14, gH + 30);
     const maxRel = Math.max(...rel, 1);
     SCAT_BANDS.forEach((b, i) => {
         const x = gap + i * (bw + gap);
-        const bh = (base - top - 16) * rel[i] / maxRel;
+        const bh = (base - top - 22) * rel[i] / maxRel;
         ctx.fillStyle = b.cor; ctx.fillRect(x, base - bh, bw, bh);
-        ctx.fillStyle = '#e2e8f0'; ctx.textAlign = 'center';
-        ctx.fillText(rel[i].toFixed(2).replace('.', ','), x + bw/2, base - bh - 6);
-        ctx.fillStyle = '#94a3b8';
-        ctx.fillText(`${b.nome} (${String(b.lambda).replace('.', ',')} µm)`, x + bw/2, base + 18);
+        ctx.strokeStyle = cssVar('--sl-plot-axis') || '#334155'; ctx.lineWidth = 1; ctx.strokeRect(x + .5, base - bh + .5, bw - 1, bh - 1);
+        ctx.fillStyle = cssVar('--sl-plot-strong') || '#e2e8f0'; ctx.textAlign = 'center'; ctx.font = 'bold 20px sans-serif';
+        ctx.fillText(rel[i].toFixed(2).replace('.', ','), x + bw/2, base - bh - 8);
+        ctx.fillStyle = cssVar('--sl-plot-text') || '#94a3b8'; ctx.font = '19px sans-serif';
+        ctx.fillText(b.nome, x + bw/2, base + 22);
+        ctx.fillText(String(b.lambda).replace('.', ',') + ' µm', x + bw/2, base + 44);
     });
     ctx.textAlign = 'left';
-
     let tipo, exemplo, agro;
     if (d < 0.05) {
         tipo = '🔵 <strong>Espalhamento Rayleigh</strong> (partícula ≪ λ; intensidade ∝ λ⁻⁴)';
@@ -2453,25 +3032,35 @@ const BAND_EXTRA = {
     micro:  { nome:'Micro-ondas', faixa:'1 mm – 1 m', agro:'Radares (ex.: Sentinel-1) monitoram lavouras sob nuvens e estimam a umidade do solo.' },
     radio:  { nome:'Rádio', faixa:'> 1 m', agro:'Telemetria de estações meteorológicas e de sensores de campo usa ondas de rádio.' }
 };
+function selectBand(div){
+    const band = div.dataset.band, info = bandInfo[band];
+    if (!info) return;
+    document.querySelectorAll('.spec-band').forEach(b => {
+        b.classList.toggle('selected', b === div);
+        b.setAttribute('aria-pressed', b === div ? 'true' : 'false');
+    });
+    const el = document.getElementById('bandInfo');
+    el.innerHTML = `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:12px;margin-top:8px;">
+        <strong style="font-size:var(--md-type-title-small);color:var(--md-sys-color-primary);">${BAND_EXTRA[band].nome}</strong>
+        <span class="data-chip" style="margin-left:6px;">λ: ${BAND_EXTRA[band].faixa}</span>
+        <div style="font-size:var(--md-type-body-small);margin-top:8px;line-height:1.7;color:var(--md-sys-color-on-surface-variant);">
+            <p>📡 <strong>Fontes:</strong> ${info.fontes}</p>
+            <p>🌍 <strong>Interação:</strong> ${info.interacao}</p>
+            <p>🛰️ <strong>Aplicações:</strong> ${info.aplicacao}</p>
+            <p>🌾 <strong>Na agronomia:</strong> ${BAND_EXTRA[band].agro}</p>
+            <p style="margin-top:8px;color:var(--md-sys-color-primary);">💡 ${info.curiosidade}</p>
+        </div>
+    </div>`;
+    el.classList.remove('hidden');
+}
 document.querySelectorAll('[data-band]').forEach(div => {
-    div.addEventListener('click', () => {
-        const band = div.dataset.band, info = bandInfo[band];
-        if (!info) return;
-        const el = document.getElementById('bandInfo');
-        el.innerHTML = `<div style="background:var(--md-sys-color-surface-container-high);border-radius:var(--md-shape-md);padding:12px;margin-top:8px;">
-            <strong style="font-size:var(--md-type-title-small);color:var(--md-sys-color-primary);">${BAND_EXTRA[band].nome}</strong>
-            <span class="data-chip" style="margin-left:6px;">λ: ${BAND_EXTRA[band].faixa}</span>
-            <div style="font-size:var(--md-type-body-small);margin-top:8px;line-height:1.7;color:var(--md-sys-color-on-surface-variant);">
-                <p>📡 <strong>Fontes:</strong> ${info.fontes}</p>
-                <p>🌍 <strong>Interação:</strong> ${info.interacao}</p>
-                <p>🛰️ <strong>Aplicações:</strong> ${info.aplicacao}</p>
-                <p>🌾 <strong>Na agronomia:</strong> ${BAND_EXTRA[band].agro}</p>
-                <p style="margin-top:8px;color:var(--md-sys-color-primary);">💡 ${info.curiosidade}</p>
-            </div>
-        </div>`;
-        el.classList.remove('hidden');
+    div.addEventListener('click', () => selectBand(div));
+    div.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectBand(div); }
     });
 });
+// Pré-seleciona a faixa visível (a mais usada em sensoriamento remoto óptico)
+selectBand(document.querySelector('[data-band="visivel"]'));
 
 // ================================================================
 //  CURIOSIDADES
@@ -2684,25 +3273,61 @@ function calculateNDWI(){
     const g=bandData[2],nir=bandData[4],r=new Float32Array(g.length);
     for(let i=0;i<g.length;i++){const gv=g[i],n=nir[i];r[i]=(gv+n===0)?0:(gv-n)/(gv+n);}return r;
 }
+// ---- Paletas dos índices: viridis (sequencial) e roxo–verde (divergente, PRGn) ----
+const PALETTES = {
+  viridis:    { stops:['#440154','#482475','#414487','#355f8d','#2a788e','#21918c','#22a884','#44bf70','#7ad151','#bddf26','#fde725'] },
+  divergente: { stops:['#40004b','#762a83','#9970ab','#c2a5cf','#e7d4e8','#f7f7f7','#d9f0d3','#a6dba0','#5aae61','#1b7837','#00441b'] }
+};
+let paletteName = (() => { try { const p = localStorage.getItem('sensorlab_paleta'); return PALETTES[p] ? p : 'viridis'; } catch(e) { return 'viridis'; } })();
+const LUT_CACHE = {};
+function hexRgb(hx){ const n = parseInt(hx.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function buildLUT(name){
+  if (LUT_CACHE[name]) return LUT_CACHE[name];
+  const st = PALETTES[name].stops.map(hexRgb), lut = new Uint8Array(256*3);
+  for (let i = 0; i < 256; i++) {
+    const t = i / 255 * (st.length - 1), k = Math.min(st.length - 2, Math.floor(t)), f = t - k;
+    for (let c = 0; c < 3; c++) lut[i*3+c] = Math.round(st[k][c] + (st[k+1][c] - st[k][c]) * f);
+  }
+  return LUT_CACHE[name] = lut;
+}
+function valColor(v){
+  const lut = buildLUT(paletteName), i = Math.round((Math.max(-1, Math.min(1, v)) + 1) * 127.5) * 3;
+  return [lut[i], lut[i+1], lut[i+2]];
+}
+function updateColorbar(){
+  const cb = document.getElementById('colorbar');
+  if (cb) cb.style.background = `linear-gradient(to right, ${PALETTES[paletteName].stops.join(',')})`;
+  document.querySelectorAll('[data-pal]').forEach(b => b.setAttribute('aria-pressed', b.dataset.pal === paletteName));
+  const cap = document.getElementById('colorbarCaption');
+  if (cap) cap.textContent = /NDWI/i.test(typeof lastIndexName === 'string' ? lastIndexName : '')
+    ? '← vegetação, solo seco · água, alvos úmidos →'
+    : '← água, nuvem, sombra · solo exposto · vegetação densa →';
+}
+function setPalette(name){
+  if (!PALETTES[name]) return;
+  paletteName = name; try { localStorage.setItem('sensorlab_paleta', name); } catch(e){}
+  updateColorbar();
+  if (lastIndexData) { renderIndex(lastIndexData, indexCanvas); drawHistogram(lastIndexData, lastIndexName); }
+}
 function renderIndex(indexData,canvas){
     if(!indexData)return;
     const first=bandImages[1]; if(!first)return;
     const w=first.width,h=first.height;
     canvas.width=w; canvas.height=h;
     const ctx=canvas.getContext('2d'),id=ctx.createImageData(w,h);
-    let mn=1,mx=-1,sum=0;
+    const lut=buildLUT(paletteName);
+    let mn=Infinity,mx=-Infinity,sum=0;
     for(let i=0;i<w*h;i++){
         const v=indexData[i]; if(v<mn)mn=v; if(v>mx)mx=v; sum+=v;
-        const x=i*4;
-        if(v<-0.2){id.data[x]=0;id.data[x+1]=100;id.data[x+2]=255;}
-        else if(v<0){const t=(v+0.2)/0.2;id.data[x]=139+t*50;id.data[x+1]=69+t*50;id.data[x+2]=19+t*20;}
-        else{const t=Math.min(1,v);id.data[x]=34+t*100;id.data[x+1]=139+t*100;id.data[x+2]=34;}
-        id.data[x+3]=255;
+        const k=Math.round((Math.max(-1,Math.min(1,v))+1)*127.5)*3, x=i*4;
+        id.data[x]=lut[k]; id.data[x+1]=lut[k+1]; id.data[x+2]=lut[k+2]; id.data[x+3]=255;
     }
     ctx.putImageData(id,0,0);
-    document.getElementById('indexMin').textContent=mn.toFixed(3);
-    document.getElementById('indexMax').textContent=mx.toFixed(3);
-    document.getElementById('indexMean').textContent=(sum/(w*h)).toFixed(3);
+    const f3 = v => v.toFixed(3).replace('.', ',');
+    document.getElementById('indexMin').textContent=f3(mn);
+    document.getElementById('indexMax').textContent=f3(mx);
+    document.getElementById('indexMean').textContent=f3(sum/(w*h));
+    updateColorbar();
     updateThreshold(false);
 }
 
@@ -2730,8 +3355,8 @@ indexCanvas.addEventListener('click', e => {
     const i = y * w + x, v = lastIndexData[i];
     const f = k => bandData[k] ? bandData[k][i].toFixed(2) : '—';
     document.getElementById('pixelInfo').innerHTML =
-        `📍 Pixel (${x}, ${y}) · <strong>${lastIndexName} = ${v.toFixed(3)}</strong> → ${interpretIndex(lastIndexName, v)}<br>` +
-        `<span style="font-size:0.7rem;">Azul ${f(1)} · Verde ${f(2)} · Vermelho ${f(3)} · NIR ${f(4)} (valores normalizados 0–1)</span>`;
+        `📍 Pixel (${x}, ${y}) · <span class="swatch" style="background:rgb(${valColor(v).join(',')})"></span><strong>${lastIndexName} = ${v.toFixed(3).replace('.', ',')}</strong> → ${interpretIndex(lastIndexName, v)}<br>` +
+        `<span style="font-size:0.75rem;">Azul ${f(1)} · Verde ${f(2)} · Vermelho ${f(3)} · NIR ${f(4)} (valores normalizados 0–1)</span>`;
 });
 
 // ---- Limiar e estimativa de área ----
@@ -2756,11 +3381,12 @@ function updateThreshold(drawMask){
         const ctx = indexCanvas.getContext('2d'), id = ctx.createImageData(w, h);
         for (let i = 0; i < N; i++) {
             const k = i*4, on = lastIndexData[i] >= t;
-            id.data[k] = on ? 34 : 60; id.data[k+1] = on ? 197 : 60; id.data[k+2] = on ? 94 : 70; id.data[k+3] = 255;
+            id.data[k] = on ? 0 : 77; id.data[k+1] = on ? 158 : 77; id.data[k+2] = on ? 115 : 77; id.data[k+3] = 255;
         }
         ctx.putImageData(id, 0, 0);
         switchView('index');
     }
+    drawHistogram(lastIndexData, lastIndexName);
 }
 thrSlider.addEventListener('input', () => updateThreshold(true));
 
@@ -2775,112 +3401,55 @@ function drawHistogram(indexData, label) {
     if (!indexData) { return; }
     lastIndexData = indexData;
     lastIndexName = label || lastIndexName;
-
-    const canvas = document.getElementById('histogramCanvas');
-    if (!canvas) return;
-    const W = canvas.width, H = canvas.height;
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('histogramCanvas'); if (!canvas) return;
+    const W = canvas.width, H = canvas.height, ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, W, H);
-
-    // Build bins [-1, +1] in 100 steps
-    const BINS = 100;
-    const bins = new Array(BINS).fill(0);
+    const BINS = 100, bins = new Array(BINS).fill(0);
     let sum = 0, count = 0;
     for (let i = 0; i < indexData.length; i++) {
-        const v = indexData[i];
-        if (isNaN(v)) continue;
-        const b = Math.min(BINS - 1, Math.max(0, Math.floor((v + 1) / 2 * BINS)));
-        bins[b]++;
-        sum += v;
-        count++;
+        const v = indexData[i]; if (isNaN(v)) continue;
+        bins[Math.min(BINS - 1, Math.max(0, Math.floor((v + 1) / 2 * BINS)))]++;
+        sum += v; count++;
     }
-    const maxBin = Math.max(...bins);
-    const mean = count > 0 ? sum / count : 0;
-
-    // Find mode bin
-    const modeBin = bins.indexOf(maxBin);
-    const modeVal = ((modeBin / BINS) * 2 - 1).toFixed(3);
-
-    // Padding
-    const padL = 42, padR = 12, padT = 16, padB = 32;
-    const gW = W - padL - padR, gH = H - padT - padB;
-
-    // Background
-    ctx.fillStyle = '#0a0d14';
-    ctx.fillRect(0, 0, W, H);
-
-    // Grid lines
-    ctx.strokeStyle = '#1e2a3a';
-    ctx.lineWidth = 1;
+    const maxBin = Math.max(...bins, 1), mean = count > 0 ? sum / count : 0;
+    const modeVal = ((bins.indexOf(maxBin) / BINS) * 2 - 1).toFixed(3);
+    const padL = 56, padR = 14, padT = 22, padB = 30, gW = W - padL - padR, gH = H - padT - padB;
+    const C = { bg:cssVar('--sl-plot-bg'), grid:cssVar('--sl-plot-grid'), axis:cssVar('--sl-plot-axis'), text:cssVar('--sl-plot-text'), accent:cssVar('--md-sys-color-primary') };
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    ctx.font = '15px sans-serif'; ctx.textAlign = 'right';
     for (let g = 0; g <= 4; g++) {
         const y = padT + gH - (g / 4) * gH;
-        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + gW, y); ctx.stroke();
-        ctx.fillStyle = '#4a5568';
-        ctx.font = '9px monospace';
-        ctx.textAlign = 'right';
-        ctx.fillText(Math.round((g / 4) * maxBin), padL - 4, y + 3);
+        ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + gW, y); ctx.stroke();
+        ctx.fillStyle = C.text; ctx.fillText(Math.round((g / 4) * maxBin).toLocaleString('pt-BR'), padL - 6, y + 5);
     }
-
-    // Zero line
-    const zeroX = padL + gW * 0.5;
-    ctx.strokeStyle = '#334155';
-    ctx.setLineDash([3, 3]);
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(zeroX, padT); ctx.lineTo(zeroX, padT + gH); ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Bars with gradient color (red→yellow→green like NDVI palette)
     const barW = gW / BINS;
     for (let b = 0; b < BINS; b++) {
-        if (bins[b] === 0) continue;
-        const x = padL + b * barW;
-        const bH = (bins[b] / maxBin) * gH;
-        const y = padT + gH - bH;
-        // Color by value
-        const val = (b / BINS) * 2 - 1;
-        let r, g, bl;
-        if (val < -0.2) { r = 0; g = 100; bl = 220; }
-        else if (val < 0) { const t = (val + 0.2) / 0.2; r = Math.round(139 + t * 80); g = Math.round(69 + t * 60); bl = 19; }
-        else { const t = Math.min(1, val); r = Math.round(34 + (1-t) * 180); g = Math.round(139 + t * 80); bl = 34; }
-        ctx.fillStyle = `rgba(${r},${g},${bl},0.85)`;
-        ctx.fillRect(x, y, Math.max(1, barW - 0.5), bH);
+        if (!bins[b]) continue;
+        const bH = (bins[b] / maxBin) * gH, val = ((b + 0.5) / BINS) * 2 - 1, c = valColor(val);
+        ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
+        ctx.fillRect(padL + b * barW, padT + gH - bH, Math.max(1, barW - 0.5), bH);
     }
-
-    // Mean line
-    const meanX = padL + ((mean + 1) / 2) * gW;
-    ctx.strokeStyle = '#78D7F5';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 3]);
-    ctx.beginPath(); ctx.moveTo(meanX, padT); ctx.lineTo(meanX, padT + gH); ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Mean label
-    ctx.fillStyle = '#78D7F5';
-    ctx.font = 'bold 9px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('med', meanX, padT - 4);
-
-    // X axis labels
-    ctx.fillStyle = '#4a5568';
-    ctx.font = '9px monospace';
-    ctx.textAlign = 'center';
-    [-1, -0.5, 0, 0.5, 1].forEach(v => {
-        const x = padL + ((v + 1) / 2) * gW;
-        ctx.fillText(v.toFixed(1), x, padT + gH + 14);
-    });
-
-    // Axis lines
-    ctx.strokeStyle = '#334155';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + gH); ctx.lineTo(padL + gW, padT + gH);
-    ctx.stroke();
-
-    // Update stats
+    // Linha do zero, do limiar e da média
+    const xOf = v => padL + ((v + 1) / 2) * gW;
+    ctx.strokeStyle = C.axis; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(xOf(0), padT); ctx.lineTo(xOf(0), padT + gH); ctx.stroke();
+    const thr = parseFloat(document.getElementById('thrSlider')?.value ?? NaN);
+    if (!isNaN(thr)) {
+        ctx.strokeStyle = C.text; ctx.setLineDash([2, 4]); ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(xOf(thr), padT); ctx.lineTo(xOf(thr), padT + gH); ctx.stroke();
+        ctx.fillStyle = C.text; ctx.textAlign = 'center'; ctx.font = 'bold 14px sans-serif'; ctx.fillText('limiar', xOf(thr), padT - 6);
+    }
+    ctx.strokeStyle = C.accent; ctx.setLineDash([6, 3]); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(xOf(mean), padT); ctx.lineTo(xOf(mean), padT + gH); ctx.stroke();
+    ctx.setLineDash([]); ctx.lineWidth = 1;
+    ctx.fillStyle = C.accent; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('média', Math.min(padL + gW - 22, Math.max(padL + 22, xOf(mean))), padT + 14);
+    ctx.strokeStyle = C.axis; ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + gH); ctx.lineTo(padL + gW, padT + gH); ctx.stroke();
+    ctx.fillStyle = C.text; ctx.font = '15px sans-serif'; ctx.textAlign = 'center';
+    [-1, -0.5, 0, 0.5, 1].forEach(v => ctx.fillText(v.toFixed(1).replace('.', ','), xOf(v), padT + gH + 20));
     document.getElementById('hist-index-label').textContent = lastIndexName;
     document.getElementById('hist-pixels').textContent = count.toLocaleString('pt-BR');
-    document.getElementById('hist-mode').textContent = modeVal;
-    document.getElementById('hist-mean').textContent = mean.toFixed(3);
+    document.getElementById('hist-mode').textContent = modeVal.replace('.', ',');
+    document.getElementById('hist-mean').textContent = mean.toFixed(3).replace('.', ',');
 }
 
 loadLocalBandsBtn.addEventListener('click', loadLandsatBands);
@@ -2967,7 +3536,7 @@ function drawCompass(angleDeg){
     const ctx=canvas.getContext('2d'),cx=120,cy=120,R=116;
     ctx.clearRect(0,0,240,240);
     ctx.beginPath(); ctx.arc(cx,cy,R,0,2*Math.PI); ctx.fillStyle='#0a0d14'; ctx.fill();
-    ctx.strokeStyle='var(--md-sys-color-outline-variant)'; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle='#334155'; ctx.lineWidth=2; ctx.stroke();
     for(let i=0;i<360;i+=5){
         const rad=(i-angleDeg)*Math.PI/180,inner=(i%10===0)?R-16:R-9,outer=R-3;
         ctx.beginPath(); ctx.moveTo(cx+inner*Math.sin(rad),cy-inner*Math.cos(rad));
@@ -3120,7 +3689,7 @@ function calibFinish(){
     const quality=spread>270?"Excelente":spread>180?"Boa":spread>90?"Regular":"Baixa";
     const qColor=spread>270?"#4ade80":spread>180?"#78D7F5":spread>90?"#fbbf24":"#f87171";
     const result=document.getElementById("calib-result");
-    result.innerHTML=`<span style="font-size:1.6rem;">${spread>180?"✅":"⚠️"}</span><br>Calibração concluída!<br><span style="color:${qColor};font-size:1rem;">Qualidade: ${quality}</span><br><span style="font-size:0.7rem;font-weight:400;color:var(--md-sys-color-on-surface-variant);">Variação angular detectada: ${Math.round(spread)}°</span>`;
+    result.innerHTML=`<span style="font-size:1.6rem;">${spread>180?"✅":"⚠️"}</span><br>Calibração concluída!<br><span style="color:${qColor};font-size:1rem;">Qualidade: ${quality}</span><br><span style="font-size:0.75rem;font-weight:400;color:var(--md-sys-color-on-surface-variant);">Variação angular detectada: ${Math.round(spread)}°</span>`;
     result.style.background=spread>180?"rgba(74,222,128,0.1)":"rgba(251,191,36,0.1)";
     result.style.border=`1px solid ${qColor}40`;
     result.classList.remove("hidden");
@@ -3243,8 +3812,8 @@ let classifyMode = 'train';
 let classMap = null;     // Uint8Array com a classe de cada pixel
 let lastMeans = null;
 
-const CLASS_COLORS     = ['#2f9e44','#f97316','#3b82f6','#86efac'];
-const CLASS_COLORS_RGB = [[47,158,68],[249,115,22],[59,130,246],[134,239,172]];
+const CLASS_COLORS     = ['#009E73','#D55E00','#0072B2','#F0E442'];
+const CLASS_COLORS_RGB = [[0,158,115],[213,94,0],[0,114,178],[240,228,66]];
 const CLASS_LABELS     = ['🌿 Vegetação','🟫 Solo Exposto','💧 Água','🐄 Pastagem'];
 
 // Decode base64 → Uint8Array
@@ -3285,13 +3854,13 @@ function setComposite(mode){
   const btnTc = document.getElementById('btn-tc');
   if(mode==='fc'){
     if(legend) legend.textContent = '🔴 B8 (NIR) · 🟢 B4 (Red) · 🔵 B3 (Green) — vegetação = vermelho vivo';
-    if(btnFc){btnFc.className='btn-filled';btnFc.style.cssText='font-size:0.6rem;padding:5px 10px;border-radius:var(--md-shape-full);';}
-    if(btnTc){btnTc.className='btn-outlined';btnTc.style.cssText='font-size:0.6rem;padding:4px 10px;border-radius:var(--md-shape-full);';}
+    if(btnFc){btnFc.className='btn-filled';btnFc.style.cssText='font-size:0.75rem;padding:5px 10px;border-radius:var(--md-shape-full);';}
+    if(btnTc){btnTc.className='btn-outlined';btnTc.style.cssText='font-size:0.75rem;padding:4px 10px;border-radius:var(--md-shape-full);';}
     renderComposite(SCENE_FC_B64);
   } else {
     if(legend) legend.textContent = '🔴 B4 (Red) · 🟢 B3 (Green) · 🔵 B2 (Blue) — cor natural';
-    if(btnFc){btnFc.className='btn-outlined';btnFc.style.cssText='font-size:0.6rem;padding:4px 10px;border-radius:var(--md-shape-full);';}
-    if(btnTc){btnTc.className='btn-filled';btnTc.style.cssText='font-size:0.6rem;padding:5px 10px;border-radius:var(--md-shape-full);';}
+    if(btnFc){btnFc.className='btn-outlined';btnFc.style.cssText='font-size:0.75rem;padding:4px 10px;border-radius:var(--md-shape-full);';}
+    if(btnTc){btnTc.className='btn-filled';btnTc.style.cssText='font-size:0.75rem;padding:5px 10px;border-radius:var(--md-shape-full);';}
     renderComposite(SCENE_TC_B64);
   }
 }
@@ -3306,8 +3875,8 @@ function initClassifyCanvas(){
     const rect = canvas.getBoundingClientRect();
     const scaleX = SCENE_W / rect.width;
     const scaleY = SCENE_H / rect.height;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const t = (e.changedTouches && e.changedTouches[0]) || e;
+    const clientX = t.clientX, clientY = t.clientY;
     return {
       x: Math.round((clientX - rect.left) * scaleX),
       y: Math.round((clientY - rect.top)  * scaleY)
@@ -3347,8 +3916,11 @@ function drawOverlay(){
     if (val) ctx.rect(x-4,y-4,8,8); else ctx.arc(x,y,5,0,Math.PI*2);
     ctx.fillStyle = CLASS_COLORS[cls];
     ctx.fill();
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 3;
+    ctx.stroke();
     ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1.2;
     ctx.stroke();
   });
 }
@@ -3421,7 +3993,7 @@ function runClassification(){
     active.forEach(c=>{
       const pct=((pixelCounts[c]||0)/total*100).toFixed(1);
       const m=means.find(x=>x.cls===c).mean;
-      statsHtml+=`<span style="color:${CLASS_COLORS[c]}">${CLASS_LABELS[c]}</span>: ${pct}% &nbsp;<span style="font-size:0.6rem;opacity:0.7;">NIR=${Math.round(m.nir)} R=${Math.round(m.red)} G=${Math.round(m.grn)}</span><br>`;
+      statsHtml+=`<span class="cdot" style="background:${CLASS_COLORS[c]}"></span><strong>${CLASS_LABELS[c]}</strong>: ${pct}% &nbsp;<span style="font-size:0.75rem;opacity:0.7;">NIR=${Math.round(m.nir)} R=${Math.round(m.red)} G=${Math.round(m.grn)}</span><br>`;
     });
     const statsEl=document.getElementById('classify-stats');
     if(statsEl) statsEl.innerHTML=statsHtml;
@@ -3461,7 +4033,7 @@ document.querySelectorAll('.class-btn').forEach(btn=>{
       b.style.boxShadow=c===activeClass?`0 0 0 3px ${CLASS_COLORS[c]}55`:'none';
     });
     const lbl=document.getElementById('active-class-label');
-    if(lbl){lbl.textContent=CLASS_LABELS[activeClass];lbl.style.color=CLASS_COLORS[activeClass];}
+    if(lbl){lbl.innerHTML=`<span class="cdot" style="background:${CLASS_COLORS[activeClass]}"></span>${CLASS_LABELS[activeClass]}`;}
   });
 });
 
@@ -3482,22 +4054,44 @@ function setClassifyMode(mode){
 function drawSignatures(means){
   const cv = document.getElementById('sigCanvas'); if(!cv) return;
   const ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
-  const pL = 40, pR = 12, pT = 12, pB = 30, gW = W-pL-pR, gH = H-pT-pB;
-  ctx.fillStyle = '#0a0d14'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle = '#1e2a3a'; ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-  for (let g=0; g<=4; g++){ const y = pT + gH - g/4*gH; ctx.beginPath(); ctx.moveTo(pL,y); ctx.lineTo(pL+gW,y); ctx.stroke(); ctx.fillText(Math.round(g*255/4), pL-5, y+3); }
+  const pL = 44, pR = 16, pT = 14, pB = 74, gW = W-pL-pR, gH = H-pT-pB;
+  const C = { bg:cssVar('--sl-plot-bg'), grid:cssVar('--sl-plot-grid'), text:cssVar('--sl-plot-text'), strong:cssVar('--sl-plot-strong') };
+  ctx.fillStyle = C.bg; ctx.fillRect(0,0,W,H);
+  ctx.font = '13px sans-serif'; ctx.textAlign = 'right';
+  for (let g=0; g<=4; g++){ const y = pT + gH - g/4*gH; ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pL,y); ctx.lineTo(pL+gW,y); ctx.stroke(); ctx.fillStyle = C.text; ctx.fillText(Math.round(g*255/4), pL-6, y+4); }
   const labels = ['Azul','Verde','Vermelho','NIR'], keys = ['blu','grn','red','nir'];
-  ctx.textAlign = 'center';
-  labels.forEach((l,i)=> ctx.fillText(l, pL + i*gW/3, H-10));
+  ctx.textAlign = 'center'; ctx.fillStyle = C.text;
+  labels.forEach((l,i)=> ctx.fillText(l, pL + i*gW/3, pT + gH + 18));
+  // Traço e marcador diferentes por classe: a leitura não depende só da cor
+  const DASH = [[], [9,4], [2,4], [10,4,2,4]];
+  const mark = (cls, x, y) => {
+    ctx.beginPath();
+    if (cls === 0) ctx.arc(x, y, 4.5, 0, Math.PI*2);
+    else if (cls === 1) ctx.rect(x-4.5, y-4.5, 9, 9);
+    else if (cls === 2) { ctx.moveTo(x, y-5.5); ctx.lineTo(x+5.5, y+4.5); ctx.lineTo(x-5.5, y+4.5); ctx.closePath(); }
+    else { ctx.moveTo(x, y-6); ctx.lineTo(x+6, y); ctx.lineTo(x, y+6); ctx.lineTo(x-6, y); ctx.closePath(); }
+    ctx.fill(); ctx.strokeStyle = C.strong; ctx.lineWidth = 1; ctx.stroke();
+  };
   means.forEach(({cls, mean})=>{
-    ctx.strokeStyle = CLASS_COLORS[cls]; ctx.fillStyle = CLASS_COLORS[cls]; ctx.lineWidth = 2.5;
+    ctx.strokeStyle = CLASS_COLORS[cls]; ctx.fillStyle = CLASS_COLORS[cls]; ctx.lineWidth = 3; ctx.setLineDash(DASH[cls]);
     ctx.beginPath();
     keys.forEach((k,i)=>{ const x = pL + i*gW/3, y = pT + gH - mean[k]/255*gH; i ? ctx.lineTo(x,y) : ctx.moveTo(x,y); });
-    ctx.stroke();
-    keys.forEach((k,i)=>{ const x = pL + i*gW/3, y = pT + gH - mean[k]/255*gH; ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fill(); });
+    ctx.stroke(); ctx.setLineDash([]);
+    keys.forEach((k,i)=>{ ctx.fillStyle = CLASS_COLORS[cls]; mark(cls, pL + i*gW/3, pT + gH - mean[k]/255*gH); });
+  });
+  // Legenda
+  const names = ['Vegetação','Solo exposto','Água','Pastagem'];
+  ctx.textAlign = 'left'; ctx.font = '13px sans-serif';
+  means.forEach(({cls}, i) => {
+    const col = i % 2, row = Math.floor(i / 2), x = pL + col * (gW/2), y = pT + gH + 40 + row * 20;
+    ctx.strokeStyle = CLASS_COLORS[cls]; ctx.lineWidth = 3; ctx.setLineDash(DASH[cls]);
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 28, y); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = CLASS_COLORS[cls]; mark(cls, x + 14, y);
+    ctx.fillStyle = C.strong; ctx.fillText(names[cls], x + 36, y + 4);
   });
   ctx.lineWidth = 1;
 }
+window.slRedrawSig = () => { if (lastMeans) drawSignatures(lastMeans); };
 
 // ── Matriz de confusão, exatidão global e Kappa ──
 function assessAccuracy(){
@@ -3523,10 +4117,10 @@ function assessAccuracy(){
   const pe = cls.reduce((a,k)=>a + rowT(k)*colT(k), 0) / (N*N);
   const kappa = pe < 1 ? (po - pe) / (1 - pe) : 1;
   const short = ['Veg.','Solo','Água','Past.'];
-  let t = '<div class="table-wrap"><table class="mini-table"><tr><th>Ref. ↓ / Mapa →</th>' + cls.map(c=>`<th style="color:${CLASS_COLORS[c]}">${short[c]}</th>`).join('') + '<th>Exat. produtor</th></tr>';
+  let t = '<div class="table-wrap"><table class="mini-table"><tr><th>Ref. ↓ / Mapa →</th>' + cls.map(c=>`<th><span class="cdot" style="background:${CLASS_COLORS[c]}"></span>${short[c]}</th>`).join('') + '<th>Exat. produtor</th></tr>';
   cls.forEach(r => {
     const rt = rowT(r);
-    t += `<tr><th style="color:${CLASS_COLORS[r]}">${short[r]}</th>` + cls.map(c=>`<td class="${r===c?'diag':''}">${M[r][c]}</td>`).join('') +
+    t += `<tr><th><span class="cdot" style="background:${CLASS_COLORS[r]}"></span>${short[r]}</th>` + cls.map(c=>`<td class="${r===c?'diag':''}">${M[r][c]}</td>`).join('') +
          `<td>${rt ? Math.round(M[r][r]/rt*100)+'%' : '—'}</td></tr>`;
   });
   t += '<tr><th>Exat. usuário</th>' + cls.map(c=>{ const ct=colT(c); return `<td>${ct?Math.round(M[c][c]/ct*100)+'%':'—'}</td>`; }).join('') + '<td></td></tr></table></div>';
@@ -3540,7 +4134,7 @@ function assessAccuracy(){
     `<p style="margin-top:8px;"><strong>Exatidão global:</strong> ${oa.toString().replace('.',',')}% (${diag} de ${N} pixels) · <strong>Kappa:</strong> ${k.toFixed(2).replace('.',',')} (concordância ${kTxt}, Landis & Koch)</p>` +
     (worst ? `<p>🔎 Maior confusão: ${worst.n} pixel(s) de <strong>${CLASS_LABELS[worst.r]}</strong> classificados como <strong>${CLASS_LABELS[worst.c]}</strong>. Compare as curvas dessas classes no gráfico acima.</p>` : '<p>✅ Nenhuma confusão entre as amostras de validação.</p>') +
     (N < 20 ? `<p style="color:var(--md-sys-color-error);">⚠️ Apenas ${N} pixels de validação: o resultado ainda é pouco confiável. Marque mais pontos.</p>` : '');
-  if (typeof slRecordClassify === 'function') slRecordClassify(oa, Math.round(k*100)/100);
+  if (typeof slRecordClassify === 'function') slRecordClassify(oa, Math.round(k*100)/100, worst ? [worst.r, worst.c] : null);
 }
 
 // Expose globals
@@ -3568,13 +4162,57 @@ window.showPage = function(tabId){
   const prevShow = window.showPage;
   window.showPage = function(tabId){
     prevShow(tabId);
-    if (tabId === 'camera') { if (!stream) startCamera(); } else stopCamera();
+    if (tabId === 'camera') { if (!stream && poeUnlocked('camera')) startCamera(); } else stopCamera();
     PROG.visited[tabId] = true; if (tabId === 'converter') PROG.visited.location = true;
     slSave();
     if (tabId === 'trail') renderTrail();
   };
 })();
 document.getElementById('trailName').addEventListener('input', e => { PROG.name = e.target.value; slSave(); });
+// ================================================================
+//  APARÊNCIA — automático, claro, escuro e alto contraste
+// ================================================================
+const THEME_KEY = 'sensorlab_tema';
+const mqDark = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+function getThemePref(){ try { return localStorage.getItem(THEME_KEY) || 'auto'; } catch(e) { return 'auto'; } }
+function applyTheme(pref, persist){
+  const t = pref === 'auto' ? (mqDark && mqDark.matches ? 'escuro' : 'claro') : pref;
+  document.documentElement.setAttribute('data-theme', t);
+  if (persist) { try { localStorage.setItem(THEME_KEY, pref); } catch(e){} }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', cssVar('--md-sys-color-surface-container-low'));
+  document.querySelectorAll('input[name="tema"]').forEach(r => r.checked = r.value === pref);
+  try { drawScattering(); } catch(e){}
+  if (lastIndexData) drawHistogram(lastIndexData, lastIndexName);
+  if (window.slRedrawSig) window.slRedrawSig();
+}
+if (mqDark) {
+  const onSys = () => { if (getThemePref() === 'auto') applyTheme('auto', false); };
+  mqDark.addEventListener ? mqDark.addEventListener('change', onSys) : mqDark.addListener(onSys);
+}
+let themeReturnFocus = null;
+function openThemeSheet(){
+  const sh = document.getElementById('theme-sheet');
+  themeReturnFocus = document.activeElement;
+  sh.classList.remove('hidden');
+  (sh.querySelector('input[name="tema"]:checked') || sh.querySelector('input[name="tema"]')).focus();
+}
+function closeThemeSheet(){
+  document.getElementById('theme-sheet').classList.add('hidden');
+  if (themeReturnFocus) themeReturnFocus.focus();
+}
+document.querySelectorAll('#theme-sheet [data-close]').forEach(el => el.addEventListener('click', closeThemeSheet));
+document.querySelectorAll('input[name="tema"]').forEach(r => r.addEventListener('change', () => {
+  applyTheme(r.value, true);
+  const nomes = { auto:'automático', claro:'claro', escuro:'escuro', contraste:'alto contraste' };
+  snack('Tema ' + nomes[r.value] + ' aplicado.');
+}));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('theme-sheet').classList.contains('hidden')) closeThemeSheet();
+});
+applyTheme(getThemePref(), false);
+updateColorbar();
+
 mountActivities();
 renderTrail();
 showPage('trail');
