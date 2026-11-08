@@ -883,7 +883,8 @@ body {
   pointer-events: none;
   z-index: 100;
   max-width: calc(100vw - 32px);
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 #snackbar.show {
@@ -1382,6 +1383,140 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 :root[data-theme="contraste"] .felt-cta { background: #000; color: #FFF; box-shadow: none; }
 @media (max-width: 360px) { .sc-name { font-size: 12px; } .hand { gap: 6px; } .felt-tile { padding: 8px; gap: 6px; } .felt-tile svg { width: 30px; } .felt-tile strong { font-size: 16px; white-space: nowrap; } }
 
+
+/* ================================================================
+   CAMPO — GPS, UTM e Bússola
+   ================================================================ */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.field { display: flex; flex-direction: column; gap: 10px; }
+.fbar {
+  display: flex; align-items: center; gap: 12px; min-height: 56px; box-sizing: border-box;
+  padding: 8px 8px 8px 16px; border-radius: var(--md-shape-full);
+  background: var(--md-sys-color-surface-container-high); border: 1px solid var(--md-sys-color-outline-variant);
+}
+.fbar-text { flex: 1; min-width: 0; font-size: var(--md-type-body-small); line-height: 1.3; color: var(--md-sys-color-on-surface-variant); }
+.fbar-text strong { display: block; font-size: var(--md-type-body-medium); color: var(--md-sys-color-on-surface); }
+.fbar-text span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fbtn {
+  min-height: 44px; padding: 0 18px; border-radius: var(--md-shape-full); border: none; flex-shrink: 0; cursor: pointer;
+  background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);
+  font-family: inherit; font-size: var(--md-type-label-large); font-weight: 700;
+}
+.fbtn.ghost { background: transparent; border: 1.5px solid var(--md-sys-color-outline); color: var(--md-sys-color-primary); }
+.fbtn.pause { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.fcard { background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline-variant); border-radius: 20px; padding: 14px; }
+.fcap { display: flex; justify-content: space-between; gap: 8px; font-size: var(--md-type-label-medium); font-weight: 700; color: var(--md-sys-color-on-surface-variant); }
+.coord-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+.coord-label { font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); }
+.coord-big {
+  font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: clamp(18px, 5.6vw, 24px); font-weight: 600; line-height: 1.25;
+  color: var(--md-sys-color-on-surface); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; white-space: nowrap;
+}
+.coord-small { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); white-space: nowrap; }
+.acc { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 14px; align-items: center; }
+.acc-ring { width: 72px; height: 72px; }
+.acc-ring circle { transition: stroke-dashoffset var(--md-duration-long1) var(--md-motion-standard), stroke var(--md-duration-medium1); }
+.acc-value { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--md-sys-color-on-surface); line-height: 1.2; margin: 2px 0 6px; font-variant-numeric: tabular-nums; }
+.acc-scale { position: relative; height: 8px; border-radius: 4px; background: var(--md-sys-color-surface-container-highest); overflow: visible; }
+.acc-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 4px; background: var(--md-sys-color-primary); transition: width var(--md-duration-long1) var(--md-motion-standard); }
+.acc-tick { position: absolute; left: 33.33%; top: -3px; bottom: -3px; width: 2px; background: var(--md-sys-color-on-surface); }
+.acc-scale-labels { display: flex; justify-content: space-between; font-size: var(--md-type-label-small); color: var(--md-sys-color-on-surface-variant); margin-top: 3px; }
+.acc-scale-labels span:nth-child(2) { margin-left: 4%; margin-right: auto; padding-left: 12%; }
+.acc-note { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); line-height: 1.35; margin-top: 4px; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.metric { background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; padding: 10px 12px; min-width: 0; }
+.metric span, .metric small { display: block; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); }
+.metric b { display: block; font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 19px; color: var(--md-sys-color-on-surface); margin: 2px 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ffoot { display: flex; align-items: center; gap: 8px; }
+.ffoot-time { flex: 1; min-width: 0; font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); line-height: 1.3; }
+.ffoot .fbtn { padding: 0 14px; }
+
+.utm-live { display: inline-flex; align-items: center; gap: 6px; }
+.utm-live.on::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--sl-success); }
+.utm-zone-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 10px 0 4px; }
+.utm-zone-big { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 40px; font-weight: 700; line-height: 1; color: var(--md-sys-color-primary); }
+.utm-zone-meta { text-align: right; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); }
+.utm-zone-meta b { display: block; font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 17px; color: var(--md-sys-color-on-surface); }
+.utm-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid var(--md-sys-color-outline-variant); }
+.utm-row .k { font-size: var(--md-type-body-medium); font-weight: 700; color: var(--md-sys-color-on-surface); }
+.utm-row .k small { display: block; font-size: var(--md-type-label-medium); font-weight: 400; color: var(--md-sys-color-on-surface-variant); }
+.utm-row .v { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: clamp(20px, 6.4vw, 27px); font-weight: 600; color: var(--md-sys-color-on-surface); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.utm-row .v small { font-size: 0.6em; color: var(--md-sys-color-on-surface-variant); }
+.utm-foot { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--md-sys-color-outline-variant); }
+.cv-seg { display: flex; }
+.cv-seg button { flex: 1; padding: 6px 8px; }
+.cv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.cv-grid.three { grid-template-columns: 0.6fr 1fr 1fr; }
+.cv-grid .m3-field { margin-bottom: 8px; }
+.cv-grid .m3-field label { text-transform: none; letter-spacing: 0; }
+.cv-hint { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); margin: 0 0 10px; }
+.cv-check { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: var(--md-type-body-medium); cursor: pointer; }
+.cv-check input { width: 20px; height: 20px; accent-color: var(--md-sys-color-primary); }
+.cv-err { margin-top: 8px; padding: 10px; border-radius: var(--md-shape-sm); background: var(--md-sys-color-error-container); color: var(--md-sys-color-on-error-container); font-size: var(--md-type-body-small); }
+.fsummary { cursor: pointer; font-weight: 700; color: var(--md-sys-color-primary); font-size: var(--md-type-body-medium); min-height: 24px; }
+.fdetail { margin-top: 10px; font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); line-height: 1.6; display: flex; flex-direction: column; gap: 6px; }
+
+.compass-screen { --dial: clamp(116px, calc(var(--app-h, 100dvh) - 524px), 236px); }
+.compass-screen.calibrating { --dial: clamp(96px, calc(var(--app-h, 100dvh) - 640px), 170px); }
+.cmp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cmp-read { display: flex; align-items: baseline; gap: 12px; }
+.cmp-cardinal { font-size: 44px; font-weight: 800; line-height: 1; color: var(--md-sys-color-primary); letter-spacing: 0.02em; min-width: 1.6em; }
+.cmp-deg { font-family: 'Roboto Mono', 'Space Mono', monospace; font-size: 30px; font-weight: 600; color: var(--md-sys-color-on-surface); font-variant-numeric: tabular-nums; }
+.cmp-src { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); margin-top: -4px; }
+.cmp-dial { display: flex; justify-content: center; }
+.cmp-dial canvas { width: var(--dial); height: var(--dial); border-radius: 50%; border: 2px solid var(--md-sys-color-outline-variant); transition: width var(--md-duration-medium2), height var(--md-duration-medium2); }
+.manual-row { display: flex; gap: 8px; }
+.manual-row .m3-input { flex: 1; min-width: 0; padding: 10px 14px; }
+.calib { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.calib-top { display: flex; align-items: center; gap: 12px; }
+.calib-top > div { flex: 1; min-width: 0; }
+.calib-top strong { display: block; font-size: var(--md-type-body-medium); color: var(--md-sys-color-on-surface); }
+.calib-top span { display: block; font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); line-height: 1.35; }
+.calib-prog-row { display: flex; justify-content: space-between; font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); margin-bottom: 4px; }
+.calib-track { height: 8px; border-radius: 4px; background: var(--md-sys-color-surface-container-highest); overflow: hidden; }
+#calib-bar { height: 100%; width: 0%; border-radius: 4px; background: var(--md-sys-color-primary); transition: width 0.3s; }
+.calib-status { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); text-align: center; }
+.calib-status:empty { display: none; }
+.calib-result { border-radius: var(--md-shape-md); padding: 8px 12px; font-size: var(--md-type-body-small); font-weight: 700; text-align: center; line-height: 1.4; }
+.calib-result br { display: none; }
+.calib-result > span:first-child { font-size: 1.1rem !important; margin-right: 6px; }
+:root[data-theme="contraste"] .fcard, :root[data-theme="contraste"] .metric, :root[data-theme="contraste"] .fbar { border: 2px solid #000; }
+
+/* Campo: compactação para caber numa tela sem rolagem */
+#location .field, #compass .field { gap: 8px; }
+#location .fbar { min-height: 52px; padding: 5px 6px 5px 14px; }
+#location .fcard { padding: 12px 14px; }
+#location .coord-grid { margin-top: 6px; }
+#location .acc { grid-template-columns: 62px minmax(0, 1fr); gap: 12px; }
+#location .acc-ring { width: 62px; height: 62px; }
+#location .acc-value { font-size: 20px; margin: 0 0 5px; }
+#location .acc-note { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#location .metric { padding: 8px 10px; border-radius: 14px; }
+#location .metric b { font-size: 18px; margin: 1px 0; }
+#act-location { padding: 10px 14px; margin-bottom: 8px; }
+#act-location details[open] { padding-top: 2px; }
+@media (max-height: 700px) {
+  #location .acc-scale-labels, #location .metric small { display: none; }
+  #location .acc-note { margin-top: 6px; }
+  #location .coord-small { font-size: 12px; }
+  .cmp-src { font-size: 12px; }
+  .calib-top span { display: none; }
+}
+
+@media (max-height: 680px) {
+  #location .field { gap: 6px; }
+  #location .acc-scale, #location .acc-note, #location .fbar-text span { display: none; }
+  #location .fbar { min-height: 46px; }
+  #location .acc-ring { width: 52px; height: 52px; }
+  #location .acc { grid-template-columns: 52px minmax(0, 1fr); }
+  #location .fcard { padding: 9px 12px; }
+  #location .metric { padding: 6px 10px; }
+  #location .metric b { font-size: 16px; }
+  #location .coord-big { font-size: 18px; }
+  #act-location { padding: 8px 12px; margin-bottom: 6px; }
+}
+@media (max-width: 360px) { .metric { padding: 8px; } .metric b { font-size: 16px; } .cmp-cardinal { font-size: 38px; } .cmp-deg { font-size: 26px; } }
+
 /* Classes: o texto usa a cor de leitura; a cor da classe fica no marcador (legível em qualquer tema) */
 .class-btn { color: var(--md-sys-color-on-surface) !important; }
 .class-btn > span { border: 1px solid var(--md-sys-color-outline); }
@@ -1857,201 +1992,177 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       </div>
     </div>
 
-    <!-- ===== ABA LOCALIZAÇÃO ===== -->
+    <!-- ===== CAMPO · GPS ===== -->
     <div id="location" class="tab-content">
-      <h2 class="section-title">🧭 Localização GPS</h2>
+      <h2 class="section-title sr-only">GPS</h2>
+      <div class="field">
+        <div class="fbar">
+          <div class="status-dot" id="gps-dot"></div>
+          <div class="fbar-text" aria-live="polite"><strong id="gps-status">GPS desligado</strong><span id="gps-sub">Toque em Iniciar para obter sua posição.</span></div>
+          <button type="button" class="fbtn" id="gps-toggle" onclick="gpsToggle()">Iniciar</button>
+        </div>
 
-      <div class="status-bar">
-        <div class="status-dot warn" id="loc-dot"></div>
-        <span id="loc-status-text" style="flex:1;font-size:var(--md-type-body-small);">Aguardando permissão…</span>
-        <button onclick="locStart()" id="loc-btn" class="btn-filled" style="font-size:var(--md-type-label-medium);padding:7px 14px;">📡 Obter</button>
-        <button onclick="locStop()" id="loc-stop-btn" class="btn-outlined hidden" style="font-size:var(--md-type-label-medium);padding:6px 12px;">⏹</button>
-      </div>
+        <section class="fcard" aria-labelledby="gps-pos-cap">
+          <div class="fcap"><span id="gps-pos-cap">Posição</span><span>WGS 84 · graus decimais</span></div>
+          <div class="coord-grid">
+            <div>
+              <div class="coord-label">Latitude</div>
+              <div class="coord-big" id="gps-lat">—</div>
+              <div class="coord-small" id="gps-lat-dms">—</div>
+            </div>
+            <div>
+              <div class="coord-label">Longitude</div>
+              <div class="coord-big" id="gps-lon">—</div>
+              <div class="coord-small" id="gps-lon-dms">—</div>
+            </div>
+          </div>
+        </section>
 
-      <!-- Bússola -->
-      <div class="m3-card">
-        <div class="m3-card-title">🧭 Bússola Digital</div>
-        <div class="compass-wrap">
-          <canvas id="compassCanvas" width="240" height="240"
-            style="background:#0a0d14;border-radius:50%;border:2px solid var(--md-sys-color-outline-variant);max-width:220px;"></canvas>
-          <div class="compass-direction" id="compass-cardinal">—</div>
-          <div class="compass-deg-label" id="compass-deg-label">Aguardando sensor de orientação…</div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:10px;">
-          <input id="loc-manual-deg" type="number" min="0" max="359" placeholder="Rumo manual (0–359°)"
-            class="m3-input m3-input-mono" style="flex:1;padding:10px 12px;">
-          <button onclick="locSetManualHeading()" class="btn-filled" style="padding:10px 16px;font-size:var(--md-type-label-medium);">OK</button>
-        </div>
-      </div>
+        <section class="fcard acc" aria-labelledby="gps-acc-cap">
+          <svg class="acc-ring" viewBox="0 0 72 72" aria-hidden="true">
+            <circle cx="36" cy="36" r="30" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="7"/>
+            <circle id="gps-ring" cx="36" cy="36" r="30" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="7" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" transform="rotate(-90 36 36)"/>
+          </svg>
+          <div class="acc-body">
+            <div class="fcap"><span id="gps-acc-cap">Acurácia horizontal</span><span id="gps-acc-q">—</span></div>
+            <div class="acc-value" id="gps-acc">± — m</div>
+            <div class="acc-scale" aria-hidden="true"><div class="acc-fill" id="gps-acc-fill"></div><div class="acc-tick"></div></div>
+            <div class="acc-scale-labels" aria-hidden="true"><span>0</span><span>10 m (pixel S2)</span><span>30 m</span></div>
+            <div class="acc-note" id="gps-acc-note">Quanto menor o erro, mais confiável o ponto.</div>
+          </div>
+        </section>
 
-      <!-- Calibrar Bússola -->
-      <div class="m3-card" id="calib-card">
-        <div class="m3-card-title">🎯 Calibrar Bússola</div>
-        <p style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:12px;">A calibração corrige desvios magnéticos causados por interferências do ambiente. Recomendada quando a leitura parecer imprecisa.</p>
-        <div id="calib-progress-wrap" class="hidden" style="margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;font-size:var(--md-type-label-small);color:var(--md-sys-color-on-surface-variant);margin-bottom:6px;"><span>Progresso da calibração</span><span id="calib-pct">0%</span></div>
-          <div style="height:8px;border-radius:var(--md-shape-full);background:var(--md-sys-color-outline-variant);overflow:hidden;"><div id="calib-bar" style="height:100%;width:0%;border-radius:var(--md-shape-full);background:var(--md-sys-color-primary);transition:width 0.3s;"></div></div>
+        <div class="metrics">
+          <div class="metric"><span>Altitude</span><b id="gps-alt">—</b><small>elipsoidal</small></div>
+          <div class="metric"><span>Velocidade</span><b id="gps-spd">—</b><small>km/h</small></div>
+          <div class="metric"><span>Rumo</span><b id="gps-hdg">—</b><small id="gps-hdg-sub">em movimento</small></div>
         </div>
-        <div id="calib-anim-wrap" style="display:none;justify-content:center;align-items:center;margin:12px 0;">
-          <svg width="160" height="90" viewBox="0 0 160 90"><path d="M80,45 C80,20 20,20 20,45 C20,70 80,70 80,45 C80,20 140,20 140,45 C140,70 80,70 80,45" fill="none" stroke="var(--md-sys-color-outline-variant)" stroke-width="3" stroke-dasharray="4 4"/><circle id="calib-dot" cx="80" cy="45" r="10" fill="var(--md-sys-color-primary)"/><text x="80" y="86" text-anchor="middle" font-size="10" fill="var(--md-sys-color-on-surface-variant)" font-family="inherit">Mova o dispositivo em ∞</text></svg>
-        </div>
-        <div id="calib-status" style="font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);text-align:center;min-height:20px;margin-bottom:12px;"></div>
-        <div id="calib-result" class="hidden" style="border-radius:var(--md-shape-md);padding:10px 14px;margin-bottom:12px;font-size:var(--md-type-body-small);font-weight:700;text-align:center;"></div>
-        <div style="display:flex;gap:8px;">
-          <button id="calib-btn" onclick="calibStart()" class="btn-filled" style="flex:1;">🔄 Iniciar Calibração</button>
-          <button id="calib-cancel-btn" onclick="calibCancel()" class="btn-outlined hidden" style="flex:1;">✕ Cancelar</button>
-        </div>
-      </div>
 
-      <!-- Coordenadas DD -->
-      <div class="m3-card">
-        <div class="m3-card-title">🌐 Graus Decimais</div>
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-label">Latitude</div>
-            <div class="stat-value" id="loc-lat">—</div>
-            <div class="stat-unit" id="loc-lat-hem">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Longitude</div>
-            <div class="stat-value" id="loc-lon">—</div>
-            <div class="stat-unit" id="loc-lon-hem">—</div>
-          </div>
+        <div class="ffoot">
+          <span class="ffoot-time" id="gps-time">Sem leitura</span>
+          <button type="button" class="fbtn ghost" onclick="locCopy()">Copiar</button>
+          <button type="button" class="fbtn ghost" onclick="showPage('converter')">Ver em UTM</button>
         </div>
-        <div class="m3-card-title" style="margin-top:4px;">📐 GMS — Graus Min. Seg.</div>
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-label">Lat GMS</div>
-            <div class="stat-value" style="font-size:0.75rem;" id="loc-lat-dms">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Lon GMS</div>
-            <div class="stat-value" style="font-size:0.75rem;" id="loc-lon-dms">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- UTM -->
-      <div class="m3-card" style="border-color:var(--md-sys-color-primary);border-width:2px;">
-        <div class="m3-card-title">🗺️ Coordenadas UTM</div>
-        <div class="stat-grid">
-          <div class="stat-tile" style="grid-column:1/-1;background:var(--md-sys-color-primary-container);">
-            <div class="stat-label" style="color:var(--md-sys-color-on-primary-container);">Fuso UTM / Hemisfério</div>
-            <div class="stat-value" style="font-size:1.5rem;color:var(--md-sys-color-on-primary-container);" id="loc-utm-zone">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Easting (E)</div>
-            <div class="stat-value" id="loc-utm-e">—</div>
-            <div class="stat-unit">metros</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Northing (N)</div>
-            <div class="stat-value" id="loc-utm-n">—</div>
-            <div class="stat-unit">metros</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Qualidade GPS -->
-      <div class="m3-card">
-        <div class="m3-card-title">📶 Qualidade do Sinal</div>
-        <div class="stat-grid">
-          <div class="stat-tile">
-            <div class="stat-label">Acurácia Horiz.</div>
-            <div class="stat-value" id="loc-accuracy">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Altitude</div>
-            <div class="stat-value" id="loc-altitude">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Velocidade</div>
-            <div class="stat-value" id="loc-speed">—</div>
-          </div>
-          <div class="stat-tile">
-            <div class="stat-label">Atualizado</div>
-            <div class="stat-value" style="font-size:0.75rem;" id="loc-time">—</div>
-          </div>
-        </div>
-        <button onclick="locCopy()" class="btn-outlined btn-full" style="margin-top:10px;">📋 Copiar Coordenadas</button>
       </div>
     </div>
 
-    <!-- ===== ABA CONVERSOR ===== -->
+    <!-- ===== CAMPO · UTM ===== -->
     <div id="converter" class="tab-content">
-      <h2 class="section-title">🔄 Converter Coordenadas</h2>
+      <h2 class="section-title sr-only">Coordenadas UTM</h2>
+      <div class="field">
+        <section class="fcard utm-hero" aria-labelledby="utm-cap">
+          <div class="fcap"><span id="utm-cap">Posição atual em UTM</span><span class="utm-live" id="utm-live">GPS desligado</span></div>
+          <div class="utm-zone-row">
+            <div><div class="coord-label">Fuso / hemisfério</div><div class="utm-zone-big" id="utm-zone">—</div></div>
+            <div class="utm-zone-meta"><span>Meridiano central</span><b id="utm-cm">—</b></div>
+          </div>
+          <div class="utm-row"><div class="k">Easting (E)<small>a leste do falso meridiano</small></div><div class="v" id="utm-e">—</div></div>
+          <div class="utm-row"><div class="k">Northing (N)<small id="utm-n-sub">a partir do Equador</small></div><div class="v" id="utm-n">—</div></div>
+          <div class="utm-foot">
+            <span class="ffoot-time" id="utm-acc">Datum WGS 84 · equivalente prático ao SIRGAS 2000</span>
+            <button type="button" class="fbtn ghost hidden" id="utm-copy" onclick="utmCopyLive()">Copiar</button>
+            <button type="button" class="fbtn" id="utm-start" onclick="gpsToggle()">Iniciar GPS</button>
+          </div>
+        </section>
 
-      <!-- DD → UTM -->
-      <div class="m3-card">
-        <div class="m3-card-title">🌐 → 🗺️ Graus Decimais → UTM</div>
-        <p class="m3-card-subtitle">Use sinal negativo para Sul (−) e Oeste (−).</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div class="m3-field">
-            <label>Latitude (°)</label>
-            <input id="cv-lat" type="number" step="0.000001" placeholder="-10.184570" oninput="cvLL2UTM()" class="m3-input m3-input-mono">
+        <section class="fcard" aria-labelledby="cv-cap">
+          <div class="fcap" style="margin-bottom:10px;"><span id="cv-cap">Converter coordenadas</span></div>
+          <div class="seg-mini cv-seg" role="group" aria-label="Sentido da conversão">
+            <button type="button" data-cv="ll" aria-pressed="true" onclick="cvMode('ll')">Geográficas → UTM</button>
+            <button type="button" data-cv="utm" aria-pressed="false" onclick="cvMode('utm')">UTM → Geográficas</button>
           </div>
-          <div class="m3-field">
-            <label>Longitude (°)</label>
-            <input id="cv-lon" type="number" step="0.000001" placeholder="-48.332760" oninput="cvLL2UTM()" class="m3-input m3-input-mono">
-          </div>
-        </div>
-        <button onclick="cvLL2UTM()" class="btn-filled btn-full">▶ Converter para UTM</button>
-        <div id="cv-res-utm" class="conv-result hidden">
-          <div class="conv-result-row"><span class="conv-result-label">Fuso</span><span class="conv-result-value" id="cv-utm-zone">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Easting (m)</span><span class="conv-result-value" id="cv-utm-e">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Northing (m)</span><span class="conv-result-value" id="cv-utm-n">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-res-lat-dms" style="font-size:0.75rem;">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-res-lon-dms" style="font-size:0.75rem;">—</span></div>
-          <button onclick="cvCopyUTM()" class="btn-text btn-full" style="margin-top:6px;">📋 Copiar</button>
-        </div>
-        <div id="cv-err-utm" class="hidden" style="margin-top:8px;padding:10px;border-radius:var(--md-shape-sm);background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);font-size:var(--md-type-body-small);"></div>
-      </div>
 
-      <!-- UTM → DD -->
-      <div class="m3-card">
-        <div class="m3-card-title">🗺️ → 🌐 UTM → Graus Decimais</div>
-        <p class="m3-card-subtitle">Hemisfério Sul é padrão. Marque Norte se necessário.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-          <div class="m3-field">
-            <label>Fuso</label>
-            <input id="cv-zone-in" type="number" min="1" max="60" placeholder="22" oninput="cvUTM2LL()" class="m3-input m3-input-mono">
+          <div id="cv-pane-ll" style="margin-top:12px;">
+            <div class="cv-grid">
+              <div class="m3-field"><label for="cv-lat">Latitude (°)</label><input id="cv-lat" type="number" step="0.000001" placeholder="-11.729800" oninput="cvLL2UTM()" class="m3-input m3-input-mono"></div>
+              <div class="m3-field"><label for="cv-lon">Longitude (°)</label><input id="cv-lon" type="number" step="0.000001" placeholder="-49.068600" oninput="cvLL2UTM()" class="m3-input m3-input-mono"></div>
+            </div>
+            <p class="cv-hint">Sul e oeste com sinal negativo. Exemplo: Gurupi (TO).</p>
+            <button type="button" class="fbtn ghost btn-full" onclick="cvUseMyPosition()">Usar minha posição atual</button>
+            <div id="cv-res-utm" class="conv-result hidden">
+              <div class="conv-result-row"><span class="conv-result-label">Fuso</span><span class="conv-result-value" id="cv-utm-zone">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Easting (m)</span><span class="conv-result-value" id="cv-utm-e">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Northing (m)</span><span class="conv-result-value" id="cv-utm-n">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-res-lat-dms">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-res-lon-dms">—</span></div>
+              <button type="button" onclick="cvCopyUTM()" class="btn-text btn-full" style="margin-top:6px;">Copiar resultado</button>
+            </div>
+            <div id="cv-err-utm" class="cv-err hidden" role="alert"></div>
           </div>
-          <div class="m3-field">
-            <label>Easting (m)</label>
-            <input id="cv-east-in" type="number" placeholder="763450" oninput="cvUTM2LL()" class="m3-input m3-input-mono">
-          </div>
-          <div class="m3-field">
-            <label>Northing (m)</label>
-            <input id="cv-north-in" type="number" placeholder="8874200" oninput="cvUTM2LL()" class="m3-input m3-input-mono">
-          </div>
-        </div>
-        <label style="display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;font-size:var(--md-type-body-medium);">
-          <input id="cv-northern" type="checkbox" onchange="cvUTM2LL()" style="accent-color:var(--md-sys-color-primary);width:18px;height:18px;">
-          Hemisfério Norte
-        </label>
-        <button onclick="cvUTM2LL()" class="btn-filled btn-full">▶ Converter para Graus Decimais</button>
-        <div id="cv-res-ll" class="conv-result hidden">
-          <div class="conv-result-row"><span class="conv-result-label">Latitude (DD)</span><span class="conv-result-value" id="cv-out-lat">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Longitude (DD)</span><span class="conv-result-value" id="cv-out-lon">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-out-lat-dms" style="font-size:0.75rem;">—</span></div>
-          <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-out-lon-dms" style="font-size:0.75rem;">—</span></div>
-          <button onclick="cvCopyLL()" class="btn-text btn-full" style="margin-top:6px;">📋 Copiar</button>
-        </div>
-        <div id="cv-err-ll" class="hidden" style="margin-top:8px;padding:10px;border-radius:var(--md-shape-sm);background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);font-size:var(--md-type-body-small);"></div>
-      </div>
 
-      <!-- Nota técnica -->
-      <div class="m3-card">
-        <details>
-          <summary style="cursor:pointer;font-weight:700;color:var(--md-sys-color-primary);font-size:var(--md-type-body-medium);">📘 Sobre o sistema UTM</summary>
-          <div style="margin-top:10px;font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);line-height:1.7;">
-            <p><strong>UTM</strong> divide o globo em 60 fusos de 6° de longitude cada, numerados de 1 a 60 a partir de 180° O.</p>
-            <p style="margin-top:6px;"><strong>Easting</strong>: distância ao leste do meridiano central + 500 000 m (falso easting).</p>
-            <p style="margin-top:6px;"><strong>Northing</strong>: distância ao norte do Equador. No hemisfério Sul soma-se 10 000 000 m.</p>
-            <p style="margin-top:6px;">O Brasil abrange fusos 18 S a 25 S. Gurupi (TO): fuso <strong>22 S</strong>.</p>
-            <p style="margin-top:6px;font-size:0.75rem;color:var(--md-sys-color-on-surface-variant);">Elipsoide WGS 84 — a = 6 378 137 m · f = 1/298,257 223 563</p>
+          <div id="cv-pane-utm" class="hidden" style="margin-top:12px;">
+            <div class="cv-grid three">
+              <div class="m3-field"><label for="cv-zone-in">Fuso</label><input id="cv-zone-in" type="number" min="1" max="60" placeholder="22" oninput="cvUTM2LL()" class="m3-input m3-input-mono"></div>
+              <div class="m3-field"><label for="cv-east-in">Easting (m)</label><input id="cv-east-in" type="number" placeholder="710494" oninput="cvUTM2LL()" class="m3-input m3-input-mono"></div>
+              <div class="m3-field"><label for="cv-north-in">Northing (m)</label><input id="cv-north-in" type="number" placeholder="8702603" oninput="cvUTM2LL()" class="m3-input m3-input-mono"></div>
+            </div>
+            <label class="cv-check"><input id="cv-northern" type="checkbox" onchange="cvUTM2LL()"> Hemisfério Norte (o padrão é Sul)</label>
+            <div id="cv-res-ll" class="conv-result hidden">
+              <div class="conv-result-row"><span class="conv-result-label">Latitude (DD)</span><span class="conv-result-value" id="cv-out-lat">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Longitude (DD)</span><span class="conv-result-value" id="cv-out-lon">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Lat GMS</span><span class="conv-result-value" id="cv-out-lat-dms">—</span></div>
+              <div class="conv-result-row"><span class="conv-result-label">Lon GMS</span><span class="conv-result-value" id="cv-out-lon-dms">—</span></div>
+              <button type="button" onclick="cvCopyLL()" class="btn-text btn-full" style="margin-top:6px;">Copiar resultado</button>
+            </div>
+            <div id="cv-err-ll" class="cv-err hidden" role="alert"></div>
+          </div>
+        </section>
+
+        <details class="fcard">
+          <summary class="fsummary">Sobre o sistema UTM</summary>
+          <div class="fdetail">
+            <p><strong>UTM</strong> divide o globo em 60 fusos de 6° de longitude, numerados de 1 a 60 a partir de 180° O. Cada fuso tem um meridiano central com fator de escala 0,9996.</p>
+            <p><strong>Easting</strong>: distância ao meridiano central somada a 500 000 m (falso leste), para evitar valores negativos.</p>
+            <p><strong>Northing</strong>: distância ao Equador. No hemisfério Sul soma-se 10 000 000 m (falso norte).</p>
+            <p>O Brasil abrange os fusos 18 a 25. Gurupi está no fuso <strong>22 S</strong> (meridiano central 51° O); o leste do Tocantins já fica no fuso 23 S.</p>
+            <p class="muted">Elipsoide WGS 84: a = 6 378 137 m · f = 1/298,257 223 563. O referencial oficial do Brasil é o SIRGAS 2000, que coincide com o WGS 84 na escala de metros.</p>
           </div>
         </details>
+      </div>
+    </div>
+
+    <!-- ===== CAMPO · BÚSSOLA ===== -->
+    <div id="compass" class="tab-content">
+      <h2 class="section-title sr-only">Bússola</h2>
+      <div class="field compass-screen" id="compassScreen">
+        <div class="cmp-head">
+          <div class="cmp-read" aria-live="polite">
+            <span class="cmp-cardinal" id="compass-cardinal">—</span>
+            <span class="cmp-deg" id="compass-deg">—°</span>
+          </div>
+          <button type="button" class="fbtn" id="compass-sensor-btn" onclick="compassSensorToggle()">Ativar sensor</button>
+        </div>
+        <div class="cmp-src" id="compass-deg-label">Aguardando sensor de orientação…</div>
+
+        <div class="cmp-dial">
+          <canvas id="compassCanvas" width="240" height="240" role="img" aria-label="Rosa dos ventos girando conforme o rumo do aparelho"></canvas>
+        </div>
+
+        <div class="manual-row">
+          <label class="sr-only" for="loc-manual-deg">Rumo manual em graus</label>
+          <input id="loc-manual-deg" type="number" min="0" max="359" placeholder="Rumo manual (0–359°)" class="m3-input m3-input-mono">
+          <button type="button" class="fbtn" onclick="locSetManualHeading()">Aplicar</button>
+        </div>
+
+        <section class="fcard calib" id="calib-card" aria-labelledby="calib-title">
+          <div class="calib-top">
+            <div>
+              <strong id="calib-title">Calibrar bússola</strong>
+              <span>Corrige desvios por interferência magnética. Use quando a leitura parecer instável.</span>
+            </div>
+            <button type="button" id="calib-btn" onclick="calibStart()" class="fbtn ghost">Calibrar</button>
+            <button type="button" id="calib-cancel-btn" onclick="calibCancel()" class="fbtn ghost hidden">Cancelar</button>
+          </div>
+          <div id="calib-progress-wrap" class="hidden">
+            <div class="calib-prog-row"><span>Progresso</span><span id="calib-pct">0%</span></div>
+            <div class="calib-track"><div id="calib-bar"></div></div>
+          </div>
+          <div id="calib-anim-wrap" style="display:none;justify-content:center;align-items:center;">
+            <svg width="132" height="62" viewBox="0 0 160 76"><path d="M80,38 C80,13 20,13 20,38 C20,63 80,63 80,38 C80,13 140,13 140,38 C140,63 80,63 80,38" fill="none" stroke="var(--md-sys-color-outline)" stroke-width="3" stroke-dasharray="4 4"/><circle id="calib-dot" cx="80" cy="38" r="9" fill="var(--md-sys-color-primary)"/></svg>
+          </div>
+          <div id="calib-status" class="calib-status"></div>
+          <div id="calib-result" class="hidden calib-result"></div>
+        </section>
       </div>
     </div>
 
@@ -2199,7 +2310,7 @@ const MODULES = [
         ops:['Porque a clorofila absorve fortemente o azul e o vermelho','Porque a folha emite luz verde','Porque a água da folha reflete o verde','Porque a câmera tem mais pixels verdes'], certa:0,
         dica:'Lembre o papel dos pigmentos fotossintéticos na absorção da luz.',
         exp:'A clorofila absorve a radiação nas faixas do azul (~450 nm) e do vermelho (~670 nm) para a fotossíntese e reflete parte do verde. Folhas senescentes perdem clorofila e passam a refletir mais o vermelho.' } },
-  { id:'location', tab:'location', nivel:2, icon:'🧭', titulo:'GPS e coordenadas UTM',
+  { id:'location', tab:'location', nivel:2, icon:'🧭', titulo:'GPS e coordenadas UTM', compacto:true,
     obj:'Registrar pontos de campo e converter coordenadas geográficas para UTM.',
     poe:{ prever:'Parado em céu aberto, qual acurácia horizontal você espera do GPS do seu celular?',
       ops:['Menos de 1 m','Entre 3 e 10 m','Entre 30 e 50 m','Mais de 100 m'], esperado:1,
@@ -2208,7 +2319,7 @@ const MODULES = [
       dinamico: () => (typeof lastLocCoords !== 'undefined' && lastLocCoords && lastLocCoords.accuracy != null)
         ? `Sua medição mais recente: ± ${lastLocCoords.accuracy.toFixed(1).replace('.', ',')} m.`
         : 'Obtenha sua posição nesta tela para comparar a previsão com um valor medido.' },
-    passos:['Toque em “Obter” e observe a acurácia horizontal.','Copie as coordenadas e converta-as na aba UTM.','Confira o fuso UTM de Gurupi (22 S).'],
+    passos:['Na subaba GPS, toque em “Iniciar” e observe a acurácia horizontal.','Repita sob uma árvore ou perto de um prédio e compare.','Abra a subaba UTM e confira o fuso de Gurupi (22 S).'],
     q:{ texto:'Você coletará amostras de solo em grade de 50 × 50 m e depois as localizará numa imagem Sentinel-2. Qual sistema de coordenadas facilita medir as distâncias?',
         ops:['Graus decimais','Graus, minutos e segundos','UTM (em metros)','Coordenadas polares'], certa:2,
         dica:'Qual sistema expressa posições diretamente em metros?',
@@ -2257,7 +2368,7 @@ function poeUnlocked(id){
   const m = MODULES.find(x => x.id === id); if (!m) return true;
   return poeState(m).stage > 0 || moduleDone(m);
 }
-const poeView = {}, poeDraft = {};
+const poeView = {}, poeDraft = {}, poeCollapse = {};
 
 // ---------- Trilha (tela inicial) ----------
 function renderTrail(){
@@ -2378,7 +2489,8 @@ function renderActivity(m){
   const body = view === 0 ? viewPrever(m,s) : view === 1 ? viewExplorar(m,s) : view === 2 ? viewExplicar(m,s) : viewAplicar(m,s,d);
   const pill = d ? '<span class="status-pill ok">Concluída</span>' : `<span class="status-pill prog">${STAGES[s.stage]}</span>`;
   const prev = host.querySelector('details');
-  const open = prev ? prev.open : !d;
+  let open = prev ? prev.open : (m.compacto ? s.stage === 0 : !d);
+  if (poeCollapse[m.id]) { open = false; delete poeCollapse[m.id]; }
   host.innerHTML = `<details ${open ? 'open' : ''}>
       <summary><span>🎯 Atividade do módulo</span>${pill}</summary>
       <p class="act-obj"><strong>Objetivo:</strong> ${m.obj}</p>
@@ -2408,7 +2520,8 @@ function poeClick(m, e){
     case 'register':
       s.pred = dr.pred; s.conf = dr.conf; s.stage = Math.max(s.stage, 1); s.quando = new Date().toISOString();
       poeView[m.id] = 1; slSave();
-      snack('Previsão registrada. O conteúdo foi liberado.');
+      if (m.compacto) poeCollapse[m.id] = true;
+      snack(m.compacto ? 'Previsão registrada. A atividade fica no topo.' : 'Previsão registrada. O conteúdo foi liberado.');
       onUnlock(m); break;
     case 'explored': s.stage = Math.max(s.stage, 2); poeView[m.id] = 2; slSave(); break;
     case 'self': s.self = v; slSave(); break;
@@ -2531,13 +2644,13 @@ function resetProgress(){
 const GROUPS = [
   { id:'aprender', titulo:'Aprender',             tabs:['spectrum','lab','quantities'] },
   { id:'labs',     titulo:'Laboratórios',         tabs:['indices','classify','camera'] },
-  { id:'campo',    titulo:'Campo',                tabs:['location','converter'] },
+  { id:'campo',    titulo:'Campo',                tabs:['location','converter','compass'] },
   { id:'praticar', titulo:'Consultar e praticar', tabs:['glossary','quiz','game'] }
 ];
 const TAB_META = {
   spectrum:{icon:'🌈',label:'Espectro'}, lab:{icon:'🌫️',label:'Espalhamento'}, quantities:{icon:'📊',label:'Grandezas'},
   indices:{icon:'🌱',label:'Índices'}, classify:{icon:'🗺️',label:'Classificação'}, camera:{icon:'📷',label:'Câmera'},
-  location:{icon:'📡',label:'GPS'}, converter:{icon:'🔄',label:'UTM'},
+  location:{icon:'📡',label:'GPS'}, converter:{icon:'🗺️',label:'UTM'}, compass:{icon:'🧭',label:'Bússola'},
   glossary:{icon:'📖',label:'Glossário'}, quiz:{icon:'❓',label:'Quiz'}, game:{icon:'🃏',label:'Trunfo'}
 };
 const TAB_GROUP = {}; GROUPS.forEach(g => g.tabs.forEach(t => TAB_GROUP[t] = g.id));
@@ -2578,7 +2691,7 @@ function showPage(tabId) {
 
   // Carregamentos sob demanda
   if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadSentinelBands();
-  if (tabId === 'location') { compassStart(); drawCompass(compassCurrentAngle); }
+  fieldOnShow(tabId, gid);
 }
 
 // Barra inferior: abre a última subaba visitada do grupo
@@ -3686,7 +3799,7 @@ function drawCompass(angleDeg){
         ctx.lineTo(cx+outer*Math.sin(rad),cy-outer*Math.cos(rad));
         ctx.strokeStyle=(i%90===0)?'#94a3b8':'#334155'; ctx.lineWidth=(i%10===0)?1.5:0.8; ctx.stroke();
     }
-    ctx.font='bold 14px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='bold 18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
     [{t:'N',a:0,c:'#f87171'},{t:'L',a:90,c:'#94a3b8'},{t:'S',a:180,c:'#94a3b8'},{t:'O',a:270,c:'#94a3b8'}].forEach(({t,a,c})=>{
         const rad=(a-angleDeg)*Math.PI/180,r=R-26;
         ctx.fillStyle=c; ctx.fillText(t,cx+r*Math.sin(rad),cy-r*Math.cos(rad));
@@ -3703,71 +3816,143 @@ function compassLoop(){
     compassRaf=requestAnimationFrame(compassLoop);
 }
 function compassStart(){ if(!compassRaf) compassLoop(); }
-function locSetHeading(deg){
-    compassTargetAngle=deg;
-    const dirs=['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
-    document.getElementById('compass-cardinal').textContent=dirs[Math.round(deg/22.5)%16];
-    document.getElementById('compass-deg-label').textContent=`${Math.round(deg)}° — sensor do dispositivo`;
+function compassStop(){ if(compassRaf){ cancelAnimationFrame(compassRaf); compassRaf=null; } }
+// ---- Leitura de rumo (sensor ou manual) ----
+const DIRS16 = ['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
+let orientOn = false, orientAbsolute = false, headingSource = null;
+function locSetHeading(deg, fonte){
+    deg = ((deg % 360) + 360) % 360;
+    compassTargetAngle = deg;
+    document.getElementById('compass-cardinal').textContent = DIRS16[Math.round(deg / 22.5) % 16];
+    document.getElementById('compass-deg').textContent = Math.round(deg) + '°';
+    headingSource = fonte || 'sensor';
+    document.getElementById('compass-deg-label').textContent = headingSource === 'manual'
+        ? 'Rumo digitado manualmente · toque em “Ativar sensor” para voltar ao sensor'
+        : (orientAbsolute ? 'Rumo magnético medido pelo sensor do aparelho' : 'Rumo medido pelo sensor do aparelho');
 }
 function locSetManualHeading(){
-    const v=parseFloat(document.getElementById('loc-manual-deg').value);
-    if(isNaN(v))return;
-    const deg=((v%360)+360)%360;
-    document.getElementById('compass-deg-label').textContent=`${Math.round(deg)}° — entrada manual`;
-    compassTargetAngle=deg;
-    const dirs=['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO'];
-    document.getElementById('compass-cardinal').textContent=dirs[Math.round(deg/22.5)%16];
-}
-function locUpdateUI(coords){
-    lastLocCoords=coords;
-    const{latitude:lat,longitude:lon,accuracy,altitude,speed}=coords;
-    const utm=latLon2UTM(lat,lon);
-    document.getElementById('loc-lat').textContent=lat.toFixed(6);
-    document.getElementById('loc-lon').textContent=lon.toFixed(6);
-    document.getElementById('loc-lat-hem').textContent=lat>=0?'↑ Norte':'↓ Sul';
-    document.getElementById('loc-lon-hem').textContent=lon>=0?'→ Leste':'← Oeste';
-    document.getElementById('loc-lat-dms').textContent=dd2dms(lat,true);
-    document.getElementById('loc-lon-dms').textContent=dd2dms(lon,false);
-    document.getElementById('loc-utm-zone').textContent=`${utm.zone} ${utm.band}`;
-    document.getElementById('loc-utm-e').textContent=utm.easting.toFixed(2);
-    document.getElementById('loc-utm-n').textContent=utm.northing.toFixed(2);
-    document.getElementById('loc-accuracy').textContent=accuracy!=null?`± ${accuracy.toFixed(1)} m`:'—';
-    document.getElementById('loc-altitude').textContent=altitude!=null?`${altitude.toFixed(1)} m`:'—';
-    document.getElementById('loc-speed').textContent=speed!=null?`${(speed*3.6).toFixed(1)} km/h`:'—';
-    document.getElementById('loc-time').textContent=new Date().toLocaleTimeString('pt-BR');
-    const dot=document.getElementById('loc-dot');
-    dot.className='status-dot active';
-    document.getElementById('loc-status-text').textContent=`📍 Localização obtida — precisão ± ${accuracy?accuracy.toFixed(0):'?'} m`;
-}
-function locStart(){
-    if(!navigator.geolocation){ document.getElementById('loc-status-text').textContent='❌ Geolocalização não suportada.'; return; }
-    document.getElementById('loc-status-text').textContent='⏳ Obtendo localização…';
-    compassStart();
-    locWatchId=navigator.geolocation.watchPosition(
-        pos=>locUpdateUI(pos.coords),
-        err=>{ const m={1:'Permissão negada.',2:'Posição indisponível.',3:'Tempo esgotado.'};
-            document.getElementById('loc-status-text').textContent='❌ '+(m[err.code]||err.message);
-            document.getElementById('loc-dot').className='status-dot error'; },
-        {enableHighAccuracy:true,maximumAge:5000,timeout:15000}
-    );
-    document.getElementById('loc-btn').classList.add('hidden');
-    document.getElementById('loc-stop-btn').classList.remove('hidden');
-    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-        DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')window.addEventListener('deviceorientation',onOrient);}).catch(()=>{});
-    } else { window.addEventListener('deviceorientation',onOrient); }
-}
-function locStop(){
-    if(locWatchId!=null){navigator.geolocation.clearWatch(locWatchId);locWatchId=null;}
-    window.removeEventListener('deviceorientation',onOrient);
-    document.getElementById('loc-btn').classList.remove('hidden');
-    document.getElementById('loc-stop-btn').classList.add('hidden');
-    document.getElementById('loc-status-text').textContent='Rastreamento pausado.';
-    document.getElementById('loc-dot').className='status-dot warn';
+    const v = parseFloat(document.getElementById('loc-manual-deg').value);
+    if (isNaN(v)) { snack('Digite um rumo entre 0 e 359°.'); return; }
+    compassSensorStop();
+    locSetHeading(v, 'manual');
 }
 function onOrient(e){
-    const h=e.webkitCompassHeading!=null?e.webkitCompassHeading:(e.alpha!=null?(360-e.alpha)%360:null);
-    if(h!=null)locSetHeading(h);
+    const h = e.webkitCompassHeading != null ? e.webkitCompassHeading : (e.alpha != null ? (360 - e.alpha) % 360 : null);
+    if (h != null) locSetHeading(h, 'sensor');
 }
+function onOrientAbs(e){ if (e.alpha != null) locSetHeading((360 - e.alpha) % 360, 'sensor'); }
+function updateSensorBtn(){
+    const b = document.getElementById('compass-sensor-btn'); if (!b) return;
+    b.textContent = orientOn ? 'Pausar sensor' : 'Ativar sensor';
+    b.classList.toggle('pause', orientOn);
+}
+function compassSensorStart(fromUser){
+    if (orientOn) return;
+    const src = document.getElementById('compass-deg-label');
+    const attach = () => {
+        if ('ondeviceorientationabsolute' in window) { window.addEventListener('deviceorientationabsolute', onOrientAbs); orientAbsolute = true; }
+        else window.addEventListener('deviceorientation', onOrient);
+        orientOn = true; updateSensorBtn();
+        if (headingSource !== 'sensor') src.textContent = 'Aguardando leitura do sensor… gire o aparelho na horizontal.';
+    };
+    if (typeof DeviceOrientationEvent === 'undefined') { src.textContent = 'Este aparelho não informa orientação. Use o rumo manual.'; return; }
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        if (!fromUser) { src.textContent = 'Toque em “Ativar sensor” para usar a bússola.'; return; }
+        DeviceOrientationEvent.requestPermission()
+            .then(s => s === 'granted' ? attach() : (src.textContent = 'Permissão negada. Use o rumo manual.'))
+            .catch(() => src.textContent = 'Não foi possível ativar o sensor. Use o rumo manual.');
+    } else attach();
+}
+function compassSensorStop(){
+    window.removeEventListener('deviceorientationabsolute', onOrientAbs);
+    window.removeEventListener('deviceorientation', onOrient);
+    orientOn = false; orientAbsolute = false; updateSensorBtn();
+}
+function compassSensorToggle(){ orientOn ? (compassSensorStop(), document.getElementById('compass-deg-label').textContent = 'Sensor pausado.') : compassSensorStart(true); }
+
+// ---- GPS ----
+let gpsAutoPaused = false;
+const fmtNum = (v, d) => v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+function fmtDD(v, isLat){ return (v < 0 ? '−' : '') + Math.abs(v).toFixed(6).replace('.', ',') + '°'; }
+function fmtDMS(dd, isLat){
+    const a = Math.abs(dd), g = Math.floor(a), mf = (a - g) * 60, m = Math.floor(mf), s = (mf - m) * 60;
+    const hem = isLat ? (dd >= 0 ? 'N' : 'S') : (dd >= 0 ? 'L' : 'O');
+    return `${g}° ${String(m).padStart(2,'0')}′ ${s.toFixed(1).replace('.', ',').padStart(4,'0')}″ ${hem}`;
+}
+function fmtUTMm(v){ const [i, d] = v.toFixed(2).split('.'); return i.replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009') + '<small>,' + d + ' m</small>'; }
+function accQuality(a){ return a <= 5 ? 'Excelente' : a <= 10 ? 'Boa' : a <= 20 ? 'Regular' : 'Fraca'; }
+
+function gpsSetStatus(state, title, sub){
+    document.getElementById('gps-dot').className = 'status-dot' + (state ? ' ' + state : '');
+    document.getElementById('gps-status').textContent = title;
+    document.getElementById('gps-sub').textContent = sub;
+    const live = document.getElementById('utm-live');
+    if (live) { live.textContent = state === 'active' ? 'Ao vivo' : (locWatchId != null ? 'Buscando sinal…' : 'GPS desligado'); live.classList.toggle('on', state === 'active'); }
+}
+function gpsButtons(){
+    const on = locWatchId != null;
+    const t = document.getElementById('gps-toggle'); t.textContent = on ? 'Pausar' : 'Iniciar'; t.classList.toggle('pause', on);
+    const u = document.getElementById('utm-start'); if (u) u.classList.toggle('hidden', on);
+}
+function locUpdateUI(coords){
+    lastLocCoords = coords;
+    const { latitude: lat, longitude: lon, accuracy, altitude, speed, heading } = coords;
+    document.getElementById('gps-lat').textContent = fmtDD(lat, true);
+    document.getElementById('gps-lon').textContent = fmtDD(lon, false);
+    document.getElementById('gps-lat-dms').textContent = fmtDMS(lat, true);
+    document.getElementById('gps-lon-dms').textContent = fmtDMS(lon, false);
+    const acc = accuracy != null ? accuracy : null;
+    if (acc != null) {
+        const q = accQuality(acc), frac = Math.max(0, 1 - Math.min(acc, 30) / 30);
+        const cor = acc <= 10 ? 'var(--sl-success)' : acc <= 20 ? 'var(--sl-warn)' : 'var(--md-sys-color-error)';
+        document.getElementById('gps-acc').textContent = '± ' + fmtNum(acc, acc < 10 ? 1 : 0) + ' m';
+        document.getElementById('gps-acc-q').textContent = q;
+        const ring = document.getElementById('gps-ring'); ring.style.strokeDashoffset = (188.5 * (1 - frac)).toFixed(1); ring.style.stroke = cor;
+        const fill = document.getElementById('gps-acc-fill'); fill.style.width = (Math.min(acc, 30) / 30 * 100) + '%'; fill.style.background = cor;
+        document.getElementById('gps-acc-note').textContent = acc <= 10
+            ? 'Menor que 1 pixel do Sentinel-2.'
+            : 'Maior que 1 pixel: pode cair no vizinho.';
+    }
+    document.getElementById('gps-alt').textContent = altitude != null ? fmtNum(altitude, 0) + ' m' : '—';
+    const kmh = speed != null ? speed * 3.6 : null;
+    document.getElementById('gps-spd').textContent = kmh != null ? fmtNum(kmh, 1) : '—';
+    const moving = heading != null && !isNaN(heading) && kmh != null && kmh > 1;
+    document.getElementById('gps-hdg').textContent = moving ? Math.round(heading) + '°' : '—';
+    document.getElementById('gps-hdg-sub').textContent = moving ? DIRS16[Math.round(heading / 22.5) % 16] : 'parado';
+    document.getElementById('gps-time').textContent = 'Última leitura às ' + new Date().toLocaleTimeString('pt-BR');
+    gpsSetStatus('active', 'Posição obtida', acc != null ? `Precisão ± ${fmtNum(acc, 0)} m · ${accQuality(acc).toLowerCase()}` : 'Sinal recebido');
+    utmRenderLive();
+}
+function locStart(){
+    if (!navigator.geolocation) { gpsSetStatus('error', 'GPS indisponível', 'Este navegador não oferece geolocalização.'); return; }
+    if (locWatchId != null) return;
+    gpsSetStatus('warn', 'Buscando sinal…', 'Em céu aberto a primeira leitura leva alguns segundos.');
+    locWatchId = navigator.geolocation.watchPosition(
+        pos => locUpdateUI(pos.coords),
+        err => {
+            const m = { 1:'Permissão negada. Libere a localização nas configurações do navegador.', 2:'Posição indisponível. Vá para um local aberto.', 3:'Tempo esgotado. Tente de novo em local aberto.' };
+            gpsSetStatus('error', 'Sem posição', m[err.code] || err.message);
+        },
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+    gpsButtons();
+}
+function locStop(msg){
+    if (locWatchId != null) { navigator.geolocation.clearWatch(locWatchId); locWatchId = null; }
+    gpsButtons();
+    gpsSetStatus('warn', 'GPS pausado', msg || 'Toque em Iniciar para retomar.');
+}
+function gpsToggle(){ gpsAutoPaused = false; locWatchId != null ? locStop() : locStart(); }
+
+// Ao entrar e sair das subabas do Campo
+function fieldOnShow(tabId, gid){
+    if (tabId === 'compass') { compassStart(); drawCompass(compassCurrentAngle); compassSensorStart(false); }
+    else { compassStop(); if (orientOn) compassSensorStop(); }
+    // GPS fica ativo só dentro do Campo, para poupar bateria
+    if (gid === 'campo') { if (gpsAutoPaused) { gpsAutoPaused = false; locStart(); } }
+    else if (locWatchId != null) { gpsAutoPaused = true; locStop('Pausado ao sair do Campo; retoma quando você voltar.'); }
+}
+
 // ================================================================
 //  CALIBRAÇÃO DA BÚSSOLA
 // ================================================================
@@ -3783,7 +3968,7 @@ function calibStart(){
     document.getElementById("calib-result").classList.add("hidden");
     document.getElementById("calib-bar").style.width="0%";
     document.getElementById("calib-pct").textContent="0%";
-    document.getElementById("calib-status").textContent="🔄 Gire o dispositivo lentamente em forma de ∞ no ar…";
+    document.getElementById("calib-status").textContent="Gire o aparelho lentamente em forma de ∞ no ar…";
     calibAnimRaf=requestAnimationFrame(calibAnimate);
     if(typeof DeviceOrientationEvent!=="undefined"&&typeof DeviceOrientationEvent.requestPermission==="function"){
         DeviceOrientationEvent.requestPermission().then(s=>{
@@ -3810,7 +3995,7 @@ function calibOnOrient(e){
     document.getElementById("calib-pct").textContent=pct+"%";
     if(calibReadings.length>=5&&calibReadings.length<60){
         const msgs=["Continue girando em ∞…","Quase lá, continue…","Ótimo! Mantenha o movimento…"];
-        document.getElementById("calib-status").textContent="🔄 "+msgs[Math.floor(calibReadings.length/20)%3];
+        document.getElementById("calib-status").textContent=msgs[Math.floor(calibReadings.length/20)%3];
     }
     if(calibReadings.length>=60) calibFinish();
 }
@@ -3839,10 +4024,10 @@ function calibFinish(){
     document.getElementById("calib-status").textContent="";
     snack(spread>180?"✅ Bússola calibrada com sucesso!":"⚠️ Calibração parcial — repita o movimento");
     if(spread<=180){
-        document.getElementById("calib-btn").textContent="🔄 Recalibrar";
+        document.getElementById("calib-btn").textContent="Recalibrar";
         document.getElementById("calib-btn").classList.remove("hidden");
     } else {
-        document.getElementById("calib-btn").textContent="🔄 Iniciar Calibração";
+        document.getElementById("calib-btn").textContent="Calibrar";
         document.getElementById("calib-btn").classList.remove("hidden");
     }
 }
@@ -3854,7 +4039,7 @@ function calibFail(msg){
     result.style.background="rgba(255,180,171,0.1)";
     result.style.border="1px solid rgba(255,180,171,0.3)";
     result.classList.remove("hidden");
-    document.getElementById("calib-btn").textContent="🔄 Tentar Novamente";
+    document.getElementById("calib-btn").textContent="Tentar de novo";
     document.getElementById("calib-btn").classList.remove("hidden");
     document.getElementById("calib-status").textContent="";
     snack("❌ "+msg);
@@ -3863,7 +4048,7 @@ function calibFail(msg){
 function calibCancel(){
     calibCleanup();
     document.getElementById("calib-status").textContent="Calibração cancelada.";
-    document.getElementById("calib-btn").textContent="🔄 Iniciar Calibração";
+    document.getElementById("calib-btn").textContent="Calibrar";
     document.getElementById("calib-btn").classList.remove("hidden");
 }
 
@@ -3877,14 +4062,54 @@ function calibCleanup(){
 }
 
 
-function locCopy(){
-    if(!lastLocCoords){snack('Obtenha a localização primeiro.');return;}
-    const{latitude:lat,longitude:lon}=lastLocCoords,utm=latLon2UTM(lat,lon);
-    const txt=`DD: ${lat.toFixed(6)}, ${lon.toFixed(6)}\nGMS Lat: ${dd2dms(lat,true)}\nGMS Lon: ${dd2dms(lon,false)}\nUTM ${utm.zone}${utm.band} E:${utm.easting.toFixed(2)} N:${utm.northing.toFixed(2)}`;
-    navigator.clipboard.writeText(txt).then(()=>snack('✅ Coordenadas copiadas!')).catch(()=>prompt('Copie:',txt));
+// Durante a calibração a rosa encolhe para tudo caber na tela
+const _calibStartBase = calibStart, _calibCleanupBase = calibCleanup;
+calibStart = function(){ document.getElementById('compassScreen')?.classList.add('calibrating'); _calibStartBase(); };
+calibCleanup = function(){ _calibCleanupBase(); document.getElementById('compassScreen')?.classList.remove('calibrating'); };
+
+// ---- Cópia e UTM ao vivo ----
+function posText(c){
+    const u = latLon2UTM(c.latitude, c.longitude);
+    return `Latitude: ${c.latitude.toFixed(6)}\nLongitude: ${c.longitude.toFixed(6)}\nGMS: ${dd2dms(c.latitude,true)} / ${dd2dms(c.longitude,false)}\n` +
+           `UTM ${u.zone} ${u.band} · E ${u.easting.toFixed(2)} m · N ${u.northing.toFixed(2)} m\n` +
+           (c.accuracy != null ? `Acurácia: ± ${c.accuracy.toFixed(1)} m\n` : '') + `Datum: WGS 84 · ${new Date().toLocaleString('pt-BR')}`;
 }
-document.querySelector('[data-tab="location"]')?.addEventListener('click',()=>{compassStart();drawCompass(compassCurrentAngle);});
-window.addEventListener('load',()=>drawCompass(0));
+function copyText(txt, ok){
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => snack(ok)).catch(() => prompt('Copie:', txt));
+}
+function locCopy(){
+    if (!lastLocCoords) { snack('Inicie o GPS para obter uma posição.'); return; }
+    copyText(posText(lastLocCoords), 'Coordenadas copiadas.');
+}
+function utmCopyLive(){
+    if (!lastLocCoords) return;
+    const u = latLon2UTM(lastLocCoords.latitude, lastLocCoords.longitude);
+    copyText(`UTM ${u.zone} ${u.band}\nE ${u.easting.toFixed(2)} m\nN ${u.northing.toFixed(2)} m\nDatum WGS 84`, 'Coordenadas UTM copiadas.');
+}
+function utmRenderLive(){
+    if (!lastLocCoords) return;
+    const u = latLon2UTM(lastLocCoords.latitude, lastLocCoords.longitude), cm = (u.zone - 1) * 6 - 180 + 3;
+    document.getElementById('utm-zone').textContent = u.zone + ' ' + u.band;
+    document.getElementById('utm-cm').textContent = Math.abs(cm) + '° ' + (cm < 0 ? 'O' : 'L');
+    document.getElementById('utm-e').innerHTML = fmtUTMm(u.easting);
+    document.getElementById('utm-n').innerHTML = fmtUTMm(u.northing);
+    document.getElementById('utm-n-sub').textContent = u.northern ? 'a partir do Equador' : 'inclui falso norte (10 000 km)';
+    const a = lastLocCoords.accuracy;
+    document.getElementById('utm-acc').textContent = (a != null ? `Precisão ± ${fmtNum(a, 0)} m · ` : '') + 'WGS 84 ≈ SIRGAS 2000';
+    document.getElementById('utm-copy').classList.remove('hidden');
+}
+function cvMode(m){
+    document.querySelectorAll('[data-cv]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cv === m));
+    document.getElementById('cv-pane-ll').classList.toggle('hidden', m !== 'll');
+    document.getElementById('cv-pane-utm').classList.toggle('hidden', m !== 'utm');
+}
+function cvUseMyPosition(){
+    if (!lastLocCoords) { snack('Inicie o GPS na aba GPS ou no cartão acima.'); return; }
+    document.getElementById('cv-lat').value = lastLocCoords.latitude.toFixed(6);
+    document.getElementById('cv-lon').value = lastLocCoords.longitude.toFixed(6);
+    cvLL2UTM();
+}
+window.addEventListener('load', () => drawCompass(0));
 
 // ================================================================
 //  CONVERSOR
@@ -4312,6 +4537,7 @@ window.showPage = function(tabId){
   };
 })();
 document.getElementById('trailName').addEventListener('input', e => { PROG.name = e.target.value; slSave(); });
+gpsButtons();
 // ================================================================
 //  APARÊNCIA — automático, claro, escuro e alto contraste
 // ================================================================
