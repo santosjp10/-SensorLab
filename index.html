@@ -1614,6 +1614,33 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 .cmp-decl span { flex: 1; min-width: 0; line-height: 1.3; }
 .cmp-decl .seg-mini button { padding: 6px 10px; }
 
+
+/* Cabeçalho com três botões: alvos de 44 px e título sem corte */
+.icon-btn { width: 44px; height: 44px; }
+.trail-btn { min-height: 44px; }
+@media (max-width: 430px) { .tab-bar-title { font-size: 1.12rem; } .bar-actions { gap: 4px; } }
+@media (max-width: 385px) { .trail-btn .trail-btn-label { display: none; } .trail-btn { min-width: 44px; padding: 8px 11px; justify-content: center; } }
+@media (max-width: 340px) { .tab-bar-title { font-size: 1rem; } }
+/* Sobre o SensorLab */
+.about-panel { max-height: min(88dvh, calc(var(--app-h, 100dvh) - 40px)); overflow-y: auto; overscroll-behavior: contain; }
+.about-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.about-head > div { flex: 1; min-width: 0; }
+.about-head h2 { font-size: var(--md-type-title-large); margin: 0; color: var(--md-sys-color-primary); }
+.about-sub { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); margin: 2px 0 0; }
+.about-logo { border-radius: 14px; flex-shrink: 0; }
+.about-close { flex-shrink: 0; font-size: 1rem; }
+.about-sec { padding: 12px 0; border-top: 1px solid var(--md-sys-color-outline-variant); font-size: var(--md-type-body-medium); line-height: 1.6; }
+.about-sec h3 { font-size: var(--md-type-label-large); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--md-sys-color-on-surface-variant); margin: 0 0 6px; }
+.about-sec p + p { margin-top: 6px; }
+.about-autor strong { color: var(--md-sys-color-on-surface); }
+.about-apoio { font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); font-style: italic; }
+.about-list { margin: 0; padding-left: 18px; font-size: var(--md-type-body-small); color: var(--md-sys-color-on-surface-variant); }
+.about-list li + li { margin-top: 4px; }
+.about-cite { font-size: var(--md-type-body-small); background: var(--md-sys-color-surface-container-high); border-radius: var(--md-shape-md); padding: 10px 12px; }
+.about-link { padding-left: 0; }
+.trail-about { text-align: center; margin: 4px 0 8px; }
+.trail-about .btn-text { font-size: var(--md-type-label-medium); color: var(--md-sys-color-on-surface-variant); }
+
 /* Classes: o texto usa a cor de leitura; a cor da classe fica no marcador (legível em qualquer tema) */
 .class-btn { color: var(--md-sys-color-on-surface) !important; }
 .class-btn > span { border: 1px solid var(--md-sys-color-outline); }
@@ -1640,6 +1667,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       </button>
       <div class="bar-actions">
         <button type="button" class="trail-btn" id="trail-btn" onclick="showPage('trail')" aria-label="Trilha de aprendizagem"><span aria-hidden="true">🎯</span><span class="trail-btn-label">Trilha</span></button>
+        <button type="button" class="icon-btn" id="about-btn" onclick="openAboutSheet()" aria-haspopup="dialog" aria-label="Sobre o SensorLab"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.4" fill="currentColor"/></svg></button>
         <button type="button" class="icon-btn" id="theme-btn" onclick="openThemeSheet()" aria-haspopup="dialog" aria-label="Aparência: tema claro, escuro ou alto contraste"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
       </div>
     </div>
@@ -1675,6 +1703,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <button class="btn-text" style="margin-top:8px;font-size:var(--md-type-label-small);color:var(--md-sys-color-error);" onclick="resetProgress()">Apagar meu progresso</button>
       </div>
+      <p class="trail-about"><button type="button" class="btn-text" onclick="openAboutSheet()">Sobre o SensorLab · versão 1.1</button></p>
     </div>
 
     <!-- ===== ABA ESPECTRO ===== -->
@@ -2385,6 +2414,69 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 </footer>
 
 <div id="snackbar" role="status" aria-live="polite"></div>
+
+<div id="about-sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-labelledby="about-title">
+  <div class="sheet-scrim" data-close-about></div>
+  <div class="sheet-panel about-panel">
+    <div class="about-head">
+      <img src="icons/icon-192.png" alt="" width="56" height="56" class="about-logo" onerror="this.style.display='none'">
+      <div>
+        <h2 id="about-title">SensorLab – UFT</h2>
+        <p class="about-sub">Laboratório digital de Sensoriamento Remoto e SIG · versão 1.1 · novembro de 2026</p>
+      </div>
+      <button type="button" class="icon-btn about-close" data-close-about aria-label="Fechar">✕</button>
+    </div>
+
+    <section class="about-sec">
+      <h3>Apresentação</h3>
+      <p>O SensorLab é um aplicativo educacional de apoio ao ensino e à aprendizagem dos fundamentos físicos, das tecnologias e das técnicas de sensoriamento remoto e de sistemas de informação geográfica aplicados às ciências agrárias. Reúne simulações, dados reais de satélite, atividades de campo e jogos que aproximam a teoria da prática agronômica, com exemplos da realidade do Tocantins.</p>
+    </section>
+
+    <section class="about-sec about-autor">
+      <h3>Autoria</h3>
+      <p>Iniciativa do professor <strong>Jacinto Pereira Santos</strong></p>
+      <p>Universidade Federal do Tocantins (UFT)<br>Campus Universitário de Gurupi (CAUG)<br>Curso de Agronomia<br>Disciplina Sensoriamento Remoto e SIG</p>
+      <p class="about-apoio">Desenvolvido com apoio do Claude, assistente de inteligência artificial da Anthropic.</p>
+    </section>
+
+    <section class="about-sec">
+      <h3>Proposta pedagógica</h3>
+      <p>Cada módulo da Trilha segue o ciclo <strong>Prever → Explorar → Explicar → Aplicar</strong>: o estudante registra uma previsão antes de explorar, confronta-a com o resultado, explica com suas palavras o que observou e aplica o conceito num problema agronômico. A estratégia expõe concepções prévias e favorece a aprendizagem ativa.</p>
+      <p>O conteúdo está organizado em quatro grupos: <strong>Aprender</strong> (espectro, assinaturas espectrais, atmosfera e grandezas radiométricas), <strong>Laboratórios</strong> (índices de vegetação, classificação supervisionada e radiometria com a câmera), <strong>Campo</strong> (GPS, coordenadas UTM e bússola) e <strong>Consultar e praticar</strong> (glossário, quiz e Trunfo dos Satélites).</p>
+    </section>
+
+    <section class="about-sec">
+      <h3>Privacidade</h3>
+      <p>O aplicativo não exige cadastro e não envia seus dados a servidores. O progresso, as previsões, as observações e as preferências ficam salvos apenas neste aparelho. A localização do GPS e as imagens da câmera são processadas no próprio aparelho e não saem dele. A única comunicação externa é o download das fontes tipográficas do Google Fonts no primeiro acesso.</p>
+      <p><button type="button" class="btn-text about-link" onclick="closeAboutSheet(); resetProgress();">Apagar meus dados deste aparelho</button></p>
+    </section>
+
+    <section class="about-sec">
+      <h3>Dados, modelos e créditos</h3>
+      <ul class="about-list">
+        <li>Imagem de satélite: contém dados Copernicus Sentinel modificados (ESA/União Europeia).</li>
+        <li>Declinação magnética: World Magnetic Model 2025 (NOAA/NGA), por meio da biblioteca <em>geomagnetism</em> (licença Apache 2.0).</li>
+        <li>Especificações dos satélites: documentação dos operadores (NASA/USGS, ESA, INPE, ISRO, ASI, DLR, NOAA, Airbus, Maxar e Planet), consolidadas na planilha do baralho.</li>
+        <li>Paletas acessíveis a daltônicos: Viridis, ColorBrewer (roxo–verde) e Okabe-Ito.</li>
+        <li>Fontes tipográficas: Nunito, Space Mono e Limelight (Google Fonts, licença SIL Open Font).</li>
+        <li>Curvas espectrais, perfil de transmitância atmosférica e constantes da cadeia radiométrica são aproximações didáticas, identificadas como tal nas telas.</li>
+      </ul>
+    </section>
+
+    <section class="about-sec">
+      <h3>Como citar</h3>
+      <p class="about-cite">SANTOS, Jacinto Pereira. <strong>SensorLab – UFT</strong>: laboratório digital de sensoriamento remoto e SIG. Versão 1.1. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.</p>
+      <p><button type="button" class="btn-text about-link" onclick="copyCitation()">Copiar referência</button></p>
+    </section>
+
+    <section class="about-sec">
+      <h3>Uso</h3>
+      <p>Destinado a fins educacionais. Os resultados das simulações e das análises ilustram conceitos e não substituem levantamentos técnicos, laudos ou recomendações agronômicas.</p>
+    </section>
+
+    <button type="button" class="btn-filled btn-full" data-close-about style="margin-top:4px;">Fechar</button>
+  </div>
+</div>
 
 <div id="theme-sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-labelledby="theme-sheet-title">
   <div class="sheet-scrim" data-close></div>
@@ -5357,6 +5449,28 @@ document.querySelectorAll('input[name="tema"]').forEach(r => r.addEventListener(
 }));
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && !document.getElementById('theme-sheet').classList.contains('hidden')) closeThemeSheet();
+});
+
+// ---- Sobre o SensorLab ----
+let aboutReturnFocus = null;
+function openAboutSheet(){
+  const sh = document.getElementById('about-sheet');
+  aboutReturnFocus = document.activeElement;
+  sh.classList.remove('hidden');
+  sh.querySelector('.sheet-panel').scrollTop = 0;
+  sh.querySelector('.about-close').focus();
+}
+function closeAboutSheet(){
+  document.getElementById('about-sheet').classList.add('hidden');
+  if (aboutReturnFocus && aboutReturnFocus.focus) aboutReturnFocus.focus();
+}
+function copyCitation(){
+  const t = 'SANTOS, Jacinto Pereira. SensorLab – UFT: laboratório digital de sensoriamento remoto e SIG. Versão 1.1. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.';
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => snack('Referência copiada.')).catch(() => prompt('Copie a referência:', t));
+}
+document.querySelectorAll('[data-close-about]').forEach(el => el.addEventListener('click', closeAboutSheet));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('about-sheet').classList.contains('hidden')) closeAboutSheet();
 });
 applyTheme(getThemePref(), false);
 updateColorbar();
