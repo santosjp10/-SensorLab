@@ -1621,6 +1621,17 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 @media (max-width: 430px) { .tab-bar-title { font-size: 1.12rem; } .bar-actions { gap: 4px; } }
 @media (max-width: 385px) { .trail-btn .trail-btn-label { display: none; } .trail-btn { min-width: 44px; padding: 8px 11px; justify-content: center; } }
 @media (max-width: 340px) { .tab-bar-title { font-size: 1rem; } }
+
+/* Resoluções do sensor */
+.res-seg { display: flex; margin-bottom: 12px; }
+.chip-choice { min-height: 44px; }
+#resSpecOut .metric:last-child { grid-column: 1 / -1; }
+.res-seg button { flex: 1; }
+.res-opts { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.res-sub { font-weight: 400; color: var(--md-sys-color-on-surface-variant); }
+.chip-choice[aria-pressed="true"] .res-sub { color: inherit; }
+#resEspCanvas, #resRadCanvas { image-rendering: pixelated; }
+
 /* Sobre o SensorLab */
 .about-panel { max-height: min(88dvh, calc(var(--app-h, 100dvh) - 40px)); overflow-y: auto; overscroll-behavior: contain; }
 .about-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
@@ -1703,7 +1714,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         </div>
         <button class="btn-text" style="margin-top:8px;font-size:var(--md-type-label-small);color:var(--md-sys-color-error);" onclick="resetProgress()">Apagar meu progresso</button>
       </div>
-      <p class="trail-about"><button type="button" class="btn-text" onclick="openAboutSheet()">Sobre o SensorLab · versão 1.1</button></p>
+      <p class="trail-about"><button type="button" class="btn-text" onclick="openAboutSheet()">Sobre o SensorLab · versão 1.2</button></p>
     </div>
 
     <!-- ===== ABA ESPECTRO ===== -->
@@ -1890,6 +1901,58 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
         <input type="range" id="hazeAmt" class="rng" min="0" max="100" step="5" value="60">
         <button type="button" class="fbtn ghost btn-full" id="hazeFumaca" style="margin-top:8px;">Simular fumaça de queimada (setembro no Tocantins)</button>
         <div id="hazeOut" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- ===== ABA RESOLUÇÕES ===== -->
+    <div id="resolutions" class="tab-content">
+      <h2 class="section-title">📐 Resoluções do sensor</h2>
+      <div class="seg-mini cv-seg res-seg" role="group" aria-label="Tipo de resolução">
+        <button type="button" data-rtab="esp" aria-pressed="true">Espacial</button>
+        <button type="button" data-rtab="spec" aria-pressed="false">Espectral</button>
+        <button type="button" data-rtab="rad" aria-pressed="false">Radiométrica</button>
+      </div>
+
+      <div class="m3-card res-pane" id="res-esp">
+        <div class="m3-card-title">Resolução espacial: o tamanho do pixel</div>
+        <p class="m3-card-subtitle">A mesma cena Sentinel-2 reamostrada pela média para pixels maiores, como registram sensores de resolução mais grosseira.</p>
+        <span class="poe-label">Tamanho do pixel</span>
+        <div class="chip-row" id="resPx" role="group" aria-label="Tamanho do pixel"></div>
+        <canvas id="resEspCanvas" width="640" height="390" class="haze-canvas" role="img" aria-label="Cena Sentinel-2 reamostrada para o tamanho de pixel escolhido; pixels mistos aparecem esbranquiçados"></canvas>
+        <div class="res-opts">
+          <div class="seg-mini" role="group" aria-label="Composição">
+            <button type="button" data-rcomp="fc" aria-pressed="true">Falsa cor</button>
+            <button type="button" data-rcomp="tc" aria-pressed="false">Cor natural</button>
+          </div>
+          <label class="cv-check"><input type="checkbox" id="resMix" checked> Destacar pixels mistos</label>
+        </div>
+        <div id="resEspOut"></div>
+      </div>
+
+      <div class="m3-card res-pane hidden" id="res-spec">
+        <div class="m3-card-title">Resolução espectral: quantas bandas e quão estreitas</div>
+        <p class="m3-card-subtitle">Cada sensor registra só a média da reflectância dentro de cada banda. Compare dois alvos parecidos e veja o que cada sensor consegue separar.</p>
+        <span class="poe-label">Alvos</span>
+        <div class="chip-row" id="resPares" role="group" aria-label="Par de alvos"></div>
+        <span class="poe-label">Sensor</span>
+        <div class="chip-row" id="resSensores" role="group" aria-label="Sensor"></div>
+        <canvas id="resSpecCanvas" width="700" height="420" class="plot-canvas" role="img" aria-label="Espectros contínuos dos dois alvos e os valores médios registrados em cada banda do sensor escolhido"></canvas>
+        <div id="resSpecOut" style="margin-top:10px;"></div>
+      </div>
+
+      <div class="m3-card res-pane hidden" id="res-rad">
+        <div class="m3-card-title">Resolução radiométrica: quantos níveis de cinza</div>
+        <p class="m3-card-subtitle">A energia medida é convertida em números inteiros. Com menos bits, há menos níveis, e diferenças sutis entre alvos se perdem.</p>
+        <label class="rng-label" for="resBits"><span>Bits por pixel</span><span class="data-chip data-chip-primary" id="resBitsTxt">4 bits</span></label>
+        <input type="range" id="resBits" class="rng" min="1" max="8" step="1" value="4">
+        <div class="seg-mini cv-seg" role="group" aria-label="Exibição" style="margin-top:6px;">
+          <button type="button" data-rradcomp="fc" aria-pressed="true">Falsa cor</button>
+          <button type="button" data-rradcomp="tc" aria-pressed="false">Cor natural</button>
+          <button type="button" data-rradcomp="nir" aria-pressed="false">Só NIR</button>
+        </div>
+        <canvas id="resRadCanvas" width="320" height="195" class="haze-canvas" role="img" aria-label="Cena Sentinel-2 quantizada com o número de bits escolhido"></canvas>
+        <canvas id="resHistCanvas" width="700" height="200" class="plot-canvas" role="img" aria-label="Histograma da banda NIR com os níveis disponíveis"></canvas>
+        <div id="resRadOut" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -2422,7 +2485,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <img src="icons/icon-192.png" alt="" width="56" height="56" class="about-logo" onerror="this.style.display='none'">
       <div>
         <h2 id="about-title">SensorLab – UFT</h2>
-        <p class="about-sub">Laboratório digital de Sensoriamento Remoto e SIG · versão 1.1 · novembro de 2026</p>
+        <p class="about-sub">Laboratório digital de Sensoriamento Remoto e SIG · versão 1.2 · novembro de 2026</p>
       </div>
       <button type="button" class="icon-btn about-close" data-close-about aria-label="Fechar">✕</button>
     </div>
@@ -2465,7 +2528,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
 
     <section class="about-sec">
       <h3>Como citar</h3>
-      <p class="about-cite">SANTOS, Jacinto Pereira. <strong>SensorLab – UFT</strong>: laboratório digital de sensoriamento remoto e SIG. Versão 1.1. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.</p>
+      <p class="about-cite">SANTOS, Jacinto Pereira. <strong>SensorLab – UFT</strong>: laboratório digital de sensoriamento remoto e SIG. Versão 1.2. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.</p>
       <p><button type="button" class="btn-text about-link" onclick="copyCitation()">Copiar referência</button></p>
     </section>
 
@@ -2490,7 +2553,7 @@ canvas { max-width: 100%; height: auto; border-radius: var(--md-shape-md); }
       <label class="theme-opt"><input type="radio" name="tema" value="contraste"><span><strong>Alto contraste</strong><small>Preto sobre branco, bordas reforçadas</small></span><span class="theme-swatch" style="background:linear-gradient(135deg,#FFFFFF 50%,#000000 50%);"></span></label>
     </div>
     <button type="button" class="btn-filled btn-full" style="margin-top:6px;" data-close>Fechar</button>
-    <p style="margin-top:12px;font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);text-align:center;">SensorLab versão 1.1 · novembro de 2026</p>
+    <p style="margin-top:12px;font-size:var(--md-type-body-small);color:var(--md-sys-color-on-surface-variant);text-align:center;">SensorLab versão 1.2 · novembro de 2026</p>
   </div>
 </div>
 
@@ -2586,6 +2649,22 @@ const MODULES = [
         ops:['Ano de lançamento','Resolução temporal (revisita)','Número de bandas termais','Tamanho do satélite'], certa:1,
         dica:'O que importa é ter imagens com frequência durante um ciclo curto.',
         exp:'Em culturas de ciclo curto, a resolução temporal é decisiva: com revisita de 16 dias e nuvens, podem restar poucas imagens úteis. Sentinel-2 (5 dias) ou PlanetScope (diário) atendem melhor.' } },
+  { id:'resolutions', tab:'resolutions', nivel:2, icon:'📐', titulo:'Resoluções do sensor',
+    obj:'Visualizar como as resoluções espacial, espectral e radiométrica limitam o que uma imagem consegue mostrar.',
+    poe:{ prever:'Ao passar do pixel de 30 m (Landsat) para 250 m (MODIS), o que acontece com a fração de pixels mistos, que misturam vegetação, solo ou água?',
+      ops:['Diminui, porque o pixel fica mais homogêneo','Aumenta muito','Quase não muda','Chega a zero'], esperado:1,
+      observar:'Na aba Espacial, compare 10, 30 e 250 m. Depois veja, na Espectral, o que o CBERS-4A e a pancromática perdem; e, na Radiométrica, o que acontece com 2 e 1 bit.',
+      resultado:'Quanto maior o pixel, maior a área que ele cobre e maior a chance de conter alvos diferentes: bordas de talhões, estradas e matas ciliares viram pixels mistos, cujo valor é a média dos alvos. Por isso o MODIS é ótimo para acompanhar regiões inteiras, mas não para talhões pequenos.',
+      dinamico: () => {
+        if (typeof resData === 'undefined' || !resData) return 'Abra a aba Resoluções para comparar com os valores da cena.';
+        const conta = f => { const a = resAgrega(f); let n = 0; for (let i = 0; i < a.misto.length; i++) n += a.misto[i]; return n / a.misto.length * 100; };
+        return `Nesta cena: ${pctBR(conta(3))} de pixels mistos a 30 m e ${pctBR(conta(25))} a 250 m.`;
+      } },
+    passos:['Na aba Espacial, escolha 10, 30 e 250 m e acompanhe os pixels mistos.','Na Espectral, compare soja sadia e estressada no Sentinel-2, no CBERS-4A e na pancromática.','Na Radiométrica, reduza para 2 e 1 bit e veja os valores distintos de NDVI.'],
+    q:{ texto:'Duas variedades de soja têm assinaturas quase iguais e só diferem numa faixa estreita do red edge. Qual característica do sensor é decisiva para separá-las?',
+        ops:['Pixel menor (resolução espacial)','Mais bandas e mais estreitas (resolução espectral)','Revisita diária (resolução temporal)','Faixa imageada larga'], certa:1,
+        dica:'Pense em qual resolução define se a faixa estreita do red edge é registrada separadamente.',
+        exp:'A resolução espectral determina se o sensor tem bandas estreitas posicionadas no red edge. Sensores com poucas bandas largas registram só a média e apagam a diferença; o Sentinel-2, com três bandas de red edge, ou um hiperespectral conseguem separá-las.' } },
   { id:'camera', tab:'camera', nivel:2, icon:'📷', titulo:'Radiometria com a câmera',
     obj:'Medir e comparar a resposta espectral de alvos no visível usando uma referência branca.',
     poe:{ prever:'Você vai fotografar uma folha verde e uma folha seca. Em qual canal da câmera a diferença entre as duas será MAIOR?',
@@ -2930,13 +3009,13 @@ function resetProgress(){
 // Grupos estáveis da barra inferior; a Trilha é a tela inicial
 const GROUPS = [
   { id:'aprender', titulo:'Aprender',             tabs:['spectrum','signatures','lab','quantities'] },
-  { id:'labs',     titulo:'Laboratórios',         tabs:['indices','classify','camera'] },
+  { id:'labs',     titulo:'Laboratórios',         tabs:['indices','resolutions','classify','camera'] },
   { id:'campo',    titulo:'Campo',                tabs:['location','converter','compass'] },
   { id:'praticar', titulo:'Consultar e praticar', tabs:['glossary','quiz','game'] }
 ];
 const TAB_META = {
   spectrum:{icon:'🌈',label:'Espectro'}, signatures:{icon:'📈',label:'Assinaturas'}, lab:{icon:'🌫️',label:'Atmosfera'}, quantities:{icon:'📊',label:'Grandezas'},
-  indices:{icon:'🌱',label:'Índices'}, classify:{icon:'🗺️',label:'Classificação'}, camera:{icon:'📷',label:'Câmera'},
+  indices:{icon:'🌱',label:'Índices'}, resolutions:{icon:'📐',label:'Resoluções'}, classify:{icon:'🗺️',label:'Classificar'}, camera:{icon:'📷',label:'Câmera'},
   location:{icon:'📡',label:'GPS'}, converter:{icon:'🗺️',label:'UTM'}, compass:{icon:'🧭',label:'Bússola'},
   glossary:{icon:'📖',label:'Glossário'}, quiz:{icon:'❓',label:'Quiz'}, game:{icon:'🃏',label:'Trunfo'}
 };
@@ -2980,6 +3059,7 @@ function showPage(tabId) {
   if (tabId === 'indices' && Object.keys(bandImages||{}).length === 0) loadSentinelBands();
   fieldOnShow(tabId, gid);
   if (tabId === 'lab') hazeInit();
+  if (tabId === 'resolutions') resInit();
 }
 
 // Barra inferior: abre a última subaba visitada do grupo
@@ -3078,6 +3158,8 @@ const glossaryTerms = [
     { termo: 'Matriz de confusão', definicao: 'Tabela que cruza a classe de referência (verdade de campo) com a classe do mapa. A diagonal contém os acertos; fora dela, as confusões entre classes.' },
     { termo: 'Índice Kappa', definicao: 'Medida de concordância entre mapa e referência que desconta os acertos esperados ao acaso. Varia de −1 a 1; acima de 0,8 indica concordância quase perfeita (Landis & Koch, 1977).' },
     { termo: 'UTM', definicao: 'Sistema Universal Transverso de Mercator: divide a Terra em 60 fusos de 6° e expressa posições em metros (Easting, Northing). Gurupi (TO) está no fuso 22 S.' },
+    { termo: 'Pixel misto', definicao: 'Pixel que contém mais de um tipo de alvo (por exemplo, soja e solo exposto) e registra a média de suas respostas. É mais frequente quanto maior o pixel, em bordas de talhões, estradas e matas ciliares.' },
+    { termo: 'Quantização', definicao: 'Conversão da energia medida em números inteiros. Com n bits há 2ⁿ níveis: 8 bits dão 256 níveis; 12 bits, 4 096.' },
     { termo: 'Janela atmosférica', definicao: 'Faixa do espectro em que a atmosfera é transparente o bastante para o sensoriamento remoto, como o visível e o NIR, 1,55–1,75 µm, 2,05–2,35 µm, 3–5 µm, 8–14 µm e as micro-ondas.' },
     { termo: 'Exitância radiante', definicao: 'Fluxo radiante emitido por unidade de área (W·m⁻²). Para um corpo negro vale σT⁴. Termo atual para a antiga “emitância”.' },
     { termo: 'NDMI', definicao: 'Normalized Difference Moisture Index = (NIR − SWIR) / (NIR + SWIR). Responde à água na folha e detecta estresse hídrico antes do NDVI.' },
@@ -4158,6 +4240,203 @@ function initHazeUI(){
 }
 initHazeUI();
 window.slRedrawAprender = () => { drawPlanck(); drawSig(); };
+
+// ================================================================
+//  RESOLUÇÕES DO SENSOR — espacial, espectral e radiométrica
+// ================================================================
+let resData = null, resTab = 'esp';
+let resPx = 30, resComp = 'fc', resMix = true;
+let resBits = 4, resRadComp = 'fc';
+let resPar = 0, resSensor = 'Sentinel-2';
+const RES_PX = [[10, 'Sentinel-2'], [20, 'Sentinel-2 (red edge)'], [30, 'Landsat'], [60, ''], [250, 'MODIS']];
+
+function resInit(){
+  if (!resData) {
+    if (typeof window.getSentinelScene !== 'function') return;
+    const sc = window.getSentinelScene(), n = sc.w * sc.h, cls = new Uint8Array(n);
+    // Classes de referência a 10 m, só para identificar mistura: 0 água, 1 vegetação, 2 outros
+    for (let i = 0; i < n; i++) {
+      const N = sc.px[i * 4], R = sc.px[i * 4 + 1];
+      cls[i] = N < 40 ? 0 : ((N + R) > 0 && (N - R) / (N + R) > 0.35 ? 1 : 2);
+    }
+    resData = { w: sc.w, h: sc.h, px: sc.px, cls };
+    resBuildUI();
+  }
+  resRender();
+}
+function resBuildUI(){
+  document.getElementById('resPx').innerHTML = RES_PX.map(([m, s]) => `<button type="button" class="chip-choice" data-rpx="${m}" aria-pressed="false">${m} m${s ? `<span class="res-sub"> · ${s}</span>` : ''}</button>`).join('');
+  document.querySelectorAll('[data-rpx]').forEach(b => b.addEventListener('click', () => { resPx = +b.dataset.rpx; resRender(); }));
+  document.querySelectorAll('[data-rtab]').forEach(b => b.addEventListener('click', () => { resTab = b.dataset.rtab; resRender(); }));
+  document.querySelectorAll('[data-rcomp]').forEach(b => b.addEventListener('click', () => { resComp = b.dataset.rcomp; resRender(); }));
+  document.querySelectorAll('[data-rradcomp]').forEach(b => b.addEventListener('click', () => { resRadComp = b.dataset.rradcomp; resRender(); }));
+  document.getElementById('resMix').addEventListener('change', e => { resMix = e.target.checked; resRender(); });
+  document.getElementById('resBits').addEventListener('input', e => { resBits = +e.target.value; resRender(); });
+  document.getElementById('resPares').innerHTML = RES_PARES.map((p, i) => `<button type="button" class="chip-choice" data-rpar="${i}" aria-pressed="false">${p.nome}</button>`).join('');
+  document.querySelectorAll('[data-rpar]').forEach(b => b.addEventListener('click', () => { resPar = +b.dataset.rpar; resRender(); }));
+  document.getElementById('resSensores').innerHTML = Object.keys(RES_SENSORES).map(s => `<button type="button" class="chip-choice" data-rsens="${s}" aria-pressed="false">${s}</button>`).join('');
+  document.querySelectorAll('[data-rsens]').forEach(b => b.addEventListener('click', () => { resSensor = b.dataset.rsens; resRender(); }));
+}
+function resRender(){
+  if (!resData) return;
+  document.querySelectorAll('[data-rtab]').forEach(b => b.setAttribute('aria-pressed', b.dataset.rtab === resTab));
+  ['esp', 'spec', 'rad'].forEach(t => document.getElementById('res-' + t).classList.toggle('hidden', t !== resTab));
+  if (resTab === 'esp') resRenderEsp(); else if (resTab === 'spec') resRenderSpec(); else resRenderRad();
+}
+const pctBR = v => (Math.round(v * 10) / 10).toLocaleString('pt-BR') + '%';
+
+// ---------- Espacial: agregação pela média ----------
+function resAgrega(fator){
+  const { w, h, px, cls } = resData;
+  const cw = Math.ceil(w / fator), ch = Math.ceil(h / fator);
+  const media = new Float32Array(cw * ch * 4), misto = new Uint8Array(cw * ch);
+  for (let by = 0; by < ch; by++) for (let bx = 0; bx < cw; bx++) {
+    let s0 = 0, s1 = 0, s2 = 0, s3 = 0, c = 0, c0 = -1, mix = 0;
+    for (let y = by * fator; y < Math.min(h, (by + 1) * fator); y++) for (let x = bx * fator; x < Math.min(w, (bx + 1) * fator); x++) {
+      const i = y * w + x, k = i * 4;
+      s0 += px[k]; s1 += px[k + 1]; s2 += px[k + 2]; s3 += px[k + 3]; c++;
+      if (c0 < 0) c0 = cls[i]; else if (cls[i] !== c0) mix = 1;
+    }
+    const b = by * cw + bx; media[b * 4] = s0 / c; media[b * 4 + 1] = s1 / c; media[b * 4 + 2] = s2 / c; media[b * 4 + 3] = s3 / c; misto[b] = mix;
+  }
+  return { cw, ch, media, misto };
+}
+function resRenderEsp(){
+  document.querySelectorAll('[data-rpx]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.rpx === resPx));
+  document.querySelectorAll('[data-rcomp]').forEach(b => b.setAttribute('aria-pressed', b.dataset.rcomp === resComp));
+  const { w, h } = resData, f = Math.max(1, Math.round(resPx / 10)), a = resAgrega(f);
+  const cv = document.getElementById('resEspCanvas'), E = 2;   // 2 pixels de tela por pixel de 10 m
+  cv.width = w * E; cv.height = h * E;
+  const ctx = cv.getContext('2d'), img = ctx.createImageData(cv.width, cv.height);
+  for (let y = 0; y < cv.height; y++) for (let x = 0; x < cv.width; x++) {
+    const bx = Math.floor(x / E / f), by = Math.floor(y / E / f), b = by * a.cw + bx, m = a.media;
+    let r, g, bl;
+    if (resComp === 'fc') { r = m[b * 4]; g = m[b * 4 + 1]; bl = m[b * 4 + 2]; } else { r = m[b * 4 + 1]; g = m[b * 4 + 2]; bl = m[b * 4 + 3]; }
+    if (resMix && f > 1 && a.misto[b]) { r = r * 0.45 + 140; g = g * 0.45 + 140; bl = bl * 0.45 + 140; }
+    const k = (y * cv.width + x) * 4; img.data[k] = r; img.data[k + 1] = g; img.data[k + 2] = bl; img.data[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  if (f > 1 && f * E >= 10) {   // grade dos pixels, só quando os pixels são grandes
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x <= w; x += f) { ctx.moveTo(x * E + 0.5, 0); ctx.lineTo(x * E + 0.5, cv.height); }
+    for (let y = 0; y <= h; y += f) { ctx.moveTo(0, y * E + 0.5); ctx.lineTo(cv.width, y * E + 0.5); }
+    ctx.stroke();
+  }
+  let nm = 0; for (let i = 0; i < a.misto.length; i++) nm += a.misto[i];
+  const pm = f > 1 ? nm / a.misto.length * 100 : 0, ha = resPx * resPx / 10000;
+  const mata = resPx <= 10 ? 'aparece com 3 pixels de largura' : resPx <= 30 ? 'cabe em cerca de 1 pixel de largura e se mistura com o entorno' : 'desaparece dentro de pixels mistos';
+  document.getElementById('resEspOut').innerHTML =
+    `<div class="metrics"><div class="metric"><span>Grade da cena</span><b>${a.cw} × ${a.ch}</b><small>${(a.cw * a.ch).toLocaleString('pt-BR')} pixels</small></div>` +
+    `<div class="metric"><span>Área de 1 pixel</span><b>${ha.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ha</b><small>${resPx} × ${resPx} m</small></div>` +
+    `<div class="metric"><span>Pixels mistos</span><b>${f > 1 ? pctBR(pm) : '—'}</b><small>${f > 1 ? 'mais de uma classe' : 'pixel de referência'}</small></div></div>` +
+    `<p class="haze-note"><b>Na lavoura:</b> um talhão de 1 ha (100 × 100 m) ocupa ${(10000 / (resPx * resPx)).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} pixel(s); uma mata ciliar de 30 m de largura, como a APP mínima de rios estreitos, ${mata}. ${resMix && f > 1 ? 'Os pixels esbranquiçados misturam água, vegetação ou solo.' : ''}</p>`;
+}
+
+// ---------- Espectral: como cada sensor amostra o espectro ----------
+const RES_PARES = [
+  { nome: 'Soja sadia × estressada', a: 'veg', b: 'est', curto: 'sadia × estressada' },
+  { nome: 'Palhada × solo seco', a: 'palha', b: 'solo', curto: 'palhada × solo' },
+  { nome: 'Água limpa × turva', a: 'agua', b: 'turva', curto: 'limpa × turva' }
+];
+const RES_SENSORES = (() => {
+  const hip = []; for (let l = 0.40; l < 2.495; l += 0.01) hip.push([+l.toFixed(3), +(l + 0.01).toFixed(3), '']);
+  const op = arr => arr.filter(([a, b, t]) => b <= 2.5 && !/pan/i.test(t));
+  return {
+    'Hiperespectral': { bandas: hip, r: [0.66, 0.67], n: [0.86, 0.87], nota: 'cerca de 210 bandas de 10 nm, como PRISMA e EnMAP' },
+    'Sentinel-2': { bandas: op(SENSOR_BANDS['Sentinel-2']), r: [0.650, 0.680], n: [0.785, 0.900], nota: '13 bandas, três delas no red edge' },
+    'Landsat 9': { bandas: op(SENSOR_BANDS['Landsat 9']), r: [0.636, 0.673], n: [0.851, 0.879], nota: '8 bandas multiespectrais, sem red edge' },
+    'CBERS-4A': { bandas: op(SENSOR_BANDS['CBERS-4A']), r: [0.63, 0.69], n: [0.77, 0.89], nota: '4 bandas: visível e NIR' },
+    'Pancromática': { bandas: [[0.45, 0.90, 'Pan']], r: null, n: null, nota: '1 banda larga de 0,45 a 0,90 µm' }
+  };
+})();
+function resRenderSpec(){
+  document.querySelectorAll('[data-rpar]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.rpar === resPar));
+  document.querySelectorAll('[data-rsens]').forEach(b => b.setAttribute('aria-pressed', b.dataset.rsens === resSensor));
+  const par = RES_PARES[resPar], A = SIG_TARGETS.find(t => t.id === par.a), B = SIG_TARGETS.find(t => t.id === par.b), S = RES_SENSORES[resSensor];
+  const cv = document.getElementById('resSpecCanvas'), ctx = cv.getContext('2d'), W = cv.width, H = cv.height;
+  const pL = 78, pR = 684, pT = 30, pB = 380, X = l => pL + (l - 0.4) / 2.1 * (pR - pL);
+  const vmax = Math.max(0.2, ...[A, B].map(t => Math.max(...t.pts.map(p => p[1])))) * 1.12, Y = v => pB - v / vmax * (pB - pT);
+  const C = { bg: cssVar('--sl-plot-bg'), grid: cssVar('--sl-plot-grid'), axis: cssVar('--sl-plot-axis'), text: cssVar('--sl-plot-text'), prim: cssVar('--md-sys-color-primary') };
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.font = '22px sans-serif'; ctx.textAlign = 'right';
+  const passo = vmax > 0.3 ? 0.1 : 0.05;
+  for (let v = 0; v <= vmax; v += passo) { ctx.strokeStyle = C.grid; ctx.beginPath(); ctx.moveTo(pL, Y(v)); ctx.lineTo(pR, Y(v)); ctx.stroke(); ctx.fillStyle = C.text; ctx.fillText(Math.round(v * 100) + '%', pL - 8, Y(v) + 7); }
+  ctx.textAlign = 'center'; [0.5, 1.0, 1.5, 2.0, 2.5].forEach(l => ctx.fillText(String(l).replace('.', ',') + ' µm', X(l), pB + 32));
+  ctx.strokeStyle = C.axis; ctx.beginPath(); ctx.moveTo(pL, pT); ctx.lineTo(pL, pB); ctx.lineTo(pR, pB); ctx.stroke();
+  // bandas do sensor
+  if (resSensor !== 'Hiperespectral') S.bandas.forEach(([a, b]) => { ctx.globalAlpha = 0.14; ctx.fillStyle = C.prim; ctx.fillRect(X(a), pT, Math.max(3, X(b) - X(a)), pB - pT); ctx.globalAlpha = 1; });
+  // espectro contínuo, apagado
+  [A, B].forEach(t => {
+    ctx.strokeStyle = t.cor; ctx.globalAlpha = 0.35; ctx.lineWidth = 2; ctx.setLineDash(t.dash); ctx.beginPath();
+    for (let i = 0; i <= 210; i++) { const l = 0.4 + 2.1 * i / 210; i ? ctx.lineTo(X(l), Y(sigAt(t.pts, l))) : ctx.moveTo(X(l), Y(sigAt(t.pts, l))); }
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  });
+  // o que o sensor registra: média em cada banda
+  let maxd = 0, maxb = null;
+  [A, B].forEach((t, ti) => {
+    ctx.strokeStyle = t.cor; ctx.lineWidth = resSensor === 'Hiperespectral' ? 3 : 6;
+    S.bandas.forEach(([a, b, nome]) => {
+      const v = sigMean(t.pts, a, b);
+      ctx.beginPath(); ctx.moveTo(X(a), Y(v)); ctx.lineTo(Math.max(X(b), X(a) + 4), Y(v)); ctx.stroke();
+      if (ti === 1) { const d = Math.abs(v - sigMean(A.pts, a, b)); if (d > maxd) { maxd = d; maxb = [a, b, nome]; } }
+    });
+  });
+  ctx.lineWidth = 1;
+  ctx.fillStyle = C.text; ctx.font = '20px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('linhas finas: espectro real · traços grossos: o que o sensor registra', pL + 8, pT + 22);
+  // leituras
+  const nd = (n, r) => (n + r) ? (n - r) / (n + r) : 0, f2 = v => v.toFixed(2).replace('.', ',');
+  let ndTxt = 'sem bandas separadas de vermelho e NIR';
+  if (S.r) {
+    const na = nd(sigMean(A.pts, ...S.n), sigMean(A.pts, ...S.r)), nb = nd(sigMean(B.pts, ...S.n), sigMean(B.pts, ...S.r));
+    ndTxt = `${f2(na)} × ${f2(nb)}`;
+  }
+  const faixa = maxb ? `${String(maxb[0]).replace('.', ',')}–${String(maxb[1]).replace('.', ',')} µm${maxb[2] ? ' (' + maxb[2] + ')' : ''}` : '—';
+  document.getElementById('resSpecOut').innerHTML =
+    `<div class="metrics"><div class="metric"><span>Bandas de 0,4 a 2,5 µm</span><b>${S.bandas.length}</b><small>${S.nota}</small></div>` +
+    `<div class="metric"><span>Maior diferença</span><b>${Math.round(maxd * 100)} p.p.</b><small>${faixa}</small></div>` +
+    `<div class="metric"><span>NDVI dos alvos</span><b>${S.r ? ndTxt : '—'}</b><small>${S.r ? par.curto : ndTxt}</small></div></div>` +
+    `<p class="haze-note">Entre as bandas, o sensor não enxerga o espectro; dentro de cada banda, registra só a média. Mais bandas e mais estreitas preservam feições como o red edge e a absorção da celulose em 2,1 µm.</p>`;
+}
+
+// ---------- Radiométrica: quantização em n bits ----------
+function resRenderRad(){
+  document.querySelectorAll('[data-rradcomp]').forEach(b => b.setAttribute('aria-pressed', b.dataset.rradcomp === resRadComp));
+  const { w, h, px } = resData, n = w * h, L = 2 ** resBits, passo = 256 / L;
+  const q = v => (Math.floor(v / passo) + 0.5) * passo;
+  const cv = document.getElementById('resRadCanvas'); cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d'), img = ctx.createImageData(w, h);
+  const ndO = new Set(), ndQ = new Set(), hist = new Uint32Array(L);
+  for (let i = 0; i < n; i++) {
+    const k = i * 4, N = px[k], R = px[k + 1], G = px[k + 2], B = px[k + 3];
+    const qN = q(N), qR = q(R), qG = q(G), qB = q(B);
+    if (resRadComp === 'fc') { img.data[k] = qN; img.data[k + 1] = qR; img.data[k + 2] = qG; }
+    else if (resRadComp === 'tc') { img.data[k] = qR; img.data[k + 1] = qG; img.data[k + 2] = qB; }
+    else { img.data[k] = img.data[k + 1] = img.data[k + 2] = qN; }
+    img.data[k + 3] = 255;
+    ndO.add(N * 256 + R); ndQ.add(Math.floor(N / passo) * 256 + Math.floor(R / passo));
+    hist[Math.min(L - 1, Math.floor(N / passo))]++;
+  }
+  ctx.putImageData(img, 0, 0);
+  document.getElementById('resBitsTxt').textContent = resBits + (resBits === 1 ? ' bit' : ' bits');
+  // histograma do NIR quantizado
+  const hc = document.getElementById('resHistCanvas'), hx = hc.getContext('2d'), HW = hc.width, HH = hc.height;
+  const C = { bg: cssVar('--sl-plot-bg'), axis: cssVar('--sl-plot-axis'), text: cssVar('--sl-plot-text'), prim: cssVar('--md-sys-color-primary') };
+  hx.fillStyle = C.bg; hx.fillRect(0, 0, HW, HH);
+  const pL = 20, pR = HW - 20, pT = 16, pB = HH - 44, mx = Math.max(...hist, 1), bw = (pR - pL) / L;
+  hx.fillStyle = C.prim;
+  for (let b = 0; b < L; b++) { const bh = hist[b] / mx * (pB - pT); hx.fillRect(pL + b * bw + (L <= 64 ? 1 : 0), pB - bh, Math.max(1, bw - (L <= 64 ? 2 : 0)), bh); }
+  hx.strokeStyle = C.axis; hx.beginPath(); hx.moveTo(pL, pB); hx.lineTo(pR, pB); hx.stroke();
+  hx.fillStyle = C.text; hx.font = '20px sans-serif'; hx.textAlign = 'left'; hx.fillText('0', pL, pB + 28);
+  hx.textAlign = 'right'; hx.fillText('255', pR, pB + 28); hx.textAlign = 'center'; hx.fillText(`histograma do NIR: ${L} níveis`, (pL + pR) / 2, pB + 28);
+  document.getElementById('resRadOut').innerHTML =
+    `<div class="metrics"><div class="metric"><span>Níveis de cinza</span><b>${L.toLocaleString('pt-BR')}</b><small>2^${resBits}</small></div>` +
+    `<div class="metric"><span>Passo entre níveis</span><b>${passo.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}</b><small>na escala 0–255 da cena</small></div>` +
+    `<div class="metric"><span>Valores distintos de NDVI</span><b>${ndQ.size.toLocaleString('pt-BR')}</b><small>de ${ndO.size.toLocaleString('pt-BR')} com 8 bits</small></div></div>` +
+    `<p class="haze-note"><b>Na lavoura:</b> com poucos níveis, áreas de vigor ligeiramente diferente recebem o mesmo valor e a variabilidade do talhão desaparece. A cena do app tem 8 bits; o Sentinel-2 e o Landsat 8/9 registram 12 bits (4 096 níveis).</p>`;
+}
+window.slRedrawRes = () => { if (resData && resTab === 'spec') resRenderSpec(); if (resData && resTab === 'rad') resRenderRad(); };
+
 
 // ================================================================
 //  ÍNDICES DE VEGETAÇÃO
@@ -5425,6 +5704,7 @@ function applyTheme(pref, persist){
   if (lastIndexData) drawHistogram(lastIndexData, lastIndexName);
   if (window.slRedrawSig) window.slRedrawSig();
   if (window.slRedrawAprender) window.slRedrawAprender();
+  if (window.slRedrawRes) window.slRedrawRes();
 }
 if (mqDark) {
   const onSys = () => { if (getThemePref() === 'auto') applyTheme('auto', false); };
@@ -5465,7 +5745,7 @@ function closeAboutSheet(){
   if (aboutReturnFocus && aboutReturnFocus.focus) aboutReturnFocus.focus();
 }
 function copyCitation(){
-  const t = 'SANTOS, Jacinto Pereira. SensorLab – UFT: laboratório digital de sensoriamento remoto e SIG. Versão 1.1. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.';
+  const t = 'SANTOS, Jacinto Pereira. SensorLab – UFT: laboratório digital de sensoriamento remoto e SIG. Versão 1.2. Gurupi: Universidade Federal do Tocantins, 2026. Aplicativo educacional.';
   (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => snack('Referência copiada.')).catch(() => prompt('Copie a referência:', t));
 }
 document.querySelectorAll('[data-close-about]').forEach(el => el.addEventListener('click', closeAboutSheet));
